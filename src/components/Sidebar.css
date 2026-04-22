@@ -1,0 +1,45 @@
+.sidebar-brand {
+    padding: var(--spacing-6) var(--spacing-6);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.brand-icon {
+    font-size: var(--font-size-2xl);
+}
+
+.brand-text {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-brand-primary);
+    letter-spacing: -0.02em;
+}
+
+.sidebar-nav {
+    padding: var(--spacing-4) 0;
+    flex: 1;
+}
+
+.nav-item {
+    padding: var(--spacing-3) var(--spacing-6);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.nav-item:hover {
+    background-color: var(--color-bg-hover);
+    color: var(--color-brand-primary);
+}
+
+.nav-item.active {
+    background-color: #fff3e0;
+    color: var(--color-brand-primary);
+    border-right: 3px solid var(--color-brand-primary);
+}

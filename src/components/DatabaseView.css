@@ -1,0 +1,128 @@
+.database-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: #f8fafc;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.db-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.db-header h2 {
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.db-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.db-search {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.95rem;
+    min-width: 250px;
+}
+
+.db-search:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.table-container {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.db-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.db-table th {
+    background: #f1f5f9;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.db-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.db-table tr:last-child td {
+    border-bottom: none;
+}
+
+.db-table tr:hover td {
+    background: #f8fafc;
+}
+
+.text-light {
+    color: var(--text-light);
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.td-name {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.td-sub {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.td-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.td-tag {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+.td-tag-more {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    padding: 2px 4px;
+}
+
+.td-empty {
+    text-align: center;
+    padding: 48px !important;
+    color: var(--text-light);
+}

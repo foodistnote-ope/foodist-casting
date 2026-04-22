@@ -1,0 +1,227 @@
+.content-pad {
+  padding: var(--spacing-6) var(--spacing-8);
+}
+
+.search-overview {
+  margin-bottom: var(--spacing-6);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.foodist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.foodist-card {
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-base);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  /* Softer shadow */
+  border: 1px solid var(--color-border);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* For top decoration */
+  padding-top: 4px;
+  /* Space for the top line */
+}
+
+.foodist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-top-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #9b8cce 0%, #7db9d6 50%, #88b087 100%);
+  border-top-left-radius: var(--radius-base);
+  border-top-right-radius: var(--radius-base);
+}
+
+.card-content {
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  flex: 1;
+}
+
+.card-main-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.card-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.foodist-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.foodist-title {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+}
+
+.card-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.card-notes {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.card-stats {
+  font-size: var(--font-size-sm);
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  margin-top: var(--spacing-2);
+}
+
+.stat-label {
+  color: var(--color-text-tertiary);
+}
+
+.stat-value {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.card-sns {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.sns-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-base);
+  padding: 4px;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.sns-icon-img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.sns-link:hover {
+  background: var(--color-bg-hover);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-3);
+}
+
+.tag {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-12);
+  background: var(--color-bg-surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-secondary);
+  gap: var(--spacing-4);
+}
+
+.btn-text {
+  color: var(--color-brand-primary);
+  font-weight: 500;
+  padding: var(--spacing-2) var(--spacing-4);
+  background: var(--color-bg-base);
+  border-radius: var(--radius-base);
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-text:hover {
+  background: var(--color-bg-hover);
+}
+
+/* 未保存変更の警告テキスト（編集モーダルヘッダー） */
+.modal-unsaved-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 2px 0 0;
+  font-style: italic;
+}
+
+/* フィルタークリック時に選択中になるタグ */
+.tag-selected {
+  background-color: var(--color-brand-primary);
+  color: white;
+  border-color: var(--color-brand-primary);
+}
+
+/* DatabaseView の会員バッジ */
+.membership-badge {
+  font-size: 0.72rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.membership-あり {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.membership-なし {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.membership-要確認 {
+  background: #fef3c7;
+  color: #92400e;
+}

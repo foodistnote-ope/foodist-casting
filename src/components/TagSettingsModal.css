@@ -1,0 +1,253 @@
+/* TagSettingsModal */
+.tag-settings-modal-overlay {
+    z-index: 3000;
+}
+
+.tag-settings-modal {
+    max-width: 780px;
+    width: 95%;
+    max-height: 90vh;
+}
+
+.settings-section {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.settings-section h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #1e293b);
+    margin-bottom: 8px;
+}
+
+.settings-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.tag-count-active {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+.tag-count-inactive {
+    color: #f97316;
+    font-weight: 600;
+}
+
+.settings-input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.tag-add-input input {
+    flex: 1;
+    min-width: 180px;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    color: #1e293b;
+    outline: none;
+}
+
+.tag-add-input input:focus {
+    border-color: var(--color-brand-primary, #6366f1);
+}
+
+.rule-select {
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #1e293b;
+    background: white;
+    min-width: 140px;
+}
+
+.rule-arrow {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* カテゴリタブ */
+.tag-category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+
+.tag-cat-tab {
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s;
+}
+
+.tag-cat-tab:hover {
+    border-color: #94a3b8;
+    color: #334155;
+}
+
+.tag-cat-tab.active {
+    background: #1e293b;
+    color: white;
+    border-color: #1e293b;
+}
+
+.tag-cat-count {
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 10px;
+    padding: 0 5px;
+    font-size: 0.72rem;
+}
+
+.tag-cat-tab.active .tag-cat-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+/* タグ一覧行 */
+.settings-chip-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.settings-chip-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    background: white;
+    transition: background 0.1s;
+}
+
+.settings-chip-row:hover {
+    background: #f8fafc;
+}
+
+.settings-chip-row.inactive {
+    opacity: 0.55;
+    background: #f8f9fa;
+}
+
+.chip-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.chip-category {
+    font-size: 0.7rem;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.chip-name {
+    font-size: 0.88rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.chip-inactive-badge {
+    font-size: 0.7rem;
+    background: #fde8d8;
+    color: #c2410c;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.chip-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-chip-toggle {
+    font-size: 0.75rem;
+    color: #64748b;
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-chip-toggle:hover {
+    border-color: #f97316;
+    color: #f97316;
+}
+
+.btn-chip-activate:hover {
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.chip-delete {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.chip-delete:hover {
+    color: #ef4444;
+    border-color: #fca5a5;
+    background: #fff5f5;
+}
+
+.btn-chip-delete-confirm {
+    font-size: 0.75rem;
+    color: white;
+    background: #ef4444;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+}
+
+.btn-chip-cancel {
+    font-size: 0.75rem;
+    color: #475569;
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+}
