@@ -90,7 +90,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_1_1",
-        "noteType": "補足情報",
+        "noteType": "その他",
         "content": "",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       },
@@ -191,7 +191,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_2_1",
-        "noteType": "補足情報",
+        "noteType": "その他",
         "content": "簡単・時短・節約をコンセプトに、身近な食材で誰でも失敗なく作れるレシピを発信。",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       }
@@ -280,7 +280,6 @@ export const initialFoodists: Foodist[] = [
         "accountName": "note",
         "url": "https://note.com/note_by_yuu",
         "metricType": "なし",
-        "note": "note",
         "showOnDetail": true,
         "sortOrder": 6,
         "updatedAt": "2026-03-18T20:51:35.540Z"
@@ -289,7 +288,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_3_1",
-        "noteType": "補足情報",
+        "noteType": "その他",
         "content": "身近な食材で作れる簡単レシピが特徴。ブロググランプリ受賞歴あり。",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       }
@@ -381,7 +380,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_foodist-1773305659547_1",
-        "noteType": "補足情報",
+        "noteType": "その他",
         "content": "お酒は飲まないがPR企画には対応可能\t\t\t\t\t\t",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       }
