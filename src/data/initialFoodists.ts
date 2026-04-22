@@ -2,8 +2,7 @@ import type { Foodist } from './types';
 
 /**
  * 初期実データ (initialFoodists)
- * 2026/04/01 にユーザー様より提供された9名分の実データをベースにしています。
- * ブラウザの localStorage がリセットされた際、このデータが初期状態として読み込まれます。
+ * 2026/04/22 バックアップから復元した128件のデータ
  */
 export const initialFoodists: Foodist[] = [
   {
@@ -91,7 +90,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_1_1",
-        "noteType": "その他",
+        "noteType": "補足情報",
         "content": "",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       },
@@ -192,7 +191,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_2_1",
-        "noteType": "その他",
+        "noteType": "補足情報",
         "content": "簡単・時短・節約をコンセプトに、身近な食材で誰でも失敗なく作れるレシピを発信。",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       }
@@ -242,7 +241,8 @@ export const initialFoodists: Foodist[] = [
         "metricValue": 1070000,
         "showOnDetail": true,
         "sortOrder": 2,
-        "updatedAt": "2026-03-18T20:51:35.540Z"
+        "updatedAt": "2026-04-14T13:58:16.559Z",
+        "reelsFrequency": "月1~2回ほど"
       },
       {
         "id": "media_3_x",
@@ -280,6 +280,7 @@ export const initialFoodists: Foodist[] = [
         "accountName": "note",
         "url": "https://note.com/note_by_yuu",
         "metricType": "なし",
+        "note": "note",
         "showOnDetail": true,
         "sortOrder": 6,
         "updatedAt": "2026-03-18T20:51:35.540Z"
@@ -288,13 +289,13 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_3_1",
-        "noteType": "その他",
+        "noteType": "補足情報",
         "content": "身近な食材で作れる簡単レシピが特徴。ブロググランプリ受賞歴あり。",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       }
     ],
     "createdAt": "2026-03-18T20:51:35.540Z",
-    "updatedAt": "2026-03-25T09:53:47.022Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z",
     "id": "3"
   },
   {
@@ -380,7 +381,7 @@ export const initialFoodists: Foodist[] = [
     "notes": [
       {
         "id": "note_foodist-1773305659547_1",
-        "noteType": "その他",
+        "noteType": "補足情報",
         "content": "お酒は飲まないがPR企画には対応可能\t\t\t\t\t\t",
         "updatedAt": "2026-03-18T20:51:35.540Z"
       }
@@ -394,7 +395,7 @@ export const initialFoodists: Foodist[] = [
   {
     "displayName": "もあいかすみ",
     "realName": "",
-    "title": "管理栄養士",
+    "title": "料理研究家",
     "membershipStatus": "要確認",
     "area": "東京都",
     "birthplace": "大阪府",
@@ -403,7 +404,7 @@ export const initialFoodists: Foodist[] = [
     "faceVisibility": "可",
     "hasChildren": "あり",
     "childStage": [],
-    "listIntro": "大学卒業後、食品メーカーに就職。全国チェーンのレストランや居酒屋、量販店など幅広い業態のメニュー開発を手がける。忙しく働きながら自炊してきた経験と管理栄養士の資格を生かして、料理研究家として独立。 ",
+    "listIntro": "大学卒業後、食品メーカーに就職。全国チェーンのレストランや居酒屋、量販店など幅広い業態のメニュー開発を手がける。",
     "profileText": "作り置きおかず\n\n大学卒業後、食品メーカーに就職。全国チェーンのレストランや居酒屋、量販店など幅広い業態のメニュー開発を手がける。忙しく働きながら自炊してきた経験と管理栄養士の資格を生かして、料理研究家として独立。 ",
     "avatarUrl": "https://foodistnote.recipe-blog.jp/wp-content/uploads/2023/07/25112853/%E3%82%82%E3%81%82%E3%81%84%E3%81%8B%E3%81%99%E3%81%BF%E5%AE%A3%E6%9D%90%E5%86%99%E7%9C%9F%EF%BC%93-20230725112853-20230725112853.jpg",
     "totalFollowers": 2707592,
@@ -457,7 +458,7 @@ export const initialFoodists: Foodist[] = [
     ],
     "notes": [],
     "createdAt": "2026-03-18T21:39:01.568Z",
-    "updatedAt": "2026-03-26T22:33:25.405Z",
+    "updatedAt": "2026-04-14T14:42:46.679Z",
     "ageGroup": "30代",
     "childrenCount": "1",
     "maritalStatus": "既婚",
@@ -469,22 +470,22 @@ export const initialFoodists: Foodist[] = [
     "title": "簡単料理&ダイエット料理研究家",
     "membershipStatus": "要確認",
     "area": "",
-    "birthplace": "",
+    "birthplace": "兵庫県",
     "birthDate": "",
-    "gender": "",
+    "gender": "男性",
     "faceVisibility": "可",
-    "hasChildren": "未確認",
+    "hasChildren": "なし",
     "childStage": [],
     "listIntro": "YouTubeチャンネル登録者数188万人（2026年3月時点）を誇る簡単料理&ダイエット料理研究家。失敗することなく誰でも上手く、そしておいしく作ることができるようなレシピを発信している。",
     "profileText": "YouTubeチャンネル登録者数188万人（2026年3月時点）を誇る簡単料理&ダイエット料理研究家。失敗することなく誰でも上手く、そしておいしく作ることができるようなレシピを発信している。著書に『極上ずぼら飯』『悶絶ずぼら飯』『宇宙一ずぼら絶品めし』などがあり累計16万部以上。TVにも多数出演。",
     "avatarUrl": "https://foodistnote.recipe-blog.jp/wp-content/uploads/2021/09/07151847/%E3%81%A0%E3%82%8C%E3%82%A6%E3%83%9E%E3%81%95%E3%82%93%E3%83%97%E3%83%AD%E3%83%95%E3%82%A3%E3%83%BC%E3%83%AB%E5%86%99%E7%9C%9F.png",
-    "totalFollowers": 848000,
+    "totalFollowers": 1590000,
     "tagIds": [],
     "mediaAccounts": [
       {
         "id": "media_1773902960989_gaf8",
         "mediaType": "ブログ",
-        "metricType": "なし",
+        "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 1,
         "updatedAt": "2026-03-19T06:49:20.989Z",
@@ -497,10 +498,11 @@ export const initialFoodists: Foodist[] = [
         "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 2,
-        "updatedAt": "2026-03-19T06:51:14.979Z",
+        "updatedAt": "2026-04-14T13:58:12.419Z",
         "url": "https://www.instagram.com/dareuma_recipe/",
         "accountName": "dareuma_recipe",
-        "metricValue": 419000
+        "metricValue": 419000,
+        "reelsFrequency": "週3~5回ほど"
       },
       {
         "id": "media_1773903081788_45ae",
@@ -516,17 +518,29 @@ export const initialFoodists: Foodist[] = [
       {
         "id": "media_1773903083204_6l2c",
         "mediaType": "YouTube",
-        "metricType": "なし",
+        "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 4,
         "updatedAt": "2026-03-19T06:51:23.204Z",
         "url": "https://www.youtube.com/channel/UCmMFrO9hjeAg9RLuTSF4A2A/",
         "accountName": "「だれウマ【料理研究家」"
+      },
+      {
+        "id": "media_1776176267724_uw10",
+        "mediaType": "TikTok",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 5,
+        "updatedAt": "2026-04-14T14:17:47.724Z",
+        "url": "https://www.tiktok.com/@dareuma_0141",
+        "metricValue": 742000
       }
     ],
     "notes": [],
     "createdAt": "2026-03-19T06:49:54.419Z",
-    "updatedAt": "2026-03-25T09:11:28.123Z",
+    "updatedAt": "2026-04-14T14:17:55.492Z",
+    "age": 27,
+    "childrenCount": "0",
     "id": "foodist-1773902994419-96qp"
   },
   {
@@ -547,7 +561,7 @@ export const initialFoodists: Foodist[] = [
     "listIntro": "",
     "profileText": "",
     "avatarUrl": "https://foodistnote.recipe-blog.jp/wp-content/uploads/2023/11/08163718/%E4%BA%95%E4%B8%8A%E3%81%8B%E3%81%AA%E3%81%88-20230124140554-20230124140554-e1677026757295-20231108163718-20231108163718.jpg",
-    "totalFollowers": 39103,
+    "totalFollowers": 42093,
     "tagIds": [
       "tag_q003",
       "tag_q008",
@@ -568,12 +582,13 @@ export const initialFoodists: Foodist[] = [
         "updatedAt": "2026-03-26T07:45:49.127Z",
         "url": "https://www.instagram.com/kanae.inoue/",
         "accountName": "kanae.inoue",
-        "metricValue": 35000
+        "metricValue": 35000,
+        "reelsFrequency": "月1~2回ほど"
       },
       {
         "id": "media_1774511170833_i1ky",
         "mediaType": "ブログ",
-        "metricType": "なし",
+        "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 2,
         "updatedAt": "2026-03-26T07:46:10.833Z",
@@ -590,11 +605,22 @@ export const initialFoodists: Foodist[] = [
         "url": "https://x.com/inokana0123",
         "accountName": "inokana0123",
         "metricValue": 4103
+      },
+      {
+        "id": "media_1776177226161_hxog",
+        "mediaType": "YouTube",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T14:33:46.161Z",
+        "url": "https://www.youtube.com/@kanaetv",
+        "metricValue": 2990
       }
     ],
     "notes": [],
     "createdAt": "2026-03-26T07:48:49.038Z",
-    "updatedAt": "2026-03-26T07:53:26.001Z",
+    "updatedAt": "2026-04-14T14:34:47.840Z",
+    "age": 53,
     "id": "foodist-1774511329038-aq1s"
   },
   {
@@ -615,7 +641,7 @@ export const initialFoodists: Foodist[] = [
     "listIntro": "",
     "profileText": "",
     "avatarUrl": "",
-    "totalFollowers": 0,
+    "totalFollowers": 162000,
     "tagIds": [
       "tag_q003",
       "tag_q005",
@@ -645,12 +671,13 @@ export const initialFoodists: Foodist[] = [
         "showOnDetail": true,
         "sortOrder": 1,
         "updatedAt": "2026-03-26T08:24:33.214Z",
-        "url": "https://www.instagram.com/kazumiokuda/"
+        "url": "https://www.instagram.com/kazumiokuda/",
+        "metricValue": 133000
       },
       {
         "id": "media_1774513819218_qmkr",
         "mediaType": "公式ホームページ",
-        "metricType": "なし",
+        "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 2,
         "updatedAt": "2026-03-26T08:30:19.218Z",
@@ -659,7 +686,7 @@ export const initialFoodists: Foodist[] = [
       {
         "id": "media_1774513830906_c6r9",
         "mediaType": "ブログ",
-        "metricType": "なし",
+        "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 3,
         "updatedAt": "2026-03-26T08:30:30.906Z",
@@ -672,7 +699,8 @@ export const initialFoodists: Foodist[] = [
         "showOnDetail": true,
         "sortOrder": 4,
         "updatedAt": "2026-03-26T08:30:49.157Z",
-        "url": "https://x.com/kazumi_okuda"
+        "url": "https://x.com/kazumi_okuda",
+        "metricValue": 29000
       }
     ],
     "notes": [
@@ -684,7 +712,7 @@ export const initialFoodists: Foodist[] = [
       }
     ],
     "createdAt": "2026-03-26T08:24:39.910Z",
-    "updatedAt": "2026-03-26T08:33:12.352Z",
+    "updatedAt": "2026-04-02T10:03:51.754Z",
     "id": "foodist-1774513479910-1e4p"
   },
   {
@@ -719,7 +747,7 @@ export const initialFoodists: Foodist[] = [
       {
         "id": "media_1774534399466_cjjk",
         "mediaType": "ブログ",
-        "metricType": "なし",
+        "metricType": "フォロワー数",
         "showOnDetail": true,
         "sortOrder": 2,
         "updatedAt": "2026-03-26T14:13:19.466Z",
@@ -730,5 +758,5545 @@ export const initialFoodists: Foodist[] = [
     "createdAt": "2026-03-26T14:13:53.877Z",
     "updatedAt": "2026-03-26T14:15:48.900Z",
     "id": "foodist-1774534433877-xhpa"
+  },
+  {
+    "displayName": "George ジョージ吉田",
+    "realName": "",
+    "title": "",
+    "membershipStatus": "要確認",
+    "area": "",
+    "birthplace": "",
+    "birthDate": "",
+    "gender": "",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "listIntro": "",
+    "profileText": "",
+    "avatarUrl": "",
+    "totalFollowers": 2917500,
+    "tagIds": [
+      "tag_a005"
+    ],
+    "mediaAccounts": [
+      {
+        "id": "media_1775047778539_9yqs",
+        "mediaType": "YouTube",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-01T12:49:38.539Z",
+        "url": "https://www.youtube.com/channel/UCP2gnyy_-ToZeIDw6qeI6HA",
+        "accountName": "George ジョージ吉田",
+        "metricValue": 1360000
+      },
+      {
+        "id": "media_1775047874278_a2ff",
+        "mediaType": "Instagram",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-01T12:51:14.278Z",
+        "url": "https://www.instagram.com/george_cuisine/",
+        "accountName": "george_cuisine",
+        "metricValue": 809000
+      },
+      {
+        "id": "media_1775047921398_ry5i",
+        "mediaType": "TikTok",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-01T12:52:01.398Z",
+        "url": "https://www.tiktok.com/@johjiro",
+        "accountName": "johjiro",
+        "metricValue": 716500
+      },
+      {
+        "id": "media_1775047978348_rfao",
+        "mediaType": "X",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-01T12:52:58.348Z",
+        "url": "https://x.com/chef_johjiro",
+        "metricValue": 32000,
+        "accountName": "chef_johjiro"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-01T12:50:01.269Z",
+    "updatedAt": "2026-04-01T12:53:35.375Z",
+    "id": "foodist-1775047801269-fcbl"
+  },
+  {
+    "displayName": "コウケンテツ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 2526000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_0_1",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UC3p5OTQsMEnmZktWUkw_Y0A",
+        "metricType": "チャンネル登録者数",
+        "metricValue": 2200000,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T12:14:33.331Z"
+      },
+      {
+        "id": "media_1776172520174_wi6b",
+        "mediaType": "Instagram",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:15:20.174Z",
+        "url": "https://www.instagram.com/kohkentetsu/",
+        "accountName": "kohkentetsu",
+        "metricValue": 282000
+      },
+      {
+        "id": "media_1776172539225_2lgz",
+        "mediaType": "X",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:15:39.225Z",
+        "url": "https://x.com/kohkentetsu14",
+        "metricValue": 44000,
+        "accountName": "kohkentetsu14"
+      }
+    ],
+    "notes": [
+      {
+        "id": "csv_note_0_other",
+        "noteType": "その他",
+        "content": "ショートであれば謝礼80万円。ただし枠数に限りあり",
+        "updatedAt": "2026-04-14T12:14:33.331Z"
+      }
+    ],
+    "createdAt": "2026-04-14T12:14:33.331Z",
+    "updatedAt": "2026-04-14T13:16:08.733Z",
+    "id": "foodist-1776168873331-0-bmn"
+  },
+  {
+    "displayName": "さち　",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "なし",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 159480,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_0_1",
+        "mediaType": "Instagram",
+        "accountName": "sacchi_recipe",
+        "url": "https://www.instagram.com/sacchi_recipe/",
+        "metricType": "フォロワー数",
+        "metricValue": 153000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_0_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@sacchi_recipe",
+        "metricType": "チャンネル登録者数",
+        "metricValue": 6480,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [
+      {
+        "id": "note_1776174912945_dtcl",
+        "noteType": "その他",
+        "content": "イタリアン, おもてなし, シーズン, パーティー, 日常\nオンライン料理教室実施",
+        "updatedAt": "2026-04-14T13:55:12.945Z"
+      }
+    ],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z",
+    "id": "foodist-1776172213316-0-8cn"
+  },
+  {
+    "displayName": "しのもこ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "埼玉県",
+    "age": 26,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "あり",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 45200,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_1_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/shinomoco_2525/",
+        "metricType": "フォロワー数",
+        "metricValue": 38200,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:12.419Z"
+      },
+      {
+        "id": "csv_media_1_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@shinomoco_2525",
+        "metricType": "フォロワー数",
+        "metricValue": 7000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_1_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UC4s_N57DGaP89Q3pAt0FWCw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:59:46.907Z",
+    "id": "foodist-1776172213316-1-ix8"
+  },
+  {
+    "id": "foodist-1776172213316-10-uw6",
+    "displayName": "syun cooking",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "大阪府",
+    "birthplace": "大阪府",
+    "age": 23,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 2055000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_10_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/syun_cooking/",
+        "metricType": "フォロワー数",
+        "metricValue": 675000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_10_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@syuncooking",
+        "metricType": "フォロワー数",
+        "metricValue": 1380000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_10_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@syuncooking",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-11-fpd",
+    "displayName": "えなりん　おいもクリエイター",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "大阪府",
+    "birthplace": "愛知県",
+    "age": 27,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 61273,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_11_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/enarin.oimo/",
+        "metricType": "フォロワー数",
+        "metricValue": 54000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_11_2",
+        "mediaType": "X",
+        "url": "https://x.com/enarin_oimo/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_11_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@enarin.oimo",
+        "metricType": "フォロワー数",
+        "metricValue": 7273,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_11_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@oimo.enarin",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-12-txd",
+    "displayName": "かな/毎日おうちカフェ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "大阪府",
+    "birthplace": "大阪府",
+    "age": 55,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 104703,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_12_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kitchen_kanakana/",
+        "metricType": "フォロワー数",
+        "metricValue": 97300,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_12_2",
+        "mediaType": "X",
+        "url": "https://x.com/kitchenkanakan/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_12_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@kitchen_kanakana",
+        "metricType": "フォロワー数",
+        "metricValue": 7403,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_12_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kitchen_kanakana",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-13-f11",
+    "displayName": "みなほお菓子レシピ発信",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "埼玉県",
+    "birthplace": "北海道",
+    "age": 28,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 918000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_13_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/tk.mnh/",
+        "metricType": "フォロワー数",
+        "metricValue": 434000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_13_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@tk.mnh",
+        "metricType": "フォロワー数",
+        "metricValue": 484000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_13_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@tk.mnh.",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-14-nko",
+    "displayName": "のりP(noripetit)",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "東京都",
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 11000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_14_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/noripetit/",
+        "metricType": "フォロワー数",
+        "metricValue": 11000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_14_2",
+        "mediaType": "X",
+        "url": "https://x.com/La_n_kitchen/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_14_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@noripetitkitchenchannel",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-15-uqe",
+    "displayName": "あやシェフ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "愛媛県",
+    "age": 38,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 399000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_15_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/aya_bistro/",
+        "metricType": "フォロワー数",
+        "metricValue": 399000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_15_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@aya_bistro",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-16-3hw",
+    "displayName": "かんちゃん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "age": 40,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 15125,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_16_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kansugi_noafood/",
+        "metricType": "フォロワー数",
+        "metricValue": 12405,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_16_2",
+        "mediaType": "X",
+        "url": "https://x.com/kansugi0321/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_16_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@kansugi0321",
+        "metricType": "フォロワー数",
+        "metricValue": 2720,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_16_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kansugi0321",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-17-gau",
+    "displayName": "さいとうあきこ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "大阪府",
+    "age": 55,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 2054,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_17_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/atsuryokunabe_akiko/",
+        "metricType": "フォロワー数",
+        "metricValue": 2026,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_17_2",
+        "mediaType": "X",
+        "url": "https://x.com/utigohan_labo/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_17_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@akisan_recipe",
+        "metricType": "フォロワー数",
+        "metricValue": 28,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_17_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@saito-akiko",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-18-cz2",
+    "displayName": "富岡清美",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "埼玉県",
+    "age": 52,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 66158,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_18_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kiyomitomioka/",
+        "metricType": "フォロワー数",
+        "metricValue": 63593,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_18_2",
+        "mediaType": "X",
+        "url": "https://x.com/tomiokakiyomi/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_18_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@shiawase_italian",
+        "metricType": "フォロワー数",
+        "metricValue": 2565,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_18_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kiyomitomioka_shiawase-italian",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-19-knw",
+    "displayName": "ゆん◎家族と食べる幸せごはん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "福岡県",
+    "age": 39,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 621000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_19_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/yun___kitchen/",
+        "metricType": "フォロワー数",
+        "metricValue": 262000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_19_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@yun___kitchen",
+        "metricType": "フォロワー数",
+        "metricValue": 359000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_19_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@yun___kitchen",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-2-mil",
+    "displayName": "あや|心ほどける地味うま野菜レシピ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "長野県",
+    "birthplace": "静岡県",
+    "age": 36,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 85000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_2_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/aya_peacekitchen/",
+        "metricType": "フォロワー数",
+        "metricValue": 38000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_2_2",
+        "mediaType": "X",
+        "url": "https://x.com/ayapeacekitchen/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_2_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@aya_peacekitchen",
+        "metricType": "フォロワー数",
+        "metricValue": 47000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_2_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@aya_peacekitchen",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-20-bym",
+    "displayName": "misa",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "長野県",
+    "birthplace": "長野県",
+    "age": 33,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 410000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_20_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/misa_ihouse/",
+        "metricType": "フォロワー数",
+        "metricValue": 361000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_20_2",
+        "mediaType": "X",
+        "url": "https://x.com/misa_ihouse/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_20_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@misa_ihome",
+        "metricType": "フォロワー数",
+        "metricValue": 49000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_20_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@misa_ihouse",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-21-lii",
+    "displayName": "稲垣飛鳥",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "香川県",
+    "age": 48,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 23237,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_21_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/asucafe/",
+        "metricType": "フォロワー数",
+        "metricValue": 22000,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_21_2",
+        "mediaType": "X",
+        "url": "https://x.com/asucafe2005/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_21_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@asucafe2",
+        "metricType": "フォロワー数",
+        "metricValue": 1237,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_21_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCbNRjpH8FrsxffNNgC0sutg",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-22-ile",
+    "displayName": "momoキャラ弁料理家",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "千葉県",
+    "birthplace": "千葉県",
+    "age": 56,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 966000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_22_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/momokyaraben/",
+        "metricType": "フォロワー数",
+        "metricValue": 210000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_22_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@momokyaraben",
+        "metricType": "フォロワー数",
+        "metricValue": 756000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_22_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@momokyaraben",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-23-mb8",
+    "displayName": "うさまる",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "福岡県",
+    "age": 40,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "4",
+    "childStage": [],
+    "totalFollowers": 219111,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_23_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/usamaru.tahm/",
+        "metricType": "フォロワー数",
+        "metricValue": 201111,
+        "reelsFrequency": "ほぼ毎日",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_23_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@usamaru.tahm",
+        "metricType": "フォロワー数",
+        "metricValue": 18000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_23_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@usamaru.tahm1010",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-24-m00",
+    "displayName": "ふじたかな",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "gender": "女性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 177000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_24_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kanamani13/",
+        "metricType": "フォロワー数",
+        "metricValue": 177000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_24_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kanaskitchen8316",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-25-21z",
+    "displayName": "まいのごはん。",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "埼玉県",
+    "birthplace": "東京都",
+    "age": 36,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 233409,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_25_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/maino_gohan24/",
+        "metricType": "フォロワー数",
+        "metricValue": 174409,
+        "reelsFrequency": "ほぼ毎日",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_25_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@maino_gohan24",
+        "metricType": "フォロワー数",
+        "metricValue": 59000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_25_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@maino_gohan24",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-26-hen",
+    "displayName": "らむ|365日せいろ蒸しで心福なくらし",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "大阪府",
+    "birthplace": "大阪府",
+    "age": 49,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 150000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_26_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/ramcamp_321/",
+        "metricType": "フォロワー数",
+        "metricValue": 150000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_26_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@ram_camp321",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-27-h61",
+    "displayName": "JUNA（神田智美）",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "静岡県",
+    "birthplace": "静岡県",
+    "age": 53,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 6300,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_27_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/juna.q/",
+        "metricType": "フォロワー数",
+        "metricValue": 6300,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_27_2",
+        "mediaType": "X",
+        "url": "https://x.com/juna_qol/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_27_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@JUNAqol",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-28-iwl",
+    "displayName": "はつみ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "広島県",
+    "birthplace": "山口県",
+    "age": 40,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 129400,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_28_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/honeycafe/",
+        "metricType": "フォロワー数",
+        "metricValue": 121000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_28_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@hatsumisweets",
+        "metricType": "フォロワー数",
+        "metricValue": 8400,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_28_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@Hatsumi_cake",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-29-6pv",
+    "displayName": "辻本なみ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "滋賀県",
+    "birthplace": "奈良県",
+    "age": 34,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 113670,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_29_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/puchaneiyoushimama/",
+        "metricType": "フォロワー数",
+        "metricValue": 113670,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_29_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@nami-wf5ud",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-3-598",
+    "displayName": "よっしぃ|満腹かさ増しごはん 𓌉◯𓇋",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "京都府",
+    "birthplace": "京都府",
+    "age": 34,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 198000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_3_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/yossiy_gohan/",
+        "metricType": "フォロワー数",
+        "metricValue": 140000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_3_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@yossiy_gohan",
+        "metricType": "フォロワー数",
+        "metricValue": 58000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_3_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCrXzHuW4mapnBQls7jG64RA",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-30-ous",
+    "displayName": "あいのおうちごはん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "埼玉県",
+    "birthplace": "福島県",
+    "age": 41,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 114200,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_30_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/ai.ouchigohan/",
+        "metricType": "フォロワー数",
+        "metricValue": 110000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_30_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@ai.ouchigohan",
+        "metricType": "フォロワー数",
+        "metricValue": 4200,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_30_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@ai.ouchigohan",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-31-6db",
+    "displayName": "sachi",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "北海道",
+    "age": 56,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 2846,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_31_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/sachi_life825/",
+        "metricType": "フォロワー数",
+        "metricValue": 2273,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_31_2",
+        "mediaType": "X",
+        "url": "https://x.com/sachisachi825/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_31_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@sachisachi825",
+        "metricType": "フォロワー数",
+        "metricValue": 573,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_31_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@sachi825.",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-32-5o9",
+    "displayName": "たくまんま",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 104405,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_32_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/takuma_tamefusa/",
+        "metricType": "フォロワー数",
+        "metricValue": 97000,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_32_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@takuma_tamefusa",
+        "metricType": "フォロワー数",
+        "metricValue": 7405,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_32_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@takumanma",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213316-33-e67",
+    "displayName": "母熊",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "埼玉県",
+    "birthplace": "埼玉県",
+    "age": 57,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 92000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_33_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/rosso___/",
+        "metricType": "フォロワー数",
+        "metricValue": 92000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_33_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCZSTRQT-XrwTVIH4QZfIzhg",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-34-l5c",
+    "displayName": "きょうこばぁば",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "鳥取県",
+    "age": 69,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 83000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_34_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kyokoba_ba/",
+        "metricType": "フォロワー数",
+        "metricValue": 83000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_34_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kyokoba_ba",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-35-fh3",
+    "displayName": "パパイズム",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "愛媛県",
+    "birthplace": "愛媛県",
+    "age": 36,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 78000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_35_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/papa_izm_kitchen/",
+        "metricType": "フォロワー数",
+        "metricValue": 78000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_35_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@papaizm661",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-36-a6g",
+    "displayName": "トイロ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "area": "福岡県",
+    "birthplace": "福岡県",
+    "age": 48,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 50000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_36_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/toironote/",
+        "metricType": "フォロワー数",
+        "metricValue": 50000,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_36_2",
+        "mediaType": "X",
+        "url": "https://x.com/toiroblue/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_36_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCihfpPLWzszGgvejdJwZMhA",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-37-5md",
+    "displayName": "つちこ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "長崎県",
+    "age": 29,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 114000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_37_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/tsuchico_recipe/",
+        "metricType": "フォロワー数",
+        "metricValue": 76000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_37_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@tsuchico_recipe",
+        "metricType": "フォロワー数",
+        "metricValue": 38000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_37_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@tsuchico_recipe",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-38-9rj",
+    "displayName": "あそれい",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "長崎県",
+    "age": 42,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 7866,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_38_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/reinaasou/",
+        "metricType": "フォロワー数",
+        "metricValue": 7866,
+        "reelsFrequency": "投稿したことがない",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_38_2",
+        "mediaType": "X",
+        "url": "https://x.com/asorei/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_38_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@asorei",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-39-5cc",
+    "displayName": "あおにーな",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "茨城県",
+    "birthplace": "茨城県",
+    "age": 50,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 85000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_39_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/ao27_seikatsu/",
+        "metricType": "フォロワー数",
+        "metricValue": 68000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_39_2",
+        "mediaType": "X",
+        "url": "https://x.com/ao27_seikatsu/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_39_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@ao27_seikatsu",
+        "metricType": "フォロワー数",
+        "metricValue": 17000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_39_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@ao27_seikatsu",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-4-zda",
+    "displayName": "ちあ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "熊本県",
+    "birthplace": "熊本県",
+    "age": 30,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 167000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_4_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/chia_cook_/",
+        "metricType": "フォロワー数",
+        "metricValue": 112000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_4_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@chia_cook_",
+        "metricType": "フォロワー数",
+        "metricValue": 55000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_4_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@chia_cook_",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-40-ust",
+    "displayName": "小春（ぽかぽかびより）",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "兵庫県",
+    "birthplace": "兵庫県",
+    "age": 47,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 36000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_40_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/pokapokakoharu/",
+        "metricType": "フォロワー数",
+        "metricValue": 36000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_40_2",
+        "mediaType": "X",
+        "url": "https://x.com/pokapokakoharu/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_40_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@pokapokaKOHARU",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "displayName": "にぎりっ娘。",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "長崎県",
+    "age": 52,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "avatarUrl": "https://foodistnote.recipe-blog.jp/wp-content/uploads/2025/03/28190441/%E3%81%AB%E3%81%8E%E3%82%8A%E3%81%A3%E5%A8%98%E3%80%82-20250328190436-20250328190436.png",
+    "totalFollowers": 1383651,
+    "tagIds": [
+      "tag_d005"
+    ],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_41_1",
+        "mediaType": "Instagram",
+        "accountName": "nigiricco",
+        "url": "https://www.instagram.com/nigiricco/",
+        "metricType": "フォロワー数",
+        "metricValue": 54000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_41_2",
+        "mediaType": "X",
+        "accountName": "obentotyu",
+        "url": "https://x.com/obentotyu/",
+        "metricType": "フォロワー数",
+        "metricValue": 2551,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_41_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@nigiricco",
+        "metricType": "フォロワー数",
+        "metricValue": 37100,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_41_4",
+        "mediaType": "YouTube",
+        "accountName": "にぎりっ娘。nigiricco",
+        "url": "https://www.youtube.com/channel/UChiZabFUXEDVSz_5NdWVhDQ",
+        "metricType": "チャンネル登録者数",
+        "metricValue": 1290000,
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "media_1776177046365_ldej",
+        "mediaType": "ブログ",
+        "metricType": "PV",
+        "showOnDetail": true,
+        "sortOrder": 5,
+        "updatedAt": "2026-04-14T14:30:46.365Z",
+        "url": "https://nigiricco.com/",
+        "accountName": "にぎりっ娘。の公式サイト弁当箱販売"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T14:32:23.951Z",
+    "id": "foodist-1776172213316-41-07r"
+  },
+  {
+    "id": "foodist-1776172213316-42-1uq",
+    "displayName": "ちはる",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "大阪府",
+    "birthplace": "島根県",
+    "age": 42,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 260970,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_42_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/dake_meshi/",
+        "metricType": "フォロワー数",
+        "metricValue": 260000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_42_2",
+        "mediaType": "X",
+        "url": "https://x.com/dakemeshi/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_42_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@dake_meshi",
+        "metricType": "フォロワー数",
+        "metricValue": 970,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_42_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@hukusai_syokudo,https://www.youtube.com/@dakemeshi",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-43-x4g",
+    "displayName": "はらしおり",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "兵庫県",
+    "age": 48,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 41797,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_43_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/shiori_wellness_kitchen/",
+        "metricType": "フォロワー数",
+        "metricValue": 41797,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_43_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@harashiori",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-44-9am",
+    "displayName": "chiyo",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "岐阜県",
+    "birthplace": "岐阜県",
+    "age": 48,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 38000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_44_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/choryinachocoto/",
+        "metricType": "フォロワー数",
+        "metricValue": 38000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_44_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@choryinachocoto",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-45-tcr",
+    "displayName": "柴田真希",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "age": 43,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 5500,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_45_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/maki_recipe106/",
+        "metricType": "フォロワー数",
+        "metricValue": 5500,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_45_2",
+        "mediaType": "X",
+        "url": "https://x.com/maki_shibata/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_45_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UClVS-NFe3HPXzvo4tUb_xIQ",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-47-ny5",
+    "displayName": "かなこ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "栃木県",
+    "birthplace": "栃木県",
+    "age": 27,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 37963,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_47_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kanamina_recipe/",
+        "metricType": "フォロワー数",
+        "metricValue": 32000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_47_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@kanamina_recipe2",
+        "metricType": "フォロワー数",
+        "metricValue": 5963,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_47_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kanamina_recipe",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-48-yq5",
+    "displayName": "ビストロパパ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "京都府",
+    "age": 55,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 1157,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_48_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/bistropapa/",
+        "metricType": "フォロワー数",
+        "metricValue": 1103,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_48_2",
+        "mediaType": "X",
+        "url": "https://x.com/bistropapa/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_48_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@bistropapa",
+        "metricType": "フォロワー数",
+        "metricValue": 54,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_48_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@bistropapa",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-49-ksk",
+    "displayName": "はまちゃん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "京都府",
+    "age": 39,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 27000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_49_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/hamachan_siawase_sweets/",
+        "metricType": "フォロワー数",
+        "metricValue": 27000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_49_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@hamachan_siawase_sweets",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-5-r4q",
+    "displayName": "つき",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "京都府",
+    "birthplace": "京都府",
+    "age": 32,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 58000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_5_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/tsuki_mama_gohan/",
+        "metricType": "フォロワー数",
+        "metricValue": 14000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_5_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@tsuki_mama_gohan",
+        "metricType": "フォロワー数",
+        "metricValue": 44000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_5_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@tsuki_mama_gohan",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-50-du1",
+    "displayName": "小川真樹",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "埼玉県",
+    "birthplace": "埼玉県",
+    "age": 57,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 25695,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_50_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/cuteobento/",
+        "metricType": "フォロワー数",
+        "metricValue": 25400,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_50_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@cuteobento",
+        "metricType": "フォロワー数",
+        "metricValue": 295,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_50_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@cuteobento",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-51-mp8",
+    "displayName": "大橋由香",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "神奈川県",
+    "birthplace": "神奈川県",
+    "age": 45,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 27000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_51_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/haruhigohan/",
+        "metricType": "フォロワー数",
+        "metricValue": 27000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_51_2",
+        "mediaType": "X",
+        "url": "https://x.com/haruhigohan/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_51_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@haruhigohan",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-52-wve",
+    "displayName": "SHIMA",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "愛知県",
+    "age": 51,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 23661,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_52_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/shima_no_ouchicafe/",
+        "metricType": "フォロワー数",
+        "metricValue": 20773,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_52_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@shima_recipe",
+        "metricType": "フォロワー数",
+        "metricValue": 2888,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_52_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCCTvb8xD7Bx1xYSyqUk7nZw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-53-1ba",
+    "displayName": "筋肉料理人",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "佐賀県",
+    "birthplace": "福岡県",
+    "age": 62,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 640,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_53_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kinnikuryourinin/",
+        "metricType": "フォロワー数",
+        "metricValue": 640,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_53_2",
+        "mediaType": "X",
+        "url": "https://x.com/kinniku/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_53_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kinniku3",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-54-ju5",
+    "displayName": "ヤミー",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "東京都",
+    "birthplace": "茨城県",
+    "age": 49,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 13000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_54_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/ym_3stepcooking/",
+        "metricType": "フォロワー数",
+        "metricValue": 13000,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_54_2",
+        "mediaType": "X",
+        "url": "https://x.com/yummy_3stepcook/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_54_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@YUMMY-TV.",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-55-3rc",
+    "displayName": "みぃ*",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "神奈川県",
+    "birthplace": "神奈川県",
+    "age": 51,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 3343,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_55_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/mii_kitchendiary/",
+        "metricType": "フォロワー数",
+        "metricValue": 3197,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_55_2",
+        "mediaType": "X",
+        "url": "https://x.com/mi_mi_mi_p/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_55_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@mii_kitchendiary",
+        "metricType": "フォロワー数",
+        "metricValue": 146,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_55_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@mii_kitchendiary",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-56-961",
+    "displayName": "あやごはん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "千葉県",
+    "age": 38,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 22544,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_56_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/aya_gohan49/",
+        "metricType": "フォロワー数",
+        "metricValue": 17800,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_56_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@aya_gohan49",
+        "metricType": "フォロワー数",
+        "metricValue": 4744,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_56_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@aya_gohantube",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-57-omb",
+    "displayName": "北嶋佳奈",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "沖縄県",
+    "birthplace": "東京都",
+    "age": 38,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 26500,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_57_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/KanaKitajima/",
+        "metricType": "フォロワー数",
+        "metricValue": 18000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_57_2",
+        "mediaType": "X",
+        "url": "https://x.com/KanaKitajima/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_57_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@KanaKitajimadesu",
+        "metricType": "フォロワー数",
+        "metricValue": 8500,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_57_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kanakitajima",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-58-76q",
+    "displayName": "冷凍子ママ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "茨城県",
+    "age": 41,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 897715,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_58_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/reitoumama/",
+        "metricType": "フォロワー数",
+        "metricValue": 677715,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_58_2",
+        "mediaType": "X",
+        "url": "https://x.com/reitoumama/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_58_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@reitoumama",
+        "metricType": "フォロワー数",
+        "metricValue": 220000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_58_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@reitoumama55",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-59-a78",
+    "displayName": "あつメシ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "沖縄県",
+    "birthplace": "沖縄県",
+    "age": 44,
+    "gender": "男性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 440000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_59_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/atu_meshi/",
+        "metricType": "フォロワー数",
+        "metricValue": 310000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_59_2",
+        "mediaType": "X",
+        "url": "https://x.com/atu_meshi/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_59_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@atu_meshi",
+        "metricType": "フォロワー数",
+        "metricValue": 130000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_59_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@atu_meshi",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-6-jg8",
+    "displayName": "MYON みょん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "area": "東京都",
+    "birthplace": "静岡県",
+    "age": 27,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 253000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_6_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/myon_424/",
+        "metricType": "フォロワー数",
+        "metricValue": 221000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_6_2",
+        "mediaType": "X",
+        "url": "https://x.com/myon_424/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_6_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@myon_424",
+        "metricType": "フォロワー数",
+        "metricValue": 32000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_6_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@myon_424",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-60-s5p",
+    "displayName": "sana",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "東京都",
+    "age": 50,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 14680,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_60_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/sanaluke2/",
+        "metricType": "フォロワー数",
+        "metricValue": 14680,
+        "reelsFrequency": "ほぼ毎日",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_60_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@sanaluke2",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-61-9ry",
+    "displayName": "みすず",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "愛知県",
+    "birthplace": "愛知県",
+    "age": 49,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 37000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_61_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/misumisu0722/",
+        "metricType": "フォロワー数",
+        "metricValue": 16000,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_61_2",
+        "mediaType": "X",
+        "url": "https://x.com/misumisu0722/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_61_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@misumisu0722",
+        "metricType": "フォロワー数",
+        "metricValue": 21000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_61_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCWcN7tVUPMjIj73bPjwT-cA",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-62-k6x",
+    "displayName": "クッキングSパパ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "茨城県",
+    "birthplace": "大阪府",
+    "age": 63,
+    "gender": "男性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 781,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_62_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/cookingspapa/",
+        "metricType": "フォロワー数",
+        "metricValue": 781,
+        "reelsFrequency": "投稿したことがない",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_62_2",
+        "mediaType": "X",
+        "url": "https://x.com/s_papa777/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_62_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@papadesuyo777",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-63-rgm",
+    "displayName": "ひろまるクック",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "大阪府",
+    "birthplace": "大阪府",
+    "age": 64,
+    "gender": "男性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 185000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_63_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/hiromarucooktv/",
+        "metricType": "フォロワー数",
+        "metricValue": 61000,
+        "reelsFrequency": "ほぼ毎日",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_63_2",
+        "mediaType": "X",
+        "url": "https://x.com/hiromarucook/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_63_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@hiromaru007",
+        "metricType": "フォロワー数",
+        "metricValue": 124000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_63_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@hiromarucook",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-64-e4f",
+    "displayName": "かっちゃん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "岐阜県",
+    "birthplace": "岐阜県",
+    "age": 37,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 709000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_64_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kattyan1011/",
+        "metricType": "フォロワー数",
+        "metricValue": 378000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_64_2",
+        "mediaType": "X",
+        "url": "https://x.com/_yuka1011/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_64_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@kattyanneru",
+        "metricType": "フォロワー数",
+        "metricValue": 331000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_64_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kattyanneru",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-65-mok",
+    "displayName": "野永喜三夫",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 8545,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_65_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kimiononaga/",
+        "metricType": "フォロワー数",
+        "metricValue": 8545,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_65_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCE4v11zI4xu4W8MCWvhhHUQ",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213316-7-6xb",
+    "displayName": "♪♪maron♪♪",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "滋賀県",
+    "birthplace": "愛媛県",
+    "age": 39,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 257000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_7_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/maron.kitchen/",
+        "metricType": "フォロワー数",
+        "metricValue": 240000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_7_2",
+        "mediaType": "X",
+        "url": "https://x.com/maron.cooking/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_7_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@maron.8431",
+        "metricType": "フォロワー数",
+        "metricValue": 17000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_7_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/shorts/s4twuyigSDg",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-8-vxx",
+    "displayName": "ふぁそら",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "北海道",
+    "birthplace": "北海道",
+    "age": 53,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 4495,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_8_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/doremi555doremi/",
+        "metricType": "フォロワー数",
+        "metricValue": 3387,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_8_2",
+        "mediaType": "X",
+        "url": "https://x.com/fasora555/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_8_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@fasora555",
+        "metricType": "フォロワー数",
+        "metricValue": 1108,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_8_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCeXQZ3DFx8o9hQpoNN5t7jw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213316-9-skg",
+    "displayName": "MOMO",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "滋賀県",
+    "birthplace": "滋賀県",
+    "age": 58,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 8736,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_9_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/lipmomo230/",
+        "metricType": "フォロワー数",
+        "metricValue": 8736,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_9_2",
+        "mediaType": "X",
+        "url": "https://x.com/lipmomo230/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_9_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCh0DUdv0qbLs6Rrcz-dDS7w",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-100-1w6",
+    "displayName": "鈴木沙織",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "山形県",
+    "birthplace": "山形県",
+    "age": 40,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_100_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/saori.suzuki1119/",
+        "metricType": "フォロワー数",
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-101-1ss",
+    "displayName": "keito",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "兵庫県",
+    "birthplace": "三重県",
+    "age": 36,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 64300,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_101_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/keito.cooking/",
+        "metricType": "フォロワー数",
+        "metricValue": 64300,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-102-tzt",
+    "displayName": "きき",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "熊本県",
+    "birthplace": "熊本県",
+    "age": 28,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 41630,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_102_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kiki_chokatsu/",
+        "metricType": "フォロワー数",
+        "metricValue": 32000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_102_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@kiki_chokatsu",
+        "metricType": "フォロワー数",
+        "metricValue": 9630,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_102_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kiki_chokatsu",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-103-5rd",
+    "displayName": "みほ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "埼玉県",
+    "birthplace": "埼玉県",
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-104-83d",
+    "displayName": "あちこ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "岡山県",
+    "birthplace": "岡山県",
+    "age": 32,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 16190,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_104_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/achico_gohan/",
+        "metricType": "フォロワー数",
+        "metricValue": 13000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_104_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@achico_gohan",
+        "metricType": "フォロワー数",
+        "metricValue": 3190,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-105-9dh",
+    "displayName": "らら",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "茨城県",
+    "birthplace": "栃木県",
+    "age": 32,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 10500,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_105_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/rara__mum/",
+        "metricType": "フォロワー数",
+        "metricValue": 10500,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_105_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@coco29951",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-106-yu6",
+    "displayName": "ちよ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "福岡県",
+    "age": 39,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 104000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_106_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/chiyo__onigiri/",
+        "metricType": "フォロワー数",
+        "metricValue": 104000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-107-wu4",
+    "displayName": "つむぎ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "京都府",
+    "birthplace": "大阪府",
+    "age": 42,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 23000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_107_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/tsumugi_gohan/",
+        "metricType": "フォロワー数",
+        "metricValue": 23000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_107_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCSsEn8BhfPPSIfmaNHM5GcQ",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-108-cbi",
+    "displayName": "幸せパン職人大野有里奈",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "岐阜県",
+    "age": 36,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 141000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_108_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/yurina.oono/",
+        "metricType": "フォロワー数",
+        "metricValue": 141000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_108_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@yurina.oono..",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-109-9xo",
+    "displayName": "あき",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "神奈川県",
+    "age": 33,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 18000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_109_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/aki__gohan_/",
+        "metricType": "フォロワー数",
+        "metricValue": 16000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_109_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@aki__gohan_",
+        "metricType": "フォロワー数",
+        "metricValue": 2000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_109_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@aki__gohan_yasai",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-110-dsg",
+    "displayName": "masayo",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "愛知県",
+    "birthDate": "1971/5/16",
+    "gender": "女性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_110_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/masayo_san/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-111-1fz",
+    "displayName": "むっちん",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "神奈川県",
+    "birthDate": "1983/1/19",
+    "gender": "女性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_111_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/muccinpurin/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-112-pz5",
+    "displayName": "りえってぃ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "長野県",
+    "birthDate": "1979/4/27",
+    "gender": "女性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_112_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/rietty1211/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-113-67p",
+    "displayName": "り〜",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "茨城県",
+    "birthDate": "1979/3/26",
+    "gender": "女性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_113_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/riritantan/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-114-0pb",
+    "displayName": "ウエキトシヒロ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "長野県",
+    "birthDate": "1981/8/19",
+    "gender": "男性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_114_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/utosh/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-115-msc",
+    "displayName": "タラゴン",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "area": "神奈川県",
+    "gender": "女性",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-116-ipv",
+    "displayName": "megu'café",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_116_1",
+        "mediaType": "X",
+        "url": "https://x.com/megucafe02/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-66-1l3",
+    "displayName": "Nami （Ncookingなみの料理）",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "age": 43,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 7601,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_66_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/namiism91/",
+        "metricType": "フォロワー数",
+        "metricValue": 7601,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_66_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@Ncooking",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-68-gfg",
+    "displayName": "藤井香江",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "愛知県",
+    "birthplace": "愛知県",
+    "age": 49,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 14934,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_68_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/diet___queen/",
+        "metricType": "フォロワー数",
+        "metricValue": 6270,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_68_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@diet__kaefujii",
+        "metricType": "フォロワー数",
+        "metricValue": 8664,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_68_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCI6u1OXPaMm0qK1EdgQxitw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-70-wq2",
+    "displayName": "後藤祐輔",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 3339,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_70_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/chef.yusukegoto/",
+        "metricType": "フォロワー数",
+        "metricValue": 3339,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_70_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCNPVA9RnTQxLvSOdeL80Lfg",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-71-6je",
+    "displayName": "森シェフ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 1239000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_71_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/pasta.mori/",
+        "metricType": "フォロワー数",
+        "metricValue": 1239000,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_71_2",
+        "mediaType": "X",
+        "url": "https://x.com/yohtaro007/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_71_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@morichef",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-72-iy7",
+    "displayName": "ぴーきち",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "京都府",
+    "age": 33,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 1900000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_72_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/pikichidesuyo/",
+        "metricType": "フォロワー数",
+        "metricValue": 1010000,
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_72_2",
+        "mediaType": "X",
+        "url": "https://x.com/pikichidesuyo/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_72_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@pikichidesuyo",
+        "metricType": "フォロワー数",
+        "metricValue": 890000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_72_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@pikichi",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-74-r3i",
+    "displayName": "中井かな",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "愛知県",
+    "age": 38,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 4047,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_74_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kanakai_cooking/",
+        "metricType": "フォロワー数",
+        "metricValue": 2390,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_74_2",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@kankai_cooking",
+        "metricType": "フォロワー数",
+        "metricValue": 1657,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_74_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@kanakai_cooking",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-75-a1u",
+    "displayName": "おおたわ歩美",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "栃木県",
+    "birthplace": "栃木県",
+    "age": 45,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 2210,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_75_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/ayunohohon/",
+        "metricType": "フォロワー数",
+        "metricValue": 2210,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_75_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCyNpuR2TFSfOkRxyFI3c9Bw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-76-sg0",
+    "displayName": "おおたわ歩美",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "栃木県",
+    "birthplace": "栃木県",
+    "age": 45,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 2200,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_76_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/ayunohohon/",
+        "metricType": "フォロワー数",
+        "metricValue": 2200,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_76_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCyNpuR2TFSfOkRxyFI3c9Bw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-77-xac",
+    "displayName": "ぼく",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "福島県",
+    "age": 37,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 120000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_77_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/boku_5656/",
+        "metricType": "フォロワー数",
+        "metricValue": 103000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_77_2",
+        "mediaType": "X",
+        "url": "https://x.com/boku_5656/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_77_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@boku_5656",
+        "metricType": "フォロワー数",
+        "metricValue": 17000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_77_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCMRFCUH88DkC0kApeihXLJg",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-78-ec2",
+    "displayName": "つくりおき食堂まりえ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "神奈川県",
+    "birthplace": "神奈川県",
+    "age": 44,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 78000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_78_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/tsukurioki_shokudo/",
+        "metricType": "フォロワー数",
+        "metricValue": 78000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_78_2",
+        "mediaType": "X",
+        "url": "https://x.com/mariegohan/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_78_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@mariesluckrecipes3332",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-79-52s",
+    "displayName": "管理栄養士maicook",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "age": 39,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 1789,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_79_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/maicook-recipe/",
+        "metricType": "フォロワー数",
+        "metricValue": 1789,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_79_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@%E7%AE%A1%E7%90%86%E6%A0%84%E9%A4%8A%E5%A3%ABmaicook",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-80-nb9",
+    "displayName": "青髪のテツ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "広島県",
+    "birthplace": "広島県",
+    "age": 37,
+    "gender": "男性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 25273,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_80_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/aogami_tetsu/",
+        "metricType": "フォロワー数",
+        "metricValue": 20000,
+        "reelsFrequency": "投稿したことがない",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_80_2",
+        "mediaType": "X",
+        "url": "https://x.com/tetsublogorg/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_80_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@bluehair_tetsu",
+        "metricType": "フォロワー数",
+        "metricValue": 5273,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_80_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@bluehairtetsu",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "displayName": "まるみキッチン",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "埼玉県",
+    "birthplace": "大阪府",
+    "age": 32,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "avatarUrl": "https://foodistnote.recipe-blog.jp/wp-content/uploads/2024/09/13195424/marumikitchin-1-20240913195423-20240913195424.jpg",
+    "totalFollowers": 1527000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_81_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/marumi_kitchen/",
+        "metricType": "フォロワー数",
+        "metricValue": 657000,
+        "reelsFrequency": "ほぼ毎日",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_81_2",
+        "mediaType": "X",
+        "url": "https://x.com/marumi_kitchen/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_81_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@marumi_kitchen",
+        "metricType": "フォロワー数",
+        "metricValue": 870000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_81_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@marumi_kitchen",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z",
+    "id": "foodist-1776172213317-81-db3"
+  },
+  {
+    "id": "foodist-1776172213317-82-qtt",
+    "displayName": "くにこキッチン",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "愛媛県",
+    "birthplace": "東京都",
+    "age": 55,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 1200,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_82_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/kuniko.yano/",
+        "metricType": "フォロワー数",
+        "metricValue": 1200,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_82_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@%E3%82%84%E3%81%AE%E3%81%8F%E3%81%AB%E3%81%93%E6%A5%BD%E3%81%97%E3%81%84%E6%96%99%E7%90%86%E5%8B%95%E7%94%BB",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-83-sat",
+    "displayName": "ハマごはん【お手軽レシピ】",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "福岡県",
+    "birthplace": "福岡県",
+    "age": 35,
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "3",
+    "childStage": [],
+    "totalFollowers": 1274000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_83_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/hamagohan_r/",
+        "metricType": "フォロワー数",
+        "metricValue": 531000,
+        "reelsFrequency": "ほぼ毎日",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_83_2",
+        "mediaType": "X",
+        "url": "https://x.com/hamagohan_r/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_83_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@hamagohan_r",
+        "metricType": "フォロワー数",
+        "metricValue": 743000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_83_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@hamagohan_r",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "displayName": "リュウジ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "area": "千葉",
+    "gender": "男",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "totalFollowers": 10850000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_84_1",
+        "mediaType": "Instagram",
+        "accountName": "ryuji_foodlabo",
+        "url": "https://www.instagram.com/ryuji_foodlabo/",
+        "metricType": "フォロワー数",
+        "metricValue": 2303000,
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_84_2",
+        "mediaType": "X",
+        "accountName": "ore825",
+        "url": "https://x.com/ore825/",
+        "metricType": "フォロワー数",
+        "metricValue": 2967000,
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_84_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UCW01sMEVYQdhcvkrhbxdBpw",
+        "metricType": "チャンネル登録者数",
+        "metricValue": 5580000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:37:00.498Z",
+    "id": "foodist-1776172213317-84-p9m"
+  },
+  {
+    "id": "foodist-1776172213317-85-cm5",
+    "displayName": "Reina",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "千葉県",
+    "birthplace": "千葉県",
+    "age": 40,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 690,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_85_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/reinahayasaka/",
+        "metricType": "フォロワー数",
+        "metricValue": 690,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_85_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@japanesefoodathome",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-86-pjc",
+    "displayName": "SAKU",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "山梨県",
+    "birthplace": "山梨県",
+    "age": 40,
+    "gender": "男性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 133000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_86_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/saku_papa.homemade/",
+        "metricType": "フォロワー数",
+        "metricValue": 118000,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_86_2",
+        "mediaType": "X",
+        "url": "https://x.com/saku_papa1/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_86_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@saku_papa.homemade",
+        "metricType": "フォロワー数",
+        "metricValue": 15000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_86_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@SAKUttoPAN",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "displayName": "藤本マキ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "東京都",
+    "birthplace": "神奈川県",
+    "age": 52,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 216483,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_87_1",
+        "mediaType": "Instagram",
+        "accountName": "mackey_norimaki",
+        "url": "https://www.instagram.com/mackey_norimaki/",
+        "metricType": "フォロワー数",
+        "metricValue": 216000,
+        "reelsFrequency": "週1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_87_2",
+        "mediaType": "X",
+        "accountName": "mackey_norimaki",
+        "url": "https://x.com/mackey_norimaki/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_87_3",
+        "mediaType": "YouTube",
+        "accountName": "「おいしい食卓研究室」",
+        "url": "https://www.youtube.com/@%E3%81%8A%E3%81%84%E3%81%97%E3%81%84%E9%A3%9F%E5%8D%93%E7%A0%94%E7%A9%B6%E5%AE%A4",
+        "metricType": "チャンネル登録者数",
+        "metricValue": 483,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-22T08:02:39.887Z",
+    "id": "foodist-1776172213317-87-5xh"
+  },
+  {
+    "id": "foodist-1776172213317-88-89n",
+    "displayName": "めろんぱんママ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "岡山県",
+    "birthplace": "岡山県",
+    "age": 50,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "totalFollowers": 448,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_88_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/meloncafe.melonpan/",
+        "metricType": "フォロワー数",
+        "metricValue": 448,
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_88_2",
+        "mediaType": "X",
+        "url": "https://x.com/meloncafe2023/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_88_3",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/channel/UC3t5tYkWN8SGW2jPggTe4yw",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-89-is5",
+    "displayName": "綱渕礼子",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "age": 42,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "totalFollowers": 22,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_89_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/reiko.t.table/",
+        "metricType": "フォロワー数",
+        "metricValue": 22,
+        "reelsFrequency": "月1回以下",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-90-654",
+    "displayName": "みるまゆ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "愛知県",
+    "birthplace": "埼玉県",
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-91-l8s",
+    "displayName": "Ryogo",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "神奈川県",
+    "birthplace": "京都府",
+    "gender": "男性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_91_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/binanpasta/",
+        "metricType": "フォロワー数",
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_91_2",
+        "mediaType": "X",
+        "url": "https://x.com/binanpasta/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_91_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@binanpasta",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_91_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@binanpasta",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-92-8jt",
+    "displayName": "武田真由美",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "徳島県",
+    "birthplace": "徳島県",
+    "age": 49,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-93-nzo",
+    "displayName": "miku_colors",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未婚",
+    "area": "兵庫県",
+    "birthplace": "兵庫県",
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_93_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/miku_colors/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-94-ny0",
+    "displayName": "ゆき",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "area": "愛知県",
+    "birthplace": "愛知県",
+    "age": 52,
+    "gender": "女性",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "2",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-95-c78",
+    "displayName": "あこ",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "神奈川県",
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-96-01i",
+    "displayName": "食で楽しむ魔女（まり）",
+    "membershipStatus": "要確認",
+    "maritalStatus": "未確認",
+    "area": "埼玉県",
+    "birthplace": "埼玉県",
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_96_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/mdaidokoro/",
+        "metricType": "フォロワー数",
+        "reelsFrequency": "月1~2回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-97-wcj",
+    "displayName": "ぐっち夫婦",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "東京都",
+    "gender": "回答しない",
+    "faceVisibility": "可",
+    "hasChildren": "未確認",
+    "childrenCount": "1",
+    "childStage": [],
+    "totalFollowers": 39000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_97_1",
+        "mediaType": "Instagram",
+        "url": "https://www.instagram.com/gucci_fuufu/",
+        "metricType": "フォロワー数",
+        "reelsFrequency": "週3~5回ほど",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:58:16.559Z"
+      },
+      {
+        "id": "csv_media_97_2",
+        "mediaType": "X",
+        "url": "https://x.com/gucci_fuufu/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_97_3",
+        "mediaType": "TikTok",
+        "url": "https://www.tiktok.com/@gucci_fuufu",
+        "metricType": "フォロワー数",
+        "metricValue": 39000,
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_97_4",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@gucci_fuufu",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 4,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:58:16.559Z"
+  },
+  {
+    "id": "foodist-1776172213317-98-oof",
+    "displayName": "てぬキッチン",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "岐阜県",
+    "birthplace": "愛知県",
+    "age": 35,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "csv_media_98_1",
+        "mediaType": "X",
+        "url": "https://x.com/Tenu_Kitchen/",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      },
+      {
+        "id": "csv_media_98_2",
+        "mediaType": "YouTube",
+        "url": "https://www.youtube.com/@tenukitchen129",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:10:13.316Z"
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "id": "foodist-1776172213317-99-swv",
+    "displayName": "イェジン",
+    "membershipStatus": "要確認",
+    "maritalStatus": "既婚",
+    "area": "東京都",
+    "birthplace": "福岡県",
+    "age": 56,
+    "gender": "女性",
+    "faceVisibility": "不可",
+    "hasChildren": "未確認",
+    "childrenCount": "0",
+    "childStage": [],
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:10:13.316Z",
+    "updatedAt": "2026-04-14T13:10:13.316Z"
+  },
+  {
+    "displayName": "土井善晴",
+    "realName": "",
+    "title": "",
+    "membershipStatus": "要確認",
+    "area": "",
+    "birthplace": "",
+    "birthDate": "",
+    "gender": "",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "listIntro": "",
+    "profileText": "",
+    "avatarUrl": "",
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [
+      {
+        "id": "note_1776174151186_kgk2",
+        "noteType": "その他",
+        "content": "一汁一菜をトレンド料理ワードで取り上げた実績ありhttps://foodistnote.recipe-blog.jp/foodist-awards-2017/",
+        "updatedAt": "2026-04-14T13:42:31.186Z"
+      }
+    ],
+    "createdAt": "2026-04-14T13:42:54.862Z",
+    "updatedAt": "2026-04-14T13:42:54.862Z",
+    "id": "foodist-1776174174862-ekuf"
+  },
+  {
+    "displayName": "栗原はるみ",
+    "realName": "",
+    "title": "",
+    "membershipStatus": "なし",
+    "area": "",
+    "birthplace": "",
+    "birthDate": "",
+    "gender": "",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "listIntro": "",
+    "profileText": "",
+    "avatarUrl": "",
+    "tagIds": [],
+    "mediaAccounts": [],
+    "notes": [],
+    "createdAt": "2026-04-14T13:44:27.657Z",
+    "updatedAt": "2026-04-14T13:44:27.657Z",
+    "id": "foodist-1776174267657-fz08"
+  },
+  {
+    "displayName": "料理研究家ゆかり",
+    "realName": "",
+    "title": "",
+    "membershipStatus": "要確認",
+    "area": "",
+    "birthplace": "",
+    "birthDate": "",
+    "gender": "",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "listIntro": "",
+    "profileText": "",
+    "avatarUrl": "",
+    "totalFollowers": 1907000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "media_1776174296900_2fgr",
+        "mediaType": "YouTube",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:44:56.900Z",
+        "url": "https://www.youtube.com/@yukariskitchen3689/",
+        "accountName": "料理研究家ゆかりのおうちで簡単レシピ / Yukari's Kitchen @yukariskitchen3689 • チャンネル登録者数 174万人 • 3072 本の動画",
+        "metricValue": 1740000
+      },
+      {
+        "id": "media_1776174315102_ad32",
+        "mediaType": "ブログ",
+        "metricType": "PV",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:45:15.102Z",
+        "url": "https://www.ameba.jp/profile/ameba/tamagoland/",
+        "accountName": "料理研究家ゆかり"
+      },
+      {
+        "id": "media_1776174322711_jfwo",
+        "mediaType": "Instagram",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 3,
+        "updatedAt": "2026-04-14T13:45:22.711Z",
+        "url": " https://www.instagram.com/yukari_recipe_0506/ ",
+        "metricValue": 167000
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:46:32.368Z",
+    "updatedAt": "2026-04-14T13:46:32.368Z",
+    "id": "foodist-1776174392368-qqxl"
+  },
+  {
+    "displayName": "長谷川あかり",
+    "realName": "",
+    "title": "",
+    "membershipStatus": "要確認",
+    "area": "",
+    "birthplace": "",
+    "birthDate": "",
+    "gender": "",
+    "faceVisibility": "未設定",
+    "hasChildren": "未確認",
+    "childStage": [],
+    "listIntro": "",
+    "profileText": "",
+    "avatarUrl": "",
+    "totalFollowers": 1161000,
+    "tagIds": [],
+    "mediaAccounts": [
+      {
+        "id": "media_1776174475651_kozj",
+        "mediaType": "X",
+        "metricType": "フォロワー数",
+        "showOnDetail": true,
+        "sortOrder": 1,
+        "updatedAt": "2026-04-14T13:47:55.651Z",
+        "url": "https://x.com/akari_hasegawa",
+        "metricValue": 975000
+      },
+      {
+        "id": "media_1776174487029_n76w",
+        "mediaType": "YouTube",
+        "metricType": "チャンネル登録者数",
+        "showOnDetail": true,
+        "sortOrder": 2,
+        "updatedAt": "2026-04-14T13:48:07.029Z",
+        "url": "https://www.youtube.com/@%E9%95%B7%E8%B0%B7%E5%B7%9D%E3%81%82%E3%81%8B%E3%82%8AChannel",
+        "metricValue": 186000
+      }
+    ],
+    "notes": [],
+    "createdAt": "2026-04-14T13:48:58.835Z",
+    "updatedAt": "2026-04-14T13:48:58.835Z",
+    "id": "foodist-1776174538835-eu0l"
   }
 ];
