@@ -1,0 +1,3 @@
+id,title,name,displayName,blogUrl,blogTitle,blogPv,instagramUrl,instagramFollowers,xUrl,xFollowers,youtubeUrl,youtubeSubscribers,tiktokUrl,tiktokFollowers,area,ageGroup,gender,hasChildren,faceVisibility,avatarUrl,profileText,skills,qualifications,tags,internalNotes
+test-1,料理研究家,テスト 太郎,テスト太郎,https://example.com,テストブログ,50000,https://instagram.com/test,150000,,,,,,,東京都,30代,男性,TRUE,可,https://via.placeholder.com/150,これはテストデータから取り込まれたプロフィールです。,レシピ開発、写真撮影,調理師,簡単、男飯,これはコメントメモです。
+test-2,スイーツ専門家,甘味 花子,ハナコ,https://example.com,はなこブログ,2000,,,,,,,https://tiktok.com/@hanako,300000,神奈川県,20代,女性,FALSE,可,https://via.placeholder.com/150,スイーツの時短レシピを発信中！,Reel Production、動画出演,製菓衛生師,スイーツ、時短,若年層向けの案件に適しています。
