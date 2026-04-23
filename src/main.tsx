@@ -23,12 +23,17 @@ if (!sessionStorage.getItem('reelsUpdated_v2')) {
             
             if (freq !== undefined && freq !== "") {
                 const igAccountIndex = f.mediaAccounts.findIndex(a => a.mediaType === 'Instagram');
+                let needsUpdate = false;
+
                 if (igAccountIndex !== -1) {
-                    f.mediaAccounts[igAccountIndex] = {
-                        ...f.mediaAccounts[igAccountIndex],
-                        reelsFrequency: freq,
-                        updatedAt: new Date().toISOString()
-                    };
+                    if (f.mediaAccounts[igAccountIndex].reelsFrequency !== freq) {
+                        f.mediaAccounts[igAccountIndex] = {
+                            ...f.mediaAccounts[igAccountIndex],
+                            reelsFrequency: freq,
+                            updatedAt: new Date().toISOString()
+                        };
+                        needsUpdate = true;
+                    }
                 } else {
                     f.mediaAccounts.push({
                         id: `media_${f.id}_ig_auto`,
@@ -39,9 +44,13 @@ if (!sessionStorage.getItem('reelsUpdated_v2')) {
                         sortOrder: 2,
                         updatedAt: new Date().toISOString()
                     });
+                    needsUpdate = true;
                 }
-                updatedCount++;
-                return { ...f, updatedAt: new Date().toISOString() };
+
+                if (needsUpdate) {
+                    updatedCount++;
+                    return { ...f, updatedAt: new Date().toISOString() };
+                }
             }
             return f;
         });
@@ -49,7 +58,6 @@ if (!sessionStorage.getItem('reelsUpdated_v2')) {
         if (updatedCount > 0) {
             await replaceAllFoodists(mapped);
             console.log(`Successfully updated reels frequency for ${updatedCount} foodists!`);
-            alert(`再更新処理が完了しました！\nスペース表記揺れを吸収し、新たに ${updatedCount} 名様分の「リール投稿頻度」を修正・追加しました。\n画面をリロードすると変更が反映されます。`);
         } else {
             console.log("No new updates found.");
         }
