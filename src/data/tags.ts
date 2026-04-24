@@ -23,6 +23,7 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_q015', name: '製菓衛生師', category: '資格・専門', sortOrder: 15, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_q016', name: 'マクロビオティック関連資格', category: '資格・専門', sortOrder: 16, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_q017', name: 'キャンプインストラクター', category: '資格・専門', sortOrder: 17, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_q018', name: '調理師', category: '資格・専門', sortOrder: 18, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // 実績
