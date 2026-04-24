@@ -15,8 +15,8 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
   const CORRECT_PASSWORD = import.meta.env.VITE_APP_ACCESS_PASSWORD || 'foodist-casting-2026';
 
   useEffect(() => {
-    // セッションストレージからログイン状態を復元
-    const authStatus = sessionStorage.getItem('foodist_auth');
+    // ローカルストレージからログイン状態を復元（ブラウザを閉じても保持される）
+    const authStatus = localStorage.getItem('foodist_auth');
     if (authStatus === 'true') {
       setIsAuthenticated(true);
     } else {
@@ -28,7 +28,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
     e.preventDefault();
     if (password === CORRECT_PASSWORD) {
       setIsAuthenticated(true);
-      sessionStorage.setItem('foodist_auth', 'true');
+      localStorage.setItem('foodist_auth', 'true');
       setError(false);
     } else {
       setError(true);
@@ -59,7 +59,9 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
             <label htmlFor="access-password">Password</label>
             <input
               id="access-password"
+              name="password"
               type="password"
+              autoComplete="current-password"
               className={`auth-input ${error ? 'error' : ''}`}
               placeholder="••••••••"
               value={password}
