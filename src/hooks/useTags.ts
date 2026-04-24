@@ -9,9 +9,22 @@ const getInitialTags = (): Tag[] => {
     if (stored) {
         try {
             const parsed = JSON.parse(stored) as Tag[];
+            
+            // DEFAULT_TAGS にあって、現在の tags にないものを探して追加する（IDで判定）
+            const existingIds = new Set(parsed.map(t => t.id));
+            const missingDefaults = DEFAULT_TAGS.filter(dt => !existingIds.has(dt.id));
+            
+            let finalTags = parsed;
+            let needsUpdate = false;
+            
+            if (missingDefaults.length > 0) {
+                finalTags = [...parsed, ...missingDefaults];
+                needsUpdate = true;
+            }
+
             // 移行処理: カテゴリ名が古い場合の置換
             let migrated = false;
-            const migratedTags = parsed.map(t => {
+            const migratedTags = finalTags.map(t => {
                 let hasMigratedTag = false;
                 let newCat = t.category;
                 let newName = t.name;
@@ -43,7 +56,7 @@ const getInitialTags = (): Tag[] => {
                 return t;
             });
 
-            if (migrated) {
+            if (migrated || needsUpdate) {
                 localStorage.setItem(TAGS_KEY, JSON.stringify(migratedTags));
                 return migratedTags;
             }
