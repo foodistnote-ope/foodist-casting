@@ -9,6 +9,7 @@ import type { Foodist, MediaType } from './data/types';
 import { useTags } from './hooks/useTags';
 import { useFoodists } from './hooks/useFoodists';
 import { parseFoodistCsv } from './utils/csvParser';
+import { AuthGate } from './components/AuthGate';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -339,233 +340,235 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
+    <AuthGate>
+      <div className="app-container">
+        <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
 
-      {currentView === 'dashboard' ? (
-        <main className="main-content">
-          <header className="top-header" style={{ justifyContent: 'flex-end' }}>
-            <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              {/* 新規登録 */}
-              <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
-                + 新規登録
-              </button>
-              {/* JSONバックアップ */}
-              <button className="btn-secondary" onClick={exportToJson} title="現在のデータをJSONファイルとしてダウンロード">
-                💾 バックアップ
-              </button>
-              <label className="btn-secondary" style={{ cursor: 'pointer' }} title="JSONバックアップファイルを読み込んで復元">
-                📂 復元
-                <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleJsonImport} />
-              </label>
-              <button className="btn-secondary" onClick={() => { recalcAllFollowers(); alert('総フォロワー数を全件再集計しました。'); }}>
-                フォロワー再集計
-              </button>
-              <button className="btn-secondary" onClick={() => setIsTagSettingsOpen(true)}>
-                タグの管理
-              </button>
-            </div>
-          </header>
-
-          <div style={{ display: 'flex' }}>
-            <FilterSidebar
-              searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-              selectedAreas={selectedAreas} setSelectedAreas={setSelectedAreas}
-              selectedBirthplaces={selectedBirthplaces} setSelectedBirthplaces={setSelectedBirthplaces}
-              selectedAges={selectedAges} setSelectedAges={setSelectedAges}
-              selectedMemberships={selectedMemberships} setSelectedMemberships={setSelectedMemberships}
-              selectedMaritalStatus={selectedMaritalStatus} setSelectedMaritalStatus={setSelectedMaritalStatus}
-              selectedFaceVisibility={selectedFaceVisibility} setSelectedFaceVisibility={setSelectedFaceVisibility}
-              selectedHasChildren={selectedHasChildren} setSelectedHasChildren={setSelectedHasChildren}
-              selectedChildrenCount={selectedChildrenCount} setSelectedChildrenCount={setSelectedChildrenCount}
-              selectedChildStages={selectedChildStages} setSelectedChildStages={setSelectedChildStages}
-              selectedFollowers={selectedFollowers} setSelectedFollowers={setSelectedFollowers}
-              selectedInstagramFollowers={selectedInstagramFollowers} setSelectedInstagramFollowers={setSelectedInstagramFollowers}
-              selectedXFollowers={selectedXFollowers} setSelectedXFollowers={setSelectedXFollowers}
-              selectedTikTokFollowers={selectedTikTokFollowers} setSelectedTikTokFollowers={setSelectedTikTokFollowers}
-              selectedYouTubeFollowers={selectedYouTubeFollowers} setSelectedYouTubeFollowers={setSelectedYouTubeFollowers}
-              selectedPlatforms={selectedPlatforms} setSelectedPlatforms={setSelectedPlatforms}
-              selectedQualificationTagIds={selectedQualificationTagIds} setSelectedQualificationTagIds={setSelectedQualificationTagIds}
-              selectedAchievementTagIds={selectedAchievementTagIds} setSelectedAchievementTagIds={setSelectedAchievementTagIds}
-              selectedWorkTagIds={selectedWorkTagIds} setSelectedWorkTagIds={setSelectedWorkTagIds}
-              selectedFeatureTagIds={selectedFeatureTagIds} setSelectedFeatureTagIds={setSelectedFeatureTagIds}
-              qualificationTags={qualificationTags}
-              achievementTags={achievementTags}
-              workTags={workTags}
-              featureTags={featureTags}
-            />
-
-            <div className="content-pad" style={{ flex: 1 }}>
-              <div className="search-overview">
-                <p>
-                  {isFiltered
-                    ? `${filteredFoodists.length}件のフーディストが見つかりました`
-                    : `全${foodists.length}件のフーディスト`}
-                </p>
+        {currentView === 'dashboard' ? (
+          <main className="main-content">
+            <header className="top-header" style={{ justifyContent: 'flex-end' }}>
+              <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                {/* 新規登録 */}
+                <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
+                  + 新規登録
+                </button>
+                {/* JSONバックアップ */}
+                <button className="btn-secondary" onClick={exportToJson} title="現在のデータをJSONファイルとしてダウンロード">
+                  💾 バックアップ
+                </button>
+                <label className="btn-secondary" style={{ cursor: 'pointer' }} title="JSONバックアップファイルを読み込んで復元">
+                  📂 復元
+                  <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleJsonImport} />
+                </label>
+                <button className="btn-secondary" onClick={() => { recalcAllFollowers(); alert('総フォロワー数を全件再集計しました。'); }}>
+                  フォロワー再集計
+                </button>
+                <button className="btn-secondary" onClick={() => setIsTagSettingsOpen(true)}>
+                  タグの管理
+                </button>
               </div>
+            </header>
 
-              {filteredFoodists.length > 0 ? (
-                <div className="foodist-grid">
-                  {filteredFoodists.map(foodist => {
-                    // 表示するタグ（最大8件、active=true 優先）
-                    const cardTags = foodist.tagIds
-                      .map(id => tagMap.get(id))
-                      .filter((t): t is NonNullable<typeof t> => t != null)
-                      .slice(0, 8);
+            <div style={{ display: 'flex' }}>
+              <FilterSidebar
+                searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+                selectedAreas={selectedAreas} setSelectedAreas={setSelectedAreas}
+                selectedBirthplaces={selectedBirthplaces} setSelectedBirthplaces={setSelectedBirthplaces}
+                selectedAges={selectedAges} setSelectedAges={setSelectedAges}
+                selectedMemberships={selectedMemberships} setSelectedMemberships={setSelectedMemberships}
+                selectedMaritalStatus={selectedMaritalStatus} setSelectedMaritalStatus={setSelectedMaritalStatus}
+                selectedFaceVisibility={selectedFaceVisibility} setSelectedFaceVisibility={setSelectedFaceVisibility}
+                selectedHasChildren={selectedHasChildren} setSelectedHasChildren={setSelectedHasChildren}
+                selectedChildrenCount={selectedChildrenCount} setSelectedChildrenCount={setSelectedChildrenCount}
+                selectedChildStages={selectedChildStages} setSelectedChildStages={setSelectedChildStages}
+                selectedFollowers={selectedFollowers} setSelectedFollowers={setSelectedFollowers}
+                selectedInstagramFollowers={selectedInstagramFollowers} setSelectedInstagramFollowers={setSelectedInstagramFollowers}
+                selectedXFollowers={selectedXFollowers} setSelectedXFollowers={setSelectedXFollowers}
+                selectedTikTokFollowers={selectedTikTokFollowers} setSelectedTikTokFollowers={setSelectedTikTokFollowers}
+                selectedYouTubeFollowers={selectedYouTubeFollowers} setSelectedYouTubeFollowers={setSelectedYouTubeFollowers}
+                selectedPlatforms={selectedPlatforms} setSelectedPlatforms={setSelectedPlatforms}
+                selectedQualificationTagIds={selectedQualificationTagIds} setSelectedQualificationTagIds={setSelectedQualificationTagIds}
+                selectedAchievementTagIds={selectedAchievementTagIds} setSelectedAchievementTagIds={setSelectedAchievementTagIds}
+                selectedWorkTagIds={selectedWorkTagIds} setSelectedWorkTagIds={setSelectedWorkTagIds}
+                selectedFeatureTagIds={selectedFeatureTagIds} setSelectedFeatureTagIds={setSelectedFeatureTagIds}
+                qualificationTags={qualificationTags}
+                achievementTags={achievementTags}
+                workTags={workTags}
+                featureTags={featureTags}
+              />
 
-                    // 媒体リンク（showOnDetail=true、主要SNSのみ）
-                    const cardMedia = foodist.mediaAccounts
-                      .filter(a => a.url && ['Instagram', 'X', 'YouTube', 'TikTok', 'ブログ'].includes(a.mediaType) && a.showOnDetail)
-                      .sort((a, b) => a.sortOrder - b.sortOrder)
-                      .slice(0, 5);
+              <div className="content-pad" style={{ flex: 1 }}>
+                <div className="search-overview">
+                  <p>
+                    {isFiltered
+                      ? `${filteredFoodists.length}件のフーディストが見つかりました`
+                      : `全${foodists.length}件のフーディスト`}
+                  </p>
+                </div>
 
-                    return (
-                      <div key={foodist.id} className="foodist-card" onClick={() => setSelectedFoodist(foodist)}>
-                        <div className="card-top-decoration"></div>
-                        <div className="card-content">
-                          <div className="card-main-info">
-                            <img src={foodist.avatarUrl || '/no-image.png'} alt={foodist.displayName} className="card-avatar" />
-                            <div className="card-header">
-                              <h3 className="foodist-name">{foodist.displayName}</h3>
-                              <span className="foodist-title">{foodist.title || '（肩書き未設定）'}</span>
-                            </div>
-                          </div>
+                {filteredFoodists.length > 0 ? (
+                  <div className="foodist-grid">
+                    {filteredFoodists.map(foodist => {
+                      // 表示するタグ（最大8件、active=true 優先）
+                      const cardTags = foodist.tagIds
+                        .map(id => tagMap.get(id))
+                        .filter((t): t is NonNullable<typeof t> => t != null)
+                        .slice(0, 8);
 
-                          <div className="card-details">
-                            <p className="card-notes">{foodist.listIntro || foodist.profileText || '（紹介文未設定）'}</p>
+                      // 媒体リンク（showOnDetail=true、主要SNSのみ）
+                      const cardMedia = foodist.mediaAccounts
+                        .filter(a => a.url && ['Instagram', 'X', 'YouTube', 'TikTok', 'ブログ'].includes(a.mediaType) && a.showOnDetail)
+                        .sort((a, b) => a.sortOrder - b.sortOrder)
+                        .slice(0, 5);
 
-                            <div className="card-stats">
-                              <span className="stat-label">総フォロワー:</span>
-                              <span className="stat-value">{foodist.totalFollowers ? foodist.totalFollowers.toLocaleString() : '未設定'}</span>
-                            </div>
-
-                            {cardMedia.length > 0 && (
-                              <div className="card-sns">
-                                {cardMedia.map(acc => (
-                                  <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.mediaType} onClick={e => e.stopPropagation()}>
-                                    <img
-                                      src={CARD_SNS_ICONS[acc.mediaType] || CARD_SNS_ICONS['ブログ']}
-                                      alt={acc.mediaType}
-                                      className="sns-icon-img"
-                                      style={acc.mediaType === 'X' ? { filter: 'invert(1)' } : undefined}
-                                    />
-                                  </a>
-                                ))}
+                      return (
+                        <div key={foodist.id} className="foodist-card" onClick={() => setSelectedFoodist(foodist)}>
+                          <div className="card-top-decoration"></div>
+                          <div className="card-content">
+                            <div className="card-main-info">
+                              <img src={foodist.avatarUrl || '/no-image.png'} alt={foodist.displayName} className="card-avatar" />
+                              <div className="card-header">
+                                <h3 className="foodist-name">{foodist.displayName}</h3>
+                                <span className="foodist-title">{foodist.title || '（肩書き未設定）'}</span>
                               </div>
-                            )}
+                            </div>
 
-                            {cardTags.length > 0 && (
-                              <div className="card-tags">
-                                {cardTags.map(tag => (
-                                  <span
-                                    key={tag.id}
-                                    className={`tag ${[...selectedQualificationTagIds, ...selectedAchievementTagIds, ...selectedWorkTagIds, ...selectedFeatureTagIds].includes(tag.id) ? 'tag-selected' : ''}`}
-                                    onClick={e => {
-                                      e.stopPropagation();
-                                      if (tag.category === '資格・専門') {
-                                        setSelectedQualificationTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                      } else if (tag.category === '実績') {
-                                        setSelectedAchievementTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                      } else if (tag.category === '対応可能業務') {
-                                        setSelectedWorkTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                      } else {
-                                        setSelectedFeatureTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                      }
-                                    }}
-                                    style={{ cursor: 'pointer' }}
-                                    title={tag.category}
-                                  >
-                                    {tag.name}
-                                  </span>
-                                ))}
+                            <div className="card-details">
+                              <p className="card-notes">{foodist.listIntro || foodist.profileText || '（紹介文未設定）'}</p>
+
+                              <div className="card-stats">
+                                <span className="stat-label">総フォロワー:</span>
+                                <span className="stat-value">{foodist.totalFollowers ? foodist.totalFollowers.toLocaleString() : '未設定'}</span>
                               </div>
-                            )}
+
+                              {cardMedia.length > 0 && (
+                                <div className="card-sns">
+                                  {cardMedia.map(acc => (
+                                    <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.mediaType} onClick={e => e.stopPropagation()}>
+                                      <img
+                                        src={CARD_SNS_ICONS[acc.mediaType] || CARD_SNS_ICONS['ブログ']}
+                                        alt={acc.mediaType}
+                                        className="sns-icon-img"
+                                        style={acc.mediaType === 'X' ? { filter: 'invert(1)' } : undefined}
+                                      />
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+
+                              {cardTags.length > 0 && (
+                                <div className="card-tags">
+                                  {cardTags.map(tag => (
+                                    <span
+                                      key={tag.id}
+                                      className={`tag ${[...selectedQualificationTagIds, ...selectedAchievementTagIds, ...selectedWorkTagIds, ...selectedFeatureTagIds].includes(tag.id) ? 'tag-selected' : ''}`}
+                                      onClick={e => {
+                                        e.stopPropagation();
+                                        if (tag.category === '資格・専門') {
+                                          setSelectedQualificationTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                        } else if (tag.category === '実績') {
+                                          setSelectedAchievementTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                        } else if (tag.category === '対応可能業務') {
+                                          setSelectedWorkTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                        } else {
+                                          setSelectedFeatureTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                        }
+                                      }}
+                                      style={{ cursor: 'pointer' }}
+                                      title={tag.category}
+                                    >
+                                      {tag.name}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="empty-state">
-                  <p>条件に一致するフーディストが見つかりませんでした。</p>
-                  <button className="btn-text" onClick={handleResetFilters}>条件をクリアする</button>
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="empty-state">
+                    <p>条件に一致するフーディストが見つかりませんでした。</p>
+                    <button className="btn-text" onClick={handleResetFilters}>条件をクリアする</button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </main>
-      ) : (
-        <DatabaseView
-          foodists={foodists}
-          onEdit={f => { setEditingFoodist(f); setIsEditModalOpen(true); }}
-          onAdd={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}
-          onDelete={(id) => {
-            const f = foodists.find(x => x.id === id);
-            if (f) handleDelete(id, f.displayName);
-          }}
-          onImport={handleCsvImport}
-          isImporting={isImportingCsv}
-        />
-      )}
+          </main>
+        ) : (
+          <DatabaseView
+            foodists={foodists}
+            onEdit={f => { setEditingFoodist(f); setIsEditModalOpen(true); }}
+            onAdd={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}
+            onDelete={(id) => {
+              const f = foodists.find(x => x.id === id);
+              if (f) handleDelete(id, f.displayName);
+            }}
+            onImport={handleCsvImport}
+            isImporting={isImportingCsv}
+          />
+        )}
 
-      {/* 詳細モーダル */}
-      {selectedFoodist && (
-        <ProfileModal
-          foodist={selectedFoodist}
-          allTags={tags}
-          onClose={() => setSelectedFoodist(null)}
-          onTagClick={tagId => {
-            const tag = tagMap.get(tagId);
-            if (!tag) return;
-            if (tag.category === '資格・専門') setSelectedQualificationTagIds(prev => [...prev, tagId]);
-            else if (tag.category === '実績') setSelectedAchievementTagIds(prev => [...prev, tagId]);
-            else if (tag.category === '対応可能業務') setSelectedWorkTagIds(prev => [...prev, tagId]);
-            else setSelectedFeatureTagIds(prev => [...prev, tagId]);
-            setSelectedFoodist(null);
-          }}
-          onEditClick={() => {
-            setEditingFoodist(selectedFoodist);
-            setSelectedFoodist(null);
-            setIsEditModalOpen(true);
-          }}
-        />
-      )}
+        {/* 詳細モーダル */}
+        {selectedFoodist && (
+          <ProfileModal
+            foodist={selectedFoodist}
+            allTags={tags}
+            onClose={() => setSelectedFoodist(null)}
+            onTagClick={tagId => {
+              const tag = tagMap.get(tagId);
+              if (!tag) return;
+              if (tag.category === '資格・専門') setSelectedQualificationTagIds(prev => [...prev, tagId]);
+              else if (tag.category === '実績') setSelectedAchievementTagIds(prev => [...prev, tagId]);
+              else if (tag.category === '対応可能業務') setSelectedWorkTagIds(prev => [...prev, tagId]);
+              else setSelectedFeatureTagIds(prev => [...prev, tagId]);
+              setSelectedFoodist(null);
+            }}
+            onEditClick={() => {
+              setEditingFoodist(selectedFoodist);
+              setSelectedFoodist(null);
+              setIsEditModalOpen(true);
+            }}
+          />
+        )}
 
-      {/* タグ管理モーダル */}
-      {isTagSettingsOpen && (
-        <TagSettingsModal
-          tags={tags}
-          addTag={addTag}
-          removeTag={removeTag}
-          toggleTagActive={toggleTagActive}
-          deactivateTag={deactivateTag}
-          onMerge={(sourceId, targetId) => {
-            deactivateTag(sourceId);
-            replaceTagInAll(sourceId, targetId);
-          }}
-          onClose={() => setIsTagSettingsOpen(false)}
-        />
-      )}
+        {/* タグ管理モーダル */}
+        {isTagSettingsOpen && (
+          <TagSettingsModal
+            tags={tags}
+            addTag={addTag}
+            removeTag={removeTag}
+            toggleTagActive={toggleTagActive}
+            deactivateTag={deactivateTag}
+            onMerge={(sourceId, targetId) => {
+              deactivateTag(sourceId);
+              replaceTagInAll(sourceId, targetId);
+            }}
+            onClose={() => setIsTagSettingsOpen(false)}
+          />
+        )}
 
-      {/* 編集モーダル */}
-      {isEditModalOpen && (
-        <FoodistEditModal
-          foodist={editingFoodist}
-          allTags={tags}
-          onClose={() => { setIsEditModalOpen(false); setEditingFoodist(null); }}
-          onSave={data => {
-            if ('id' in data) {
-              updateFoodist(data as Foodist);
-            } else {
-              addFoodist(data);
-            }
-            setIsEditModalOpen(false);
-            setEditingFoodist(null);
-          }}
-        />
-      )}
-    </div>
+        {/* 編集モーダル */}
+        {isEditModalOpen && (
+          <FoodistEditModal
+            foodist={editingFoodist}
+            allTags={tags}
+            onClose={() => { setIsEditModalOpen(false); setEditingFoodist(null); }}
+            onSave={data => {
+              if ('id' in data) {
+                updateFoodist(data as Foodist);
+              } else {
+                addFoodist(data);
+              }
+              setIsEditModalOpen(false);
+              setEditingFoodist(null);
+            }}
+          />
+        )}
+      </div>
+    </AuthGate>
   );
 }
 
