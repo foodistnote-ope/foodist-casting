@@ -349,6 +349,7 @@ function App() {
     setSelectedGenders([]);
   };
 
+  /*
   // ---- データ移行: 動画関連タグの統合 ----
   useEffect(() => {
     if (loading || foodists.length === 0) return;
@@ -366,6 +367,7 @@ function App() {
     localStorage.setItem(MIGRATION_KEY, 'done');
     console.info('[App] 動画関連タグの統合（v4）が完了しました');
   }, [loading, foodists, batchReplaceTags]);
+  */
 
   // ---- URLベースのディープリンク ----
   // フーディストがロードされたらURLパラメータをチェックし、对象のモーダルを自動で開く
