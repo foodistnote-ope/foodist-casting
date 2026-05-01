@@ -70,8 +70,6 @@ function App() {
   const alcoholTags = getSearchableTags('飲酒について');
   const featureTags = useMemo(() => [
     ...getSearchableTags('得意な料理ジャンル'),
-    ...getSearchableTags('よく発信しているテーマ'),
-    ...getSearchableTags('ターゲット適性'),
   ], [tags]);
 
   // CSV インポート処理
