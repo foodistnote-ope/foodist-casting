@@ -123,7 +123,7 @@ export const useFoodists = () => {
             totalFollowers: calcTotalFollowers(f.mediaAccounts),
             updatedAt: now,
         }));
-        _applyAndSave(recalced, () => replaceAllFoodists(recalced));
+        _applyAndSave(recalced, () => putManyFoodists(recalced));
     }, [foodists, _applyAndSave]);
 
     /** タグ統合後に全フーディストの tagIds を置換する */
@@ -135,7 +135,7 @@ export const useFoodists = () => {
                 .concat(f.tagIds.includes(targetTagId) ? [] : [targetTagId]);
             return { ...f, tagIds: newTagIds, updatedAt: new Date().toISOString() };
         });
-        _applyAndSave(updated, () => replaceAllFoodists(updated));
+        _applyAndSave(updated, () => putManyFoodists(updated));
     }, [foodists, _applyAndSave]);
 
     /** 複数のタグペアを一括置換する */
@@ -158,7 +158,7 @@ export const useFoodists = () => {
             if (!changed) return f;
             return { ...f, tagIds: currentTagIds, updatedAt: now };
         });
-        _applyAndSave(updated, () => replaceAllFoodists(updated));
+        _applyAndSave(updated, () => putManyFoodists(updated));
     }, [foodists, _applyAndSave]);
 
     // ---- JSON エクスポート ----
@@ -351,7 +351,7 @@ export const useFoodists = () => {
         }
 
         if (updatedCount > 0) {
-            _applyAndSave(newList, () => replaceAllFoodists(newList));
+            _applyAndSave(newList, () => putManyFoodists(newList));
         }
 
         return { updated: updatedCount, notFound };
