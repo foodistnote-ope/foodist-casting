@@ -51,6 +51,7 @@ function App() {
   const [selectedFeatureTagIds, setSelectedFeatureTagIds] = useState<string[]>([]);
   const [selectedAlcoholTagIds, setSelectedAlcoholTagIds] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
 
   // ---- モーダル状態 ----
   const [selectedFoodist, setSelectedFoodist] = useState<Foodist | null>(null);
@@ -206,6 +207,9 @@ function App() {
       // 4. 年代
       if (selectedAges.length > 0 && !selectedAges.includes(f.ageGroup || '')) return false;
 
+      // 4.5 性別
+      if (selectedGenders.length > 0 && !selectedGenders.includes(f.gender || '')) return false;
+
       // 5. フーディスト会員登録状況
       if (selectedMemberships.length > 0 && !selectedMemberships.includes(f.membershipStatus)) return false;
 
@@ -317,7 +321,7 @@ function App() {
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
     selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    selectedAlcoholTagIds,
+    selectedAlcoholTagIds, selectedGenders,
   ]);
 
   const handleResetFilters = () => {
@@ -342,6 +346,7 @@ function App() {
     setSelectedWorkTagIds([]);
     setSelectedFeatureTagIds([]);
     setSelectedAlcoholTagIds([]);
+    setSelectedGenders([]);
   };
 
   // ---- データ移行: 動画関連タグの統合 ----
@@ -397,7 +402,7 @@ function App() {
     selectedChildStages, selectedFollowers, selectedInstagramFollowers,
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    selectedAlcoholTagIds,
+    selectedAlcoholTagIds, selectedGenders,
   ].some(a => a.length > 0);
 
   // SNSフォロワーフィルターのアクティブなプラットフォームを特定し、そのフォロワー数で降順ソート
@@ -505,6 +510,7 @@ function App() {
                 selectedWorkTagIds={selectedWorkTagIds} setSelectedWorkTagIds={setSelectedWorkTagIds}
                 selectedFeatureTagIds={selectedFeatureTagIds} setSelectedFeatureTagIds={setSelectedFeatureTagIds}
                 selectedAlcoholTagIds={selectedAlcoholTagIds} setSelectedAlcoholTagIds={setSelectedAlcoholTagIds}
+                selectedGenders={selectedGenders} setSelectedGenders={setSelectedGenders}
                 qualificationTags={qualificationTags}
                 achievementTags={achievementTags}
                 workTags={workTags}
