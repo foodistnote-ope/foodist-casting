@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Tag } from '../data/types';
+import { GENDER_OPTIONS } from '../data/types';
 import './FilterSidebar.css';
 
 interface FilterSidebarProps {
@@ -35,6 +36,8 @@ interface FilterSidebarProps {
     setSelectedXFollowers: (v: string[]) => void;
     selectedPlatforms: string[];
     setSelectedPlatforms: (v: string[]) => void;
+    selectedGenders: string[];
+    setSelectedGenders: (v: string[]) => void;
     // タグカテゴリ別選択済みIDリスト
     selectedQualificationTagIds: string[];
     setSelectedQualificationTagIds: (v: string[]) => void;
@@ -162,6 +165,7 @@ export const FilterSidebar = ({
     selectedTikTokFollowers, setSelectedTikTokFollowers,
     selectedYouTubeFollowers, setSelectedYouTubeFollowers,
     selectedPlatforms, setSelectedPlatforms,
+    selectedGenders, setSelectedGenders,
     selectedQualificationTagIds, setSelectedQualificationTagIds,
     selectedAchievementTagIds, setSelectedAchievementTagIds,
     selectedWorkTagIds, setSelectedWorkTagIds,
@@ -191,6 +195,7 @@ export const FilterSidebar = ({
         setSelectedTikTokFollowers([]);
         setSelectedYouTubeFollowers([]);
         setSelectedPlatforms([]);
+        setSelectedGenders([]);
         setSelectedQualificationTagIds([]);
         setSelectedAchievementTagIds([]);
         setSelectedWorkTagIds([]);
@@ -202,7 +207,7 @@ export const FilterSidebar = ({
         selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
         selectedChildStages, selectedFollowers, selectedInstagramFollowers,
         selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
-        selectedPlatforms,
+        selectedPlatforms, selectedGenders,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
 
@@ -267,6 +272,11 @@ export const FilterSidebar = ({
             {/* 年代 */}
             <FilterSection title="年代" badge={selectedAges.length}>
                 <CheckList items={AGE_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedAges} onToggle={v => toggle(v, selectedAges, setSelectedAges)} />
+            </FilterSection>
+
+            {/* 性別 */}
+            <FilterSection title="性別" badge={selectedGenders.length}>
+                <CheckList items={GENDER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedGenders} onToggle={v => toggle(v, selectedGenders, setSelectedGenders)} />
             </FilterSection>
 
             {/* フーディスト会員登録状況 */}
