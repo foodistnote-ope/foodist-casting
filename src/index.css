@@ -112,7 +112,13 @@ ol {
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-base);
   font-weight: 600;
+  font-size: 0.875rem;
+  font-family: inherit;
   transition: background-color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
 }
 
 .btn-primary:hover {
@@ -126,8 +132,13 @@ ol {
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-base);
   font-weight: 600;
+  font-size: 0.875rem;
+  font-family: inherit;
   transition: all var(--transition-fast);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
   cursor: pointer;
 }
 
