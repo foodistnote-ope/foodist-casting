@@ -86,11 +86,13 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                                 <h2 className="modal-name">{foodist.displayName}</h2>
                                 <span className="modal-title">{val(foodist.title)}</span>
                             </div>
-                            {onEditClick && (
-                                <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.85rem', flexShrink: 0 }} onClick={onEditClick}>
-                                    情報を編集する
-                                </button>
-                            )}
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                {onEditClick && (
+                                    <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.85rem', flexShrink: 0 }} onClick={onEditClick}>
+                                        情報を編集する
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {/* 総フォロワー数 */}
@@ -216,6 +218,11 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                 </div>
 
                 <div className="modal-footer">
+                    {onEditClick && (
+                        <button className="btn-secondary" onClick={onEditClick}>
+                            情報を編集する
+                        </button>
+                    )}
                     <button className="btn-secondary" onClick={onClose}>閉じる</button>
                 </div>
             </div>

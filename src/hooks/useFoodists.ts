@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Foodist, MediaAccount } from '../data/types';
+import type { FoodistPatch } from '../utils/csvParser';
 import { calcTotalFollowers } from '../data/types';
 import { initialFoodists } from '../data/initialFoodists';
 import {
@@ -9,109 +10,7 @@ import {
     putManyFoodists,
     replaceAllFoodists,
     deleteFoodistById,
-} from '../data/db';
-
-// ============================================================
-// localStorage 旧キー（移行後は読み取りのみ・書き込みなし）
-// ============================================================
-const LS_MAIN_KEY = 'foodist_mgmt_data_v2';
-const LS_V1_KEY   = 'foodist_management_data';
-
-// ============================================================
-// 旧フォーマット（v1）→ 新フォーマット（v2）マイグレーション
-// ============================================================
-const migrateFromV1 = (raw: Record<string, unknown>): Foodist => {
-    const now = new Date().toISOString();
-    const accounts: MediaAccount[] = [];
-    let sort = 1;
-
-    if (raw.blogUrl || raw.blogTitle) {
-        accounts.push({ id: `media_${raw.id}_blog`, mediaType: 'ブログ', accountName: (raw.blogTitle as string) || undefined, url: (raw.blogUrl as string) || undefined, metricType: 'PV', metricValue: (raw.blogPv as number) || undefined, showOnDetail: true, sortOrder: sort++, updatedAt: now });
-    }
-    if (raw.instagramUrl) {
-        accounts.push({ id: `media_${raw.id}_ig`, mediaType: 'Instagram', url: raw.instagramUrl as string, metricType: 'フォロワー数', metricValue: (raw.instagramFollowers as number) || undefined, showOnDetail: true, sortOrder: sort++, updatedAt: now });
-    }
-    if (raw.xUrl) {
-        accounts.push({ id: `media_${raw.id}_x`, mediaType: 'X', url: raw.xUrl as string, metricType: 'フォロワー数', metricValue: (raw.xFollowers as number) || undefined, showOnDetail: true, sortOrder: sort++, updatedAt: now });
-    }
-    if (raw.youtubeUrl) {
-        accounts.push({ id: `media_${raw.id}_yt`, mediaType: 'YouTube', accountName: (raw.youtubeTitle as string) || undefined, url: raw.youtubeUrl as string, metricType: 'チャンネル登録者数', metricValue: (raw.youtubeSubscribers as number) || undefined, showOnDetail: true, sortOrder: sort++, updatedAt: now });
-    }
-    if (raw.tiktokUrl) {
-        accounts.push({ id: `media_${raw.id}_tt`, mediaType: 'TikTok', url: raw.tiktokUrl as string, metricType: 'フォロワー数', metricValue: (raw.tiktokFollowers as number) || undefined, showOnDetail: true, sortOrder: sort++, updatedAt: now });
-    }
-    if (raw.noteUrl) {
-        accounts.push({ id: `media_${raw.id}_note`, mediaType: 'ブログ', accountName: 'note', url: raw.noteUrl as string, metricType: 'なし', showOnDetail: true, sortOrder: sort++, updatedAt: now });
-    }
-
-    const notes = raw.internalNotes ? [{ id: `note_${raw.id}_1`, noteType: 'その他' as const, content: raw.internalNotes as string, updatedAt: now }] : [];
-    const hasChild = raw.hasChildren;
-    let hasChildNorm: Foodist['hasChildren'] = '未確認';
-    if (hasChild === true || hasChild === 'あり') hasChildNorm = 'あり';
-    else if (hasChild === false || hasChild === 'なし') hasChildNorm = 'なし';
-    else if (hasChild === '非公開') hasChildNorm = '非公開';
-
-    return {
-        id: raw.id as string,
-        displayName: (raw.displayName as string) || (raw.name as string) || '（名前なし）',
-        realName: (raw.name as string) || undefined,
-        title: (raw.title as string) || undefined,
-        membershipStatus: '要確認',
-        area: (raw.area as string) || undefined,
-        birthplace: (raw.birthplace as string) || undefined,
-        birthDate: undefined, age: undefined,
-        ageGroup: (raw.ageGroup as Foodist['ageGroup']) || undefined,
-        gender: (raw.gender as string) || undefined,
-        faceVisibility: (raw.faceVisibility as Foodist['faceVisibility']) || '可',
-        hasChildren: hasChildNorm,
-        childrenCount: raw.childrenCount != null ? String(raw.childrenCount) : undefined,
-        childStage: [],
-        listIntro: (raw.internalNotes as string) || undefined,
-        profileText: (raw.profileText as string) || undefined,
-        avatarUrl: (raw.avatarUrl as string) || undefined,
-        totalFollowers: calcTotalFollowers(accounts),
-        tagIds: [],
-        mediaAccounts: accounts,
-        notes,
-        createdAt: now,
-        updatedAt: now,
-    };
-};
-
-/** ============================================================
- * localStorage の既存データを読み取るユーティリティ
- * ============================================================ */
-const readFromLocalStorage = (): Foodist[] | null => {
-    // v2 形式を優先
-    try {
-        const raw = localStorage.getItem(LS_MAIN_KEY);
-        if (raw) {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed as Foodist[];
-        }
-    } catch { /* fall through */ }
-
-    // v1 形式をマイグレーション
-    try {
-        const raw = localStorage.getItem(LS_V1_KEY);
-        if (raw) {
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-                return (parsed as Record<string, unknown>[]).map(migrateFromV1);
-            }
-        }
-    } catch { /* fall through */ }
-
-    return null;
-};
-
-/** localStorage の旧データを削除して移行完了を記録 */
-const clearLocalStorage = () => {
-    try { localStorage.removeItem(LS_MAIN_KEY); } catch { /* ignore */ }
-    try { localStorage.removeItem(LS_V1_KEY); } catch { /* ignore */ }
-    // 移行済みフラグを立てる（再度初期化されないようにするための保険）
-    try { localStorage.setItem('foodist_migrated_to_idb', '1'); } catch { /* ignore */ }
-};
+} from '../lib/supabaseDb';
 
 /** ============================================================
  * フック本体
@@ -128,35 +27,35 @@ export const useFoodists = () => {
                 const count = await countFoodists();
 
                 if (count > 0) {
-                    // IndexedDB にデータがある → そのまま読み込む
+                    // Supabase にデータがある → 読み込む
                     const data = await getAllFoodists();
-                    console.info(`[useFoodists] IndexedDB から ${data.length} 件読み込みました`);
+                    console.info(`[useFoodists] Supabase から ${data.length} 件読み込みました`);
                     setFoodistsState(data);
                     return;
                 }
 
-                // IndexedDB が空 → localStorage からの移行を試みる
-                const lsData = readFromLocalStorage();
-                if (lsData && lsData.length > 0) {
-                    await putManyFoodists(lsData);
-                    clearLocalStorage();
-                    console.info(`[useFoodists] localStorage から ${lsData.length} 件を IndexedDB へ移行しました`);
-                    setFoodistsState(lsData);
-                    return;
-                }
+                // Supabase が空 → 初期シードを挿入
+                const seeded = initialFoodists.map(f => {
+                    const note = f.notes.find(n => n.content.includes('お酒'));
+                    if (!note) return f;
+                    let tid = '';
+                    if (note.content.includes('PR企画には対応可能')) tid = 'tag_al03';
+                    else if (note.content.includes('お酒を飲む')) tid = 'tag_al01';
+                    else if (note.content.includes('お酒を飲まない')) tid = 'tag_al02';
 
-                // どこにもデータがない → 初期シードを挿入
-                await putManyFoodists(initialFoodists);
-                console.info(`[useFoodists] 初期データ ${initialFoodists.length} 件を IndexedDB に登録しました`);
-                setFoodistsState(initialFoodists);
+                    if (tid && !f.tagIds.includes(tid)) return { ...f, tagIds: [...f.tagIds, tid] };
+                    return f;
+                });
+                await putManyFoodists(seeded);
+                console.info(`[useFoodists] 初期データ ${seeded.length} 件を Supabase に登録しました`);
+                setFoodistsState(seeded);
 
             } catch (e) {
                 const msg = e instanceof Error ? e.message : String(e);
                 console.error('[useFoodists] 初期化に失敗しました', e);
                 setError(msg);
-                // フォールバック: localStorage から直接読む（最終手段）
-                const fallback = readFromLocalStorage() ?? initialFoodists;
-                setFoodistsState(fallback);
+                // フォールバック: 初期データをそのまま表示
+                setFoodistsState(initialFoodists);
             } finally {
                 setLoading(false);
             }
@@ -165,12 +64,12 @@ export const useFoodists = () => {
         init();
     }, []);
 
-    // ---- 内部ヘルパー: 状態更新 + IndexedDB 書き込み ----
-    /** 渡した配列でメモリ上の状態を即時更新し、DBにも非同期で書き込む */
+    // ---- 内部ヘルパー: 状態更新 + Supabase 書き込み ----
+    /** 渡した配列でメモリ上の状態を即時更新し、Supabaseにも非同期で書き込む */
     const _applyAndSave = useCallback((newList: Foodist[], dbOp: () => Promise<void>) => {
         setFoodistsState(newList);
         dbOp().catch(e => {
-            console.error('[useFoodists] IndexedDB への書き込みに失敗しました', e);
+            console.error('[useFoodists] Supabase への書き込みに失敗しました', e);
         });
     }, []);
 
@@ -239,6 +138,29 @@ export const useFoodists = () => {
         _applyAndSave(updated, () => replaceAllFoodists(updated));
     }, [foodists, _applyAndSave]);
 
+    /** 複数のタグペアを一括置換する */
+    const batchReplaceTags = useCallback((replacements: { source: string; target: string }[]) => {
+        const now = new Date().toISOString();
+        const updated = foodists.map(f => {
+            let currentTagIds = [...f.tagIds];
+            let changed = false;
+
+            replacements.forEach(({ source, target }) => {
+                if (currentTagIds.includes(source)) {
+                    currentTagIds = currentTagIds.filter(id => id !== source);
+                    if (!currentTagIds.includes(target)) {
+                        currentTagIds.push(target);
+                    }
+                    changed = true;
+                }
+            });
+
+            if (!changed) return f;
+            return { ...f, tagIds: currentTagIds, updatedAt: now };
+        });
+        _applyAndSave(updated, () => replaceAllFoodists(updated));
+    }, [foodists, _applyAndSave]);
+
     // ---- JSON エクスポート ----
     const exportToJson = useCallback(() => {
         const payload = {
@@ -258,22 +180,53 @@ export const useFoodists = () => {
     }, [foodists]);
 
     // ---- インポート / マージ ----
-    const mergeFoodists = useCallback(async (incoming: Foodist[]): Promise<{ added: number; skipped: number }> => {
-        const existingIds = new Set(foodists.map(f => f.id));
-        const toAdd = incoming.filter(f => !existingIds.has(f.id));
-        const skipped = incoming.length - toAdd.length;
+    /**
+     * フーディスト配列を現在のデータに統合する（復元・インポートで使用）
+     * - ID または 活動名 が一致する場合：既存レコードを新しい内容で上書き（更新）
+     * - 一致しない場合：新規追加
+     */
+    const mergeFoodists = useCallback(async (incoming: Foodist[]): Promise<{ added: number; updated: number }> => {
+        const newList = [...foodists];
+        const idIndex = new Map(foodists.map((f, i) => [f.id, i]));
+        const nameIndex = new Map(foodists.map((f, i) => [f.displayName, i]));
 
-        if (toAdd.length > 0) {
-            const merged = [...foodists, ...toAdd];
-            setFoodistsState(merged);
-            await putManyFoodists(toAdd);
+        let added = 0;
+        let updated = 0;
+        const toSave: Foodist[] = [];
+
+        for (const item of incoming) {
+            // マッチングロジック: ID優先、次に活動名
+            let idx = idIndex.get(item.id);
+            if (idx === undefined) {
+                idx = nameIndex.get(item.displayName);
+            }
+
+            if (idx !== undefined) {
+                // 既存あり → 更新
+                // 元のIDを維持しつつ中身を上書き
+                const existing = newList[idx];
+                const updatedItem = { ...item, id: existing.id };
+                newList[idx] = updatedItem;
+                updated++;
+                toSave.push(updatedItem);
+            } else {
+                // 新規追加
+                newList.push(item);
+                added++;
+                toSave.push(item);
+            }
         }
 
-        return { added: toAdd.length, skipped };
+        if (toSave.length > 0) {
+            setFoodistsState(newList);
+            await putManyFoodists(toSave);
+        }
+
+        return { added, updated };
     }, [foodists]);
 
     // ---- JSON インポート ----
-    const importFromJson = useCallback((file: File, mode: 'merge' | 'overwrite' = 'merge'): Promise<{ added: number; skipped: number }> => {
+    const importFromJson = useCallback((file: File, mode: 'merge' | 'overwrite' = 'merge'): Promise<{ added: number; updated: number; skipped: number }> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = async (e) => {
@@ -285,17 +238,13 @@ export const useFoodists = () => {
                     if (mode === 'overwrite') {
                         await replaceAllFoodists(incoming);
                         setFoodistsState(incoming);
-                        resolve({ added: incoming.length, skipped: 0 });
+                        resolve({ added: incoming.length, updated: 0, skipped: 0 });
                         return;
                     }
 
-                    // merge: 既存 ID はスキップ
-                    const existingIds = new Set(foodists.map(f => f.id));
-                    const toAdd = incoming.filter(f => !existingIds.has(f.id));
-                    const merged = [...foodists, ...toAdd];
-                    await putManyFoodists(toAdd);
-                    setFoodistsState(merged);
-                    resolve({ added: toAdd.length, skipped: incoming.length - toAdd.length });
+                    // 改良版マージを実行
+                    const result = await mergeFoodists(incoming);
+                    resolve({ ...result, skipped: 0 });
                 } catch (err) {
                     reject(err);
                 }
@@ -303,7 +252,110 @@ export const useFoodists = () => {
             reader.onerror = () => reject(reader.error);
             reader.readAsText(file, 'utf-8');
         });
-    }, [foodists]);
+    }, [mergeFoodists]);
+
+    // ---- CSV 部分更新（パッチ）----
+    /**
+     * FoodistPatch 配列を受け取り、id または displayName でマッチした既存レコードにだけ差分を適用する。
+     * - タグ: 既存タグを保持しつつ、CSVの新しいタグを追加（重複なし）
+     * - メモ: 既存メモを保持しつつ追記
+     * - SNSフォロワー数: 対象プラットフォームの metricValue / url を上書き
+     */
+    const patchFoodists = useCallback(async (patches: FoodistPatch[]): Promise<{ updated: number; notFound: string[] }> => {
+        const now = new Date().toISOString();
+        const nameIndex = new Map(foodists.map(f => [f.displayName, f.id]));
+        let updatedCount = 0;
+        const notFound: string[] = [];
+
+        const newList = foodists.map(f => ({ ...f }));
+
+        for (const patch of patches) {
+            // マッチング: id 優先 → displayName フォールバック
+            let targetId = patch._matchId;
+            if (!targetId && patch._matchName) {
+                targetId = nameIndex.get(patch._matchName);
+            }
+
+            if (!targetId) {
+                notFound.push(patch._matchName || '（不明）');
+                continue;
+            }
+
+            const idx = newList.findIndex(f => f.id === targetId);
+            if (idx === -1) {
+                notFound.push(patch._matchName || patch._matchId || targetId);
+                continue;
+            }
+
+            const existing = newList[idx];
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { _matchId, _matchName, tagIds, notes: _notes, mediaAccounts: _ma, ...scalarPatch } = patch as any;
+
+            // スカラーフィールドの上書き
+            let updated: Foodist = { ...existing, ...scalarPatch };
+
+            // タグのマージ（既存 ∪ 新規）
+            if (tagIds && Array.isArray(tagIds)) {
+                const merged = Array.from(new Set([...existing.tagIds, ...tagIds]));
+                updated = { ...updated, tagIds: merged };
+            }
+
+            // メモの追記
+            const patchNotes: any[] = (patch as any)._patchNotes ?? [];
+            if (patchNotes.length > 0) {
+                updated = { ...updated, notes: [...existing.notes, ...patchNotes] };
+            }
+
+            // SNS / 媒体アカウントの部分更新
+            const patchMedia: { type: string; metricValue?: number; url?: string }[] = (patch as any)._patchMedia ?? [];
+            if (patchMedia.length > 0) {
+                const accounts: MediaAccount[] = existing.mediaAccounts.map(acc => {
+                    const mp = patchMedia.find(m => m.type === acc.mediaType);
+                    if (!mp) return acc;
+                    return {
+                        ...acc,
+                        ...(mp.metricValue !== undefined ? { metricValue: mp.metricValue } : {}),
+                        ...(mp.url !== undefined ? { url: mp.url } : {}),
+                        updatedAt: now,
+                    };
+                });
+
+                // CSVにあるが既存アカウントにない媒体は新規追加
+                patchMedia.forEach(mp => {
+                    if (!accounts.find(a => a.mediaType === mp.type)) {
+                        accounts.push({
+                            id: `patch_media_${existing.id}_${mp.type}`,
+                            mediaType: mp.type as MediaAccount['mediaType'],
+                            metricType: mp.type === 'ブログ' ? 'PV' : mp.type === 'YouTube' ? 'チャンネル登録者数' : 'フォロワー数',
+                            metricValue: mp.metricValue,
+                            url: mp.url,
+                            showOnDetail: true,
+                            sortOrder: accounts.length + 1,
+                            updatedAt: now,
+                        });
+                    }
+                });
+
+                updated = { ...updated, mediaAccounts: accounts };
+            }
+
+            // totalFollowers を再計算
+            updated = {
+                ...updated,
+                totalFollowers: calcTotalFollowers(updated.mediaAccounts),
+                updatedAt: now,
+            };
+
+            newList[idx] = updated;
+            updatedCount++;
+        }
+
+        if (updatedCount > 0) {
+            _applyAndSave(newList, () => replaceAllFoodists(newList));
+        }
+
+        return { updated: updatedCount, notFound };
+    }, [foodists, _applyAndSave]);
 
     return {
         foodists,
@@ -315,8 +367,10 @@ export const useFoodists = () => {
         setAllFoodists,
         recalcAllFollowers,
         replaceTagInAll,
+        batchReplaceTags,
         exportToJson,
         importFromJson,
         mergeFoodists,
+        patchFoodists,
     };
 };

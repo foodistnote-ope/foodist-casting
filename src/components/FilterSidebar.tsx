@@ -43,11 +43,14 @@ interface FilterSidebarProps {
     selectedWorkTagIds: string[];
     setSelectedWorkTagIds: (v: string[]) => void;
     selectedFeatureTagIds: string[];
-    setSelectedFeatureTagIds: (v: string[]) => void;
+    setSelectedFeatureTagIds: (ids: string[]) => void;
+    selectedAlcoholTagIds: string[];
+    setSelectedAlcoholTagIds: (ids: string[]) => void;
     // 検索可能タグ（active=true & searchVisible=true のみ）
     qualificationTags: Tag[];
     achievementTags: Tag[];
     workTags: Tag[];
+    alcoholTags: Tag[];
     featureTags: Tag[];
 }
 
@@ -163,7 +166,12 @@ export const FilterSidebar = ({
     selectedAchievementTagIds, setSelectedAchievementTagIds,
     selectedWorkTagIds, setSelectedWorkTagIds,
     selectedFeatureTagIds, setSelectedFeatureTagIds,
-    qualificationTags, achievementTags, workTags, featureTags,
+    selectedAlcoholTagIds, setSelectedAlcoholTagIds,
+    qualificationTags,
+    achievementTags,
+    workTags,
+    alcoholTags,
+    featureTags
 }: FilterSidebarProps) => {
 
     const handleReset = () => {
@@ -215,7 +223,7 @@ export const FilterSidebar = ({
                     <input
                         type="text"
                         className="search-input"
-                        placeholder="活動名・肩書きで検索..."
+                        placeholder="活動名・肩書き・アカウント・メモで検索..."
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                     />
@@ -314,6 +322,15 @@ export const FilterSidebar = ({
             {/* YouTube登録者数 */}
             <FilterSection title="YouTube登録者数" badge={selectedYouTubeFollowers.length}>
                 <CheckList items={FOLLOWER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedYouTubeFollowers} onToggle={v => toggle(v, selectedYouTubeFollowers, setSelectedYouTubeFollowers)} />
+            </FilterSection>
+
+            {/* 飲酒について */}
+            <FilterSection title="飲酒について" badge={selectedAlcoholTagIds.length}>
+                <CheckList
+                    items={alcoholTags.map(t => ({ value: t.id, label: t.name }))}
+                    selected={selectedAlcoholTagIds}
+                    onToggle={v => toggle(v, selectedAlcoholTagIds, setSelectedAlcoholTagIds)}
+                />
             </FilterSection>
 
             {/* 保有資格・専門 */}

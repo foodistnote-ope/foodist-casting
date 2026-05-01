@@ -37,14 +37,11 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_a007', name: '雑誌掲載', category: '実績', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_a008', name: 'Webメディア掲載', category: '実績', sortOrder: 8, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_a009', name: 'レシピ連載', category: '実績', sortOrder: 9, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a010', name: '監修実績あり', category: '実績', sortOrder: 10, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a011', name: '商品開発実績あり', category: '実績', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a012', name: '企業タイアップ実績あり', category: '実績', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a013', name: 'イベント登壇実績あり', category: '実績', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a014', name: 'SNSキャンペーン実績あり', category: '実績', sortOrder: 14, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a015', name: 'Instagram案件実績あり', category: '実績', sortOrder: 15, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a016', name: '動画案件実績あり', category: '実績', sortOrder: 16, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a017', name: '受賞歴あり', category: '実績', sortOrder: 17, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a010', name: '監修', category: '実績', sortOrder: 10, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a011', name: '商品開発', category: '実績', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a012', name: '企業タイアップ', category: '実績', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a013', name: 'イベント登壇', category: '実績', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a017', name: '受賞歴', category: '実績', sortOrder: 17, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // 対応可能業務
@@ -55,18 +52,12 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_w004', name: 'SNS投稿', category: '対応可能業務', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w005', name: '写真撮影', category: '対応可能業務', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w006', name: '動画出演', category: '対応可能業務', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w007', name: '動画企画', category: '対応可能業務', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w008', name: '動画撮影', category: '対応可能業務', sortOrder: 8, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w009', name: '動画制作', category: '対応可能業務', sortOrder: 9, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w010', name: '動画台本作成', category: '対応可能業務', sortOrder: 10, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w009', name: '動画制作', category: '対応可能業務', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w011', name: 'ライブ配信', category: '対応可能業務', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w012', name: 'イベント登壇', category: '対応可能業務', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w013', name: 'インタビュー対応', category: '対応可能業務', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w014', name: 'オンライン出演', category: '対応可能業務', sortOrder: 14, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w015', name: '対面出演', category: '対応可能業務', sortOrder: 15, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w016', name: '出張', category: '対応可能業務', sortOrder: 16, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w017', name: '継続案件', category: '対応可能業務', sortOrder: 17, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w018', name: '短納期対応', category: '対応可能業務', sortOrder: 18, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w019', name: 'フードスタイリング', category: '対応可能業務', sortOrder: 19, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
@@ -104,5 +95,16 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_d030', name: '電子レンジ', category: '得意な料理ジャンル', sortOrder: 30, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d031', name: 'オーブン対応', category: '得意な料理ジャンル', sortOrder: 31, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d032', name: '無水調理', category: '得意な料理ジャンル', sortOrder: 32, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_d033', name: 'アウトドア', category: '得意な料理ジャンル', sortOrder: 33, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_d034', name: 'イタリアン', category: '得意な料理ジャンル', sortOrder: 34, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_d035', name: 'フレンチ', category: '得意な料理ジャンル', sortOrder: 35, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_d036', name: '簡単', category: '得意な料理ジャンル', sortOrder: 36, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+
+    // =============================================
+    // 飲酒について
+    // =============================================
+    { id: 'tag_al01', name: 'お酒を飲む', category: '飲酒について', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_al02', name: 'お酒を飲まない', category: '飲酒について', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_al03', name: 'お酒は飲まないがPR可', category: '飲酒について', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 ];
 

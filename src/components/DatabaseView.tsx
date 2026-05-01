@@ -9,16 +9,23 @@ interface DatabaseViewProps {
     onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onDelete?: (id: string) => void;
     isImporting: boolean;
+    onPatchImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    isPatchImporting: boolean;
 }
 
-export const DatabaseView = ({ foodists, onEdit, onAdd, onImport, onDelete, isImporting }: DatabaseViewProps) => {
+export const DatabaseView = ({ foodists, onEdit, onAdd, onImport, onDelete, isImporting, onPatchImport, isPatchImporting }: DatabaseViewProps) => {
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredFoodists = foodists.filter(f =>
-        f.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (f.realName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (f.title || '').toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredFoodists = foodists.filter(f => {
+        const q = searchQuery.toLowerCase();
+        return f.displayName.toLowerCase().includes(q) ||
+        (f.realName || '').toLowerCase().includes(q) ||
+        f.mediaAccounts.some(acc => 
+          (acc.accountName || '').toLowerCase().includes(q) || 
+          (acc.url || '').toLowerCase().includes(q)
+        ) ||
+        f.notes.some(n => n.content.toLowerCase().includes(q));
+    });
 
     // Instagram フォロワー数（mediaAccounts から取得）
     const getInstagramFollowers = (f: Foodist): number | undefined => {
@@ -35,16 +42,33 @@ export const DatabaseView = ({ foodists, onEdit, onAdd, onImport, onDelete, isIm
                 <div className="db-actions">
                     <input
                         type="text"
-                        placeholder="名前・肩書きで検索..."
+                        placeholder="名前・肩書き・アカウント・メモで検索..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="db-search"
                     />
                     <button className="btn-primary" onClick={onAdd}>+ 新規登録</button>
-                    <label className={`btn-secondary ${isImporting ? 'loading' : ''}`} style={{ cursor: 'pointer' }}>
-                        {isImporting ? '読込中...' : 'CSVインポート'}
+                    <label className={`btn-secondary ${isImporting ? 'loading' : ''}`} style={{ cursor: 'pointer' }} title="新規フーディストを一括追加するCSV">
+                        {isImporting ? '読込中...' : '新規追加CSV'}
                         <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onImport} disabled={isImporting} />
                     </label>
+                    <label
+                        className={`btn-secondary ${isPatchImporting ? 'loading' : ''}`}
+                        style={{ cursor: 'pointer', borderColor: '#d4844a', color: '#d4844a' }}
+                        title="既存フーディストの特定項目を一括更新するCSV（新規追加はされません）"
+                    >
+                        {isPatchImporting ? '更新中...' : '🔄 部分更新CSV'}
+                        <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onPatchImport} disabled={isPatchImporting} />
+                    </label>
+                    <a
+                        href="/foodist_patch_template.csv"
+                        download
+                        className="btn-secondary"
+                        style={{ fontSize: '0.75rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+                        title="部分更新CSVのテンプレートをダウンロード"
+                    >
+                        📥 更新テンプレ
+                    </a>
                 </div>
             </header>
 

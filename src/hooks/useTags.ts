@@ -1,80 +1,78 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { Tag, TagCategory } from '../data/types';
 import { DEFAULT_TAGS } from '../data/tags';
+import { supabase } from '../lib/supabaseClient';
 
-const TAGS_KEY = 'foodist_mgmt_tags_v2';
+// ============================================================
+// Supabase ヘルパー（fire and forget）
+// ============================================================
 
-const getInitialTags = (): Tag[] => {
-    const stored = localStorage.getItem(TAGS_KEY);
-    if (stored) {
-        try {
-            const parsed = JSON.parse(stored) as Tag[];
-            
-            // DEFAULT_TAGS にあって、現在の tags にないものを探して追加する（IDで判定）
-            const existingIds = new Set(parsed.map(t => t.id));
-            const missingDefaults = DEFAULT_TAGS.filter(dt => !existingIds.has(dt.id));
-            
-            let finalTags = parsed;
-            let needsUpdate = false;
-            
-            if (missingDefaults.length > 0) {
-                finalTags = [...parsed, ...missingDefaults];
-                needsUpdate = true;
-            }
-
-            // 移行処理: カテゴリ名が古い場合の置換
-            let migrated = false;
-            const migratedTags = finalTags.map(t => {
-                let hasMigratedTag = false;
-                let newCat = t.category;
-                let newName = t.name;
-                if (t.category === '専門領域' as any) {
-                    newCat = '得意な料理ジャンル';
-                    migrated = true;
-                    hasMigratedTag = true;
-                } else if (t.category === '発信テーマ' as any) {
-                    newCat = 'よく発信しているテーマ';
-                    migrated = true;
-                    hasMigratedTag = true;
-                } else if (t.category === '資格・専門属性' as any) {
-                    newCat = '資格・専門';
-                    migrated = true;
-                    hasMigratedTag = true;
-                } else if (t.category === '実績属性' as any) {
-                    newCat = '実績';
-                    migrated = true;
-                    hasMigratedTag = true;
-                }
-                
-                if (newCat === '対応可能業務' && newName.endsWith('可')) {
-                    newName = newName.slice(0, -1);
-                    migrated = true;
-                    hasMigratedTag = true;
-                }
-
-                if (hasMigratedTag) return { ...t, category: newCat, name: newName };
-                return t;
-            });
-
-            if (migrated || needsUpdate) {
-                localStorage.setItem(TAGS_KEY, JSON.stringify(migratedTags));
-                return migratedTags;
-            }
-            return parsed;
-        } catch {
-            /* fall through */
-        }
-    }
-    localStorage.setItem(TAGS_KEY, JSON.stringify(DEFAULT_TAGS));
-    return DEFAULT_TAGS;
+/** タグを Supabase に upsert（非同期、エラーはログのみ） */
+const _upsertTagsToSupabase = (tags: Tag[]) => {
+    if (tags.length === 0) return;
+    const rows = tags.map(t => ({
+        id: t.id,
+        data: t,
+        updated_at: t.updatedAt,
+    }));
+    supabase.from('tags').upsert(rows).then(({ error }) => {
+        if (error) console.error('[useTags] upsert error:', error);
+    });
 };
 
-export const useTags = () => {
-    const [tags, setTagsState] = useState<Tag[]>(getInitialTags);
+/** タグを Supabase から削除（非同期、エラーはログのみ） */
+const _deleteTagFromSupabase = (id: string) => {
+    supabase.from('tags').delete().eq('id', id).then(({ error }) => {
+        if (error) console.error('[useTags] delete error:', error);
+    });
+};
 
-    const saveTags = useCallback((newTags: Tag[]) => {
-        setTagsState(newTags);
-        localStorage.setItem(TAGS_KEY, JSON.stringify(newTags));
+// ============================================================
+// フック本体
+// ============================================================
+export const useTags = () => {
+    const [tags, setTagsState] = useState<Tag[]>([]);
+    const [tagsLoading, setTagsLoading] = useState(true);
+
+    // ---- 初期化（Supabase から読み込み） ----
+    useEffect(() => {
+        const init = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('tags')
+                    .select('data');
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    const loaded = data.map(row => row.data as Tag);
+
+                    // DEFAULT_TAGS にあって未登録のものを追加（新タグ追加時の自動補完）
+                    const loadedIds = new Set(loaded.map(t => t.id));
+                    const missing = DEFAULT_TAGS.filter(t => !loadedIds.has(t.id));
+                    const finalTags = [...loaded, ...missing];
+
+                    if (missing.length > 0) {
+                        console.info(`[useTags] ${missing.length} 件の新しいデフォルトタグを追加しました`);
+                        _upsertTagsToSupabase(missing);
+                    }
+
+                    setTagsState(finalTags);
+                } else {
+                    // Supabase が空 → デフォルトタグをシード
+                    console.info('[useTags] タグが未登録のため、デフォルトタグをシードします');
+                    setTagsState(DEFAULT_TAGS);
+                    _upsertTagsToSupabase(DEFAULT_TAGS);
+                }
+            } catch (e) {
+                console.error('[useTags] 初期化に失敗しました', e);
+                // フォールバック: デフォルトタグで起動
+                setTagsState(DEFAULT_TAGS);
+            } finally {
+                setTagsLoading(false);
+            }
+        };
+
+        init();
     }, []);
 
     // --- 新規追加 ---
@@ -94,32 +92,54 @@ export const useTags = () => {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
-        saveTags([...tags, newTag]);
-    }, [tags, saveTags]);
+        setTagsState(prev => [...prev, newTag]);
+        _upsertTagsToSupabase([newTag]);
+    }, [tags]);
 
     // --- 削除（完全削除） ---
     const removeTag = useCallback((id: string) => {
-        saveTags(tags.filter(t => t.id !== id));
-    }, [tags, saveTags]);
+        setTagsState(prev => prev.filter(t => t.id !== id));
+        _deleteTagFromSupabase(id);
+    }, []);
 
-    // --- 有効/無効切り替え（削除より優先） ---
+    // --- 有効/無効切り替え ---
     const toggleTagActive = useCallback((id: string) => {
-        saveTags(tags.map(t => t.id === id ? { ...t, active: !t.active, updatedAt: new Date().toISOString() } : t));
-    }, [tags, saveTags]);
+        setTagsState(prev => {
+            const newTags = prev.map(t =>
+                t.id === id ? { ...t, active: !t.active, updatedAt: new Date().toISOString() } : t
+            );
+            const updated = newTags.find(t => t.id === id);
+            if (updated) _upsertTagsToSupabase([updated]);
+            return newTags;
+        });
+    }, []);
 
     // --- 検索表示フラグ切り替え ---
     const toggleSearchVisible = useCallback((id: string) => {
-        saveTags(tags.map(t => t.id === id ? { ...t, searchVisible: !t.searchVisible, updatedAt: new Date().toISOString() } : t));
-    }, [tags, saveTags]);
+        setTagsState(prev => {
+            const newTags = prev.map(t =>
+                t.id === id ? { ...t, searchVisible: !t.searchVisible, updatedAt: new Date().toISOString() } : t
+            );
+            const updated = newTags.find(t => t.id === id);
+            if (updated) _upsertTagsToSupabase([updated]);
+            return newTags;
+        });
+    }, []);
 
     /**
-     * タグ統合: sourceId のタグを targetId に統合する。
-     * - sourceId タグを active=false に設定
-     * - フーディスト側の tagIds の置き換えは useFoodists の mergeTagInFoodists に委ねる
+     * タグ統合: sourceId のタグを無効化する。
+     * フーディスト側の tagIds 置き換えは useFoodists の replaceTagInAll に委ねる。
      */
     const deactivateTag = useCallback((id: string) => {
-        saveTags(tags.map(t => t.id === id ? { ...t, active: false, updatedAt: new Date().toISOString() } : t));
-    }, [tags, saveTags]);
+        setTagsState(prev => {
+            const newTags = prev.map(t =>
+                t.id === id ? { ...t, active: false, updatedAt: new Date().toISOString() } : t
+            );
+            const updated = newTags.find(t => t.id === id);
+            if (updated) _upsertTagsToSupabase([updated]);
+            return newTags;
+        });
+    }, []);
 
     // --- カテゴリ別取得ヘルパー ---
     /** 検索サイドバー用: active=true かつ searchVisible=true のタグをカテゴリで絞り込む */
@@ -143,6 +163,7 @@ export const useTags = () => {
 
     return {
         tags,
+        tagsLoading,
         addTag,
         removeTag,
         toggleTagActive,
