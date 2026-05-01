@@ -130,6 +130,9 @@ export const CHILD_STAGES = [
 ] as const;
 export type ChildStage = typeof CHILD_STAGES[number];
 
+// --- 性別 ---
+export const GENDER_OPTIONS = ['女性', '男性', 'その他', '非公開'];
+
 // --- フーディスト基本マスタ ---
 export interface Foodist {
     id: string;
