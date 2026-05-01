@@ -60,7 +60,7 @@ function App() {
   const [editingFoodist, setEditingFoodist] = useState<Foodist | null>(null);
 
   // ---- データ ----
-  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, recalcAllFollowers, replaceTagInAll, batchReplaceTags, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
+  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, batchReplaceTags, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
   const { tags, tagsLoading, addTag, removeTag, toggleTagActive, deactivateTag, getSearchableTags } = useTags();
 
   // 各カテゴリの検索可能タグ（active=true & searchVisible=true）
@@ -478,9 +478,6 @@ function App() {
                   📂 復元
                   <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleJsonImport} />
                 </label>
-                <button className="btn-secondary" onClick={() => { recalcAllFollowers(); alert('総フォロワー数を全件再集計しました。'); }}>
-                  フォロワー再集計
-                </button>
                 <button className="btn-secondary" onClick={() => setIsTagSettingsOpen(true)}>
                   タグの管理
                 </button>
