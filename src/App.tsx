@@ -67,7 +67,7 @@ function App() {
   } | null>(null);
 
   // ---- データ ----
-  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, batchReplaceTags, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
+  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
   const { tags, tagsLoading, addTag, removeTag, toggleTagActive, deactivateTag, getSearchableTags } = useTags();
 
   // 各カテゴリの検索可能タグ（active=true & searchVisible=true）
