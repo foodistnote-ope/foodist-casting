@@ -10,6 +10,7 @@ import { useTags } from './hooks/useTags';
 import { useFoodists, normalizeString } from './hooks/useFoodists';
 import { parseFoodistCsv, parsePatchCsv } from './utils/csvParser';
 import { AuthGate } from './components/AuthGate';
+import { ImportResultModal } from './components/ImportResultModal';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -52,12 +53,18 @@ function App() {
   const [selectedAlcoholTagIds, setSelectedAlcoholTagIds] = useState<string[]>([]);
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  const [selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions] = useState<string[]>([]);
 
   // ---- モーダル状態 ----
   const [selectedFoodist, setSelectedFoodist] = useState<Foodist | null>(null);
   const [isTagSettingsOpen, setIsTagSettingsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingFoodist, setEditingFoodist] = useState<Foodist | null>(null);
+  const [importResult, setImportResult] = useState<{
+    title: string;
+    summary: { success: number; added?: number; updated?: number };
+    failures?: { type: 'notFound' | 'conflict' | 'duplicate'; label: string; items: string[] }[];
+  } | null>(null);
 
   // ---- データ ----
   const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, batchReplaceTags, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
@@ -82,6 +89,10 @@ function App() {
     setIsImportingCsv(true);
     try {
       let parsed = await parseFoodistCsv(file, tags);
+      if (parsed.length === 0) {
+        alert('CSVに有効なデータが見つかりませんでした。');
+        return;
+      }
 
       // --- 同名データの重複チェック（正規化とエイリアスを考慮） ---
       const findExistingIdx = (name: string) => {
@@ -116,8 +127,12 @@ function App() {
         }
       }
 
-      const { added, updated } = await mergeFoodists(parsed);
-      alert(`インポート完了\n新規追加: ${added}件\n既存更新: ${updated}件`);
+      const { added } = await mergeFoodists(parsed);
+      setImportResult({
+        title: '新規追加インポート結果',
+        summary: { success: added, added },
+        failures: duplicates.length > 0 ? [{ type: 'duplicate', label: '登録済みのためスキップ', items: duplicates.map(p => p.displayName) }] : []
+      });
     } catch (err) {
       console.error(err);
       alert(`CSVインポートに失敗しました。\n${err}`);
@@ -144,18 +159,14 @@ function App() {
       if (!window.confirm(confirmMsg)) return;
 
       const { updated, notFound, conflicts } = await patchFoodists(patches);
-      let msg = `部分更新が完了しました。\n更新: ${updated}件`;
-      if (notFound.length > 0) {
-        const names = notFound.slice(0, 10).join(', ');
-        const extra = notFound.length > 10 ? ` 他${notFound.length - 10}件` : '';
-        msg += `\n\n⚠️ マッチしなかった行: ${notFound.length}件\n（${names}${extra}）`;
-      }
-      if (conflicts.length > 0) {
-        const names = conflicts.slice(0, 10).join(', ');
-        const extra = conflicts.length > 10 ? ` 他${conflicts.length - 10}件` : '';
-        msg += `\n\n⚠️ 複数の候補が見つかりスキップされた行: ${conflicts.length}件\n（${names}${extra}）\n※名前やエイリアスが他者と重複している可能性があります。`;
-      }
-      alert(msg);
+      setImportResult({
+        title: '部分更新結果',
+        summary: { success: updated },
+        failures: [
+          { type: 'notFound', label: 'マッチしなかった行', items: notFound },
+          { type: 'conflict', label: '複数の候補が見つかりスキップ', items: conflicts }
+        ]
+      });
     } catch (err) {
       console.error(err);
       alert(`部分更新CSVのインポートに失敗しました。\n${err}`);
@@ -326,6 +337,9 @@ function App() {
         ...selectedAlcoholTagIds,
       ];
       if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => f.tagIds.includes(id))) return false;
+      
+      // 12. フーディストノート掲載可否
+      if (selectedNoteFeaturedPermissions.length > 0 && !selectedNoteFeaturedPermissions.includes(f.noteFeaturedPermission || '未設定')) return false;
 
       return true;
     }).sort((a, b) => (b.totalFollowers || 0) - (a.totalFollowers || 0));
@@ -337,6 +351,7 @@ function App() {
     selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     selectedAlcoholTagIds, selectedGenders,
+    selectedNoteFeaturedPermissions,
   ]);
 
   const handleResetFilters = () => {
@@ -362,6 +377,7 @@ function App() {
     setSelectedFeatureTagIds([]);
     setSelectedAlcoholTagIds([]);
     setSelectedGenders([]);
+    setSelectedNoteFeaturedPermissions([]);
   };
 
   /*
@@ -420,6 +436,7 @@ function App() {
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     selectedAlcoholTagIds, selectedGenders,
+    selectedNoteFeaturedPermissions,
   ].some(a => a.length > 0);
 
   // SNSフォロワーフィルターのアクティブなプラットフォームを特定し、そのフォロワー数で降順ソート
@@ -523,6 +540,7 @@ function App() {
                 selectedFeatureTagIds={selectedFeatureTagIds} setSelectedFeatureTagIds={setSelectedFeatureTagIds}
                 selectedAlcoholTagIds={selectedAlcoholTagIds} setSelectedAlcoholTagIds={setSelectedAlcoholTagIds}
                 selectedGenders={selectedGenders} setSelectedGenders={setSelectedGenders}
+                selectedNoteFeaturedPermissions={selectedNoteFeaturedPermissions} setSelectedNoteFeaturedPermissions={setSelectedNoteFeaturedPermissions}
                 qualificationTags={qualificationTags}
                 achievementTags={achievementTags}
                 workTags={workTags}
@@ -722,6 +740,16 @@ function App() {
               setIsEditModalOpen(false);
               setEditingFoodist(null);
             }}
+          />
+        )}
+
+        {/* インポート結果モーダル */}
+        {importResult && (
+          <ImportResultModal
+            title={importResult.title}
+            summary={importResult.summary}
+            failures={importResult.failures}
+            onClose={() => setImportResult(null)}
           />
         )}
       </div>
