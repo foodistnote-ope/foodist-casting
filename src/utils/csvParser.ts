@@ -23,10 +23,12 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
     return new Promise((resolve, reject) => {
         Papa.parse<Record<string, string>>(file, {
             header: true,
-            skipEmptyLines: true,
+            skipEmptyLines: 'greedy',
+            transformHeader: (header) => header.trim(),
             complete: (results) => {
                 try {
                     const headers = results.meta.fields ?? [];
+                    console.info('[csvParser] Parsed headers:', headers);
                     const hasHeader = (name: string) => headers.includes(name);
 
                     const patches: FoodistPatch[] = results.data.map((row, index) => {
@@ -161,7 +163,8 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
     return new Promise((resolve, reject) => {
         Papa.parse<Record<string, string>>(file, {
             header: true,
-            skipEmptyLines: true,
+            skipEmptyLines: 'greedy',
+            transformHeader: (header) => header.trim(),
             complete: (results) => {
                 try {
                     const now = new Date().toISOString();
