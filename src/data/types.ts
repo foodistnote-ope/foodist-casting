@@ -159,6 +159,7 @@ export interface Foodist {
     tagIds: string[];
     mediaAccounts: MediaAccount[];
     notes: FoodieNote[];
+    aliases?: string[];         // 照合用の別名（エイリアス）
     createdAt: string;
     updatedAt: string;
 }
