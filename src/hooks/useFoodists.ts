@@ -197,33 +197,35 @@ export const useFoodists = () => {
      * - 一致しない場合：新規追加
      */
     const mergeFoodists = useCallback(async (incoming: Foodist[]): Promise<{ added: number; updated: number }> => {
-        const newList = [...foodists];
-        const idIndex = new Map(foodists.map((f, i) => [f.id, i]));
-        const nameIndex = new Map(foodists.map((f, i) => [f.displayName, i]));
+        const validExisting = foodists.filter(f => !!f);
+        const newList = [...validExisting];
+        const idIndex = new Map(validExisting.map((f, i) => [f.id, i]));
+        const nameIndex = new Map(validExisting.map((f, i) => [f.displayName, i]));
 
         let added = 0;
         let updated = 0;
         const toSave: Foodist[] = [];
 
         for (const item of incoming) {
+            if (!item) continue;
             // マッチングロジック: ID優先、次に活動名（正規化）
-            let idx = idIndex.get(item.id);
+            let idx = item.id ? idIndex.get(item.id) : undefined;
 
-            if (idx === undefined) {
+            if (idx === undefined || idx === -1) {
                 // 正規化して比較
                 const targetNorm = normalizeString(item.displayName);
-                idx = foodists.findIndex(f => 
+                const foundIdx = validExisting.findIndex(f => 
                     normalizeString(f.displayName) === targetNorm || 
                     (f.aliases ?? []).some(a => normalizeString(a) === targetNorm)
                 );
+                idx = foundIdx !== -1 ? foundIdx : undefined;
             }
 
-            if (idx !== undefined) {
+            if (idx !== undefined && idx !== -1) {
                 // 既存あり → 更新
-                // 元のIDを維持しつつ、中身を「マージ」する（既存の項目を空文字で消さないようガード）
                 const existing = newList[idx];
+                if (!existing) continue;
                 
-                // 空文字やnullを除去した「差分のみ」を抽出
                 const patch: any = {};
                 (Object.keys(item) as (keyof Foodist)[]).forEach(key => {
                     const val = item[key];
@@ -238,6 +240,9 @@ export const useFoodists = () => {
                 toSave.push(updatedItem);
             } else {
                 // 新規追加
+                if (!item.id) {
+                    item.id = `foodist-${Date.now()}-${added}-${Math.floor(Math.random() * 1000000)}`;
+                }
                 newList.push(item);
                 added++;
                 toSave.push(item);
