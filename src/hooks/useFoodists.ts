@@ -200,7 +200,6 @@ export const useFoodists = () => {
         const validExisting = foodists.filter(f => !!f);
         const newList = [...validExisting];
         const idIndex = new Map(validExisting.map((f, i) => [f.id, i]));
-        const nameIndex = new Map(validExisting.map((f, i) => [f.displayName, i]));
 
         let added = 0;
         let updated = 0;
@@ -226,6 +225,7 @@ export const useFoodists = () => {
                 const existing = newList[idx];
                 if (!existing) continue;
                 
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const patch: any = {};
                 (Object.keys(item) as (keyof Foodist)[]).forEach(key => {
                     const val = item[key];
@@ -303,7 +303,7 @@ export const useFoodists = () => {
 
         for (const patch of patches) {
             // 1. IDでの直接マッチング
-            let targetId = patch._matchId;
+            const targetId = patch._matchId;
             let targetIndex = -1;
 
             if (targetId) {
@@ -340,7 +340,7 @@ export const useFoodists = () => {
             }
 
             const existing = newList[targetIndex];
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
             const { _matchId, _matchName, tagIds, notes: _notes, mediaAccounts: _ma, ...scalarPatch } = patch as any;
 
             // スカラーフィールドの上書き
@@ -353,12 +353,14 @@ export const useFoodists = () => {
             }
 
             // メモの追記
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const patchNotes: any[] = (patch as any)._patchNotes ?? [];
             if (patchNotes.length > 0) {
                 updated = { ...updated, notes: [...existing.notes, ...patchNotes] };
             }
 
             // SNS / 媒体アカウントの部分更新
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const patchMedia: { type: string; metricValue?: number; url?: string }[] = (patch as any)._patchMedia ?? [];
             if (patchMedia.length > 0) {
                 const accounts: MediaAccount[] = existing.mediaAccounts.map(acc => {
