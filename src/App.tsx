@@ -7,7 +7,7 @@ import { DatabaseView } from './components/DatabaseView';
 import { FoodistEditModal } from './components/FoodistEditModal';
 import type { Foodist, MediaType } from './data/types';
 import { useTags } from './hooks/useTags';
-import { useFoodists } from './hooks/useFoodists';
+import { useFoodists, normalizeString } from './hooks/useFoodists';
 import { parseFoodistCsv, parsePatchCsv } from './utils/csvParser';
 import { AuthGate } from './components/AuthGate';
 import './App.css';
@@ -190,15 +190,22 @@ function App() {
   };
 
 
+  // タグIDからタグ情報を引きやすくするためのMap
+  const tagMap = useMemo(() => new Map(tags.map(t => [t.id, t])), [tags]);
+
   // ---- フィルタリング ----
   const filteredFoodists = useMemo(() => {
     return foodists.filter(f => {
-      // 1. キーワード検索（活動名・肩書き・一覧用紹介文）
+      // 1. キーワード検索（活動名・肩書き・一覧用紹介文・タグ名・エイリアス等）
       const q = searchQuery.toLowerCase();
+      const tagNames = f.tagIds.map(id => tagMap.get(id)?.name || '').join(' ').toLowerCase();
+      
       if (q && !f.displayName.toLowerCase().includes(q) &&
         !(f.title || '').toLowerCase().includes(q) &&
         !(f.listIntro || '').toLowerCase().includes(q) &&
         !(f.realName || '').toLowerCase().includes(q) &&
+        !(f.aliases ?? []).some(a => a.toLowerCase().includes(q)) &&
+        !tagNames.includes(q) &&
         !f.mediaAccounts.some(acc => 
           (acc.accountName || '').toLowerCase().includes(q) || 
           (acc.url || '').toLowerCase().includes(q)
@@ -444,8 +451,6 @@ function App() {
     'YouTube': 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg',
   };
 
-  const tagMap = useMemo(() => new Map(tags.map(t => [t.id, t])), [tags]);
-
   // ---- ローディング / エラー画面 ----
   if (loading || tagsLoading) {
     return (
@@ -648,6 +653,7 @@ function App() {
         ) : (
           <DatabaseView
             foodists={foodists}
+            allTags={tags}
             onEdit={f => { setEditingFoodist(f); setIsEditModalOpen(true); }}
             onAdd={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}
             onDelete={(id) => {
