@@ -125,6 +125,7 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
                         }
                         if (newNotes.length > 0) {
                             // _patchNotes は実際には FoodistPatch に存在しないが、patchFoodists 側で処理する
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             (patch as any)._patchNotes = newNotes;
                         }
 
@@ -150,6 +151,7 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
                             }
                         });
                         if (mediaToPatch.length > 0) {
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             (patch as any)._patchMedia = mediaToPatch;
                         }
 
@@ -267,7 +269,9 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                             displayName,
                             realName: row['本名'] || row['name'] || undefined,
                             title: row['肩書き'] || row['title'] || undefined,
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             membershipStatus: (['あり', 'なし', '要確認'].includes(membershipRaw as any) ? membershipRaw : '要確認') as any,
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             maritalStatus: (['未婚', '既婚', '非公開', '未確認'].includes(maritalRaw as any) ? maritalRaw : '未確認') as any,
                             area: row['居住地'] || row['area'] || undefined,
                             birthplace: row['出身地'] || row['birthplace'] || undefined,
@@ -275,6 +279,7 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                             age: parseNumber(row['年齢'] || row['age']),
                             ageGroup: (row['年代'] || row['ageGroup']) as Foodist['ageGroup'] || undefined,
                             gender: row['性別'] || row['gender'] || undefined,
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             faceVisibility: (['可', '条件付き可', '不可', '未設定'].includes(faceVisibilityRaw as any) ? faceVisibilityRaw : '未設定') as any,
                             hasChildren,
                             childrenCount: row['子どもの数'] || row['childrenCount'] || undefined,
