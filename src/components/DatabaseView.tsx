@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import type { Foodist } from '../data/types';
+import type { Foodist, Tag } from '../data/types';
 import './DatabaseView.css';
 
 interface DatabaseViewProps {
     foodists: Foodist[];
+    allTags: Tag[];
     onEdit: (foodist: Foodist) => void;
     onAdd: () => void;
     onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -13,13 +14,22 @@ interface DatabaseViewProps {
     isPatchImporting: boolean;
 }
 
-export const DatabaseView = ({ foodists, onEdit, onAdd, onImport, onDelete, isImporting, onPatchImport, isPatchImporting }: DatabaseViewProps) => {
+export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDelete, isImporting, onPatchImport, isPatchImporting }: DatabaseViewProps) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredFoodists = foodists.filter(f => {
         const q = searchQuery.toLowerCase();
+        if (!q) return true;
+
+        // タグ名の解決
+        const tagNames = f.tagIds.map(id => allTags.find(t => t.id === id)?.name || '').join(' ').toLowerCase();
+
         return f.displayName.toLowerCase().includes(q) ||
         (f.realName || '').toLowerCase().includes(q) ||
+        (f.title || '').toLowerCase().includes(q) ||
+        (f.listIntro || '').toLowerCase().includes(q) ||
+        (f.aliases ?? []).some(a => a.toLowerCase().includes(q)) ||
+        tagNames.includes(q) ||
         f.mediaAccounts.some(acc => 
           (acc.accountName || '').toLowerCase().includes(q) || 
           (acc.url || '').toLowerCase().includes(q)
