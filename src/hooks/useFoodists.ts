@@ -12,6 +12,17 @@ import {
     deleteFoodistById,
 } from '../lib/supabaseDb';
 
+/** 文字列の正規化（照合用） */
+export const normalizeString = (str: string | undefined): string => {
+    if (!str) return '';
+    return str
+        .normalize('NFKC') // 全角・半角、結合文字などを統一
+        .replace(/[\u30a1-\u30f6]/g, (s) => String.fromCharCode(s.charCodeAt(0) - 0x60)) // カタカナをひらがなに
+        .replace(/[ーｰ-]/g, '') // 長音記号、ハイフンなどを除去（たっきー / たつき 等の揺れ対策）
+        .replace(/\s+/g, '') // 空白除去
+        .toLowerCase();
+};
+
 /** ============================================================
  * フック本体
  * ============================================================ */
@@ -195,17 +206,33 @@ export const useFoodists = () => {
         const toSave: Foodist[] = [];
 
         for (const item of incoming) {
-            // マッチングロジック: ID優先、次に活動名
+            // マッチングロジック: ID優先、次に活動名（正規化）
             let idx = idIndex.get(item.id);
+
             if (idx === undefined) {
-                idx = nameIndex.get(item.displayName);
+                // 正規化して比較
+                const targetNorm = normalizeString(item.displayName);
+                idx = foodists.findIndex(f => 
+                    normalizeString(f.displayName) === targetNorm || 
+                    (f.aliases ?? []).some(a => normalizeString(a) === targetNorm)
+                );
             }
 
             if (idx !== undefined) {
                 // 既存あり → 更新
-                // 元のIDを維持しつつ中身を上書き
+                // 元のIDを維持しつつ、中身を「マージ」する（既存の項目を空文字で消さないようガード）
                 const existing = newList[idx];
-                const updatedItem = { ...item, id: existing.id };
+                
+                // 空文字やnullを除去した「差分のみ」を抽出
+                const patch: any = {};
+                (Object.keys(item) as (keyof Foodist)[]).forEach(key => {
+                    const val = item[key];
+                    if (val !== '' && val !== null && val !== undefined && !(Array.isArray(val) && val.length === 0)) {
+                        patch[key] = val;
+                    }
+                });
+
+                const updatedItem = { ...existing, ...patch, id: existing.id };
                 newList[idx] = updatedItem;
                 updated++;
                 toSave.push(updatedItem);
@@ -261,33 +288,53 @@ export const useFoodists = () => {
      * - メモ: 既存メモを保持しつつ追記
      * - SNSフォロワー数: 対象プラットフォームの metricValue / url を上書き
      */
-    const patchFoodists = useCallback(async (patches: FoodistPatch[]): Promise<{ updated: number; notFound: string[] }> => {
+    const patchFoodists = useCallback(async (patches: FoodistPatch[]): Promise<{ updated: number; notFound: string[]; conflicts: string[] }> => {
         const now = new Date().toISOString();
-        const nameIndex = new Map(foodists.map(f => [f.displayName, f.id]));
         let updatedCount = 0;
         const notFound: string[] = [];
+        const conflicts: string[] = [];
 
         const newList = foodists.map(f => ({ ...f }));
 
         for (const patch of patches) {
-            // マッチング: id 優先 → displayName フォールバック
+            // 1. IDでの直接マッチング
             let targetId = patch._matchId;
-            if (!targetId && patch._matchName) {
-                targetId = nameIndex.get(patch._matchName);
+            let targetIndex = -1;
+
+            if (targetId) {
+                targetIndex = newList.findIndex(f => f.id === targetId);
             }
 
-            if (!targetId) {
-                notFound.push(patch._matchName || '（不明）');
+            // 2. IDで見つからない場合、名前/エイリアスで照合
+            if (targetIndex === -1 && patch._matchName) {
+                const searchNorm = normalizeString(patch._matchName);
+                console.info(`[patchFoodists] Matching for: "${patch._matchName}" (norm: "${searchNorm}")`);
+                
+                // 候補を探す（活動名またはエイリアスが一致するもの）
+                const potentialMatches = newList.filter(f => 
+                    normalizeString(f.displayName) === searchNorm ||
+                    (f.aliases ?? []).some(a => normalizeString(a) === searchNorm)
+                );
+
+                if (potentialMatches.length > 1) {
+                    console.warn(`[patchFoodists] Ambiguous match for "${patch._matchName}": found ${potentialMatches.length} candidates.`);
+                    // 衝突（複数候補あり）
+                    conflicts.push(patch._matchName);
+                    continue;
+                } else if (potentialMatches.length === 1) {
+                    console.info(`[patchFoodists] Found match: "${potentialMatches[0].displayName}" (ID: ${potentialMatches[0].id})`);
+                    targetIndex = newList.findIndex(f => f.id === potentialMatches[0].id);
+                } else {
+                    console.warn(`[patchFoodists] No match found for "${patch._matchName}"`);
+                }
+            }
+
+            if (targetIndex === -1) {
+                notFound.push(patch._matchName || patch._matchId || '（不明）');
                 continue;
             }
 
-            const idx = newList.findIndex(f => f.id === targetId);
-            if (idx === -1) {
-                notFound.push(patch._matchName || patch._matchId || targetId);
-                continue;
-            }
-
-            const existing = newList[idx];
+            const existing = newList[targetIndex];
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { _matchId, _matchName, tagIds, notes: _notes, mediaAccounts: _ma, ...scalarPatch } = patch as any;
 
@@ -346,7 +393,7 @@ export const useFoodists = () => {
                 updatedAt: now,
             };
 
-            newList[idx] = updated;
+            newList[targetIndex] = updated;
             updatedCount++;
         }
 
@@ -354,7 +401,7 @@ export const useFoodists = () => {
             _applyAndSave(newList, () => putManyFoodists(newList));
         }
 
-        return { updated: updatedCount, notFound };
+        return { updated: updatedCount, notFound, conflicts };
     }, [foodists, _applyAndSave]);
 
     return {
