@@ -83,20 +83,25 @@ function App() {
     try {
       let parsed = await parseFoodistCsv(file, tags);
 
-      // --- 同名データの重複チェック ---
-      // 登録済みの活動名のセットを作成
-      const existingNames = new Set(foodists.map(f => f.displayName));
-      // 今回のCSVに含まれる、既に存在する名前のリスト
-      const duplicates = parsed.filter(p => existingNames.has(p.displayName));
+      // --- 同名データの重複チェック（正規化とエイリアスを考慮） ---
+      const findExistingIdx = (name: string) => {
+        const norm = normalizeString(name);
+        return foodists.findIndex(f => 
+          normalizeString(f.displayName) === norm || 
+          (f.aliases ?? []).some(a => normalizeString(a) === norm)
+        );
+      };
+
+      const duplicates = parsed.filter(p => findExistingIdx(p.displayName) !== -1);
 
       if (duplicates.length > 0) {
         const namesMsg = duplicates.map(p => p.displayName).slice(0, 10).join(', ');
         const extraMsg = duplicates.length > 10 ? ' など' : '';
-        const msg = `⚠️ 重複警告\n\nアップロードされたCSV内に、既に登録されている「活動名」が ${duplicates.length} 件含まれています。\n（${namesMsg}${extraMsg}）\n\n重複を避けるため、これら既存のデータを「スキップ」して、新しく追加される人のみをインポートしますか？\n（「キャンセル」を押すと、インポート自体をすべて中止します）`;
+        const msg = `⚠️ 重複警告\n\nアップロードされたCSV内に、既に登録されている（またはエイリアスが一致する）フーディストが ${duplicates.length} 件含まれています。\n（${namesMsg}${extraMsg}）\n\n重複を避けるため、これら既存のデータを「スキップ」して、新しく追加される人のみをインポートしますか？\n（「キャンセル」を押すと、インポート自体をすべて中止します）`;
 
         if (window.confirm(msg)) {
           // 重複分のデータを配列から除外してスキップする
-          parsed = parsed.filter(p => !existingNames.has(p.displayName));
+          parsed = parsed.filter(p => findExistingIdx(p.displayName) === -1);
           if (parsed.length === 0) {
             alert('新しいデータがなかったため、インポートを終了しました。');
             setIsImportingCsv(false);
@@ -138,12 +143,17 @@ function App() {
       const confirmMsg = `部分更新CSVを読み込みました。\n対象レコード数: ${patches.length}件\n\n「id」または「活動名」でマッチした既存データに差分を上書きします。\n新規登録はされません。\n\n実行しますか？`;
       if (!window.confirm(confirmMsg)) return;
 
-      const { updated, notFound } = await patchFoodists(patches);
+      const { updated, notFound, conflicts } = await patchFoodists(patches);
       let msg = `部分更新が完了しました。\n更新: ${updated}件`;
       if (notFound.length > 0) {
         const names = notFound.slice(0, 10).join(', ');
         const extra = notFound.length > 10 ? ` 他${notFound.length - 10}件` : '';
         msg += `\n\n⚠️ マッチしなかった行: ${notFound.length}件\n（${names}${extra}）`;
+      }
+      if (conflicts.length > 0) {
+        const names = conflicts.slice(0, 10).join(', ');
+        const extra = conflicts.length > 10 ? ` 他${conflicts.length - 10}件` : '';
+        msg += `\n\n⚠️ 複数の候補が見つかりスキップされた行: ${conflicts.length}件\n（${names}${extra}）\n※名前やエイリアスが他者と重複している可能性があります。`;
       }
       alert(msg);
     } catch (err) {
