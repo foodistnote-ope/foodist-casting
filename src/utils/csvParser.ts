@@ -12,6 +12,22 @@ export type FoodistPatch = Partial<Omit<Foodist, 'id' | 'createdAt'>> & {
     _matchName?: string;
 };
 
+/** 掲載可否の文字列を正規化してEnum値に変換する */
+const parseNoteFeaturedPermission = (v: string | undefined): Foodist['noteFeaturedPermission'] | undefined => {
+    if (!v) return undefined;
+    const s = v.trim();
+    if (['掲載可（事前確認が必要）', '掲載可（事前確認は不要、掲載後に案内があればOK）', '掲載不可', '未設定'].includes(s)) {
+        return s as Foodist['noteFeaturedPermission'];
+    }
+    // 短縮形やキーワードでのマッチング
+    if (s.includes('事前確認が必要') || s === '掲載可') return '掲載可（事前確認が必要）';
+    if (s.includes('事前確認は不要') || s.includes('掲載後に案内')) return '掲載可（事前確認は不要、掲載後に案内があればOK）';
+    if (s === '掲載不可' || s === '不可') return '掲載不可';
+    if (s === '可') return '掲載可（事前確認が必要）'; // デフォルトは慎重な方
+    if (s === '未設定') return '未設定';
+    return undefined;
+};
+
 /**
  * 部分更新CSVのパース。
  * - ヘッダーに "id" または "活動名" が必要（どちらか一方でも可）。
@@ -24,14 +40,17 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
         Papa.parse<Record<string, string>>(file, {
             header: true,
             skipEmptyLines: 'greedy',
-            transformHeader: (header) => header.trim(),
+            transformHeader: (header) => header.replace(/^\ufeff/, '').trim(),
+            delimiter: '',
             complete: (results) => {
                 try {
                     const headers = results.meta.fields ?? [];
                     console.info('[csvParser] Parsed headers:', headers);
                     const hasHeader = (name: string) => headers.includes(name);
 
-                    const patches: FoodistPatch[] = results.data.map((row, index) => {
+                    const patches: FoodistPatch[] = results.data
+                        .filter(row => row && Object.values(row).some(v => v !== ''))
+                        .map((row, index) => {
                         const patch: FoodistPatch = {
                             _matchId: row['id'] || undefined,
                             _matchName: row['活動名'] || undefined,
@@ -75,6 +94,17 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
                         if (hasHeader('一覧用紹介文') && row['一覧用紹介文'] !== '') patch.listIntro = row['一覧用紹介文'] || undefined;
                         if (hasHeader('詳細プロフィール') && row['詳細プロフィール'] !== '') patch.profileText = row['詳細プロフィール'] || undefined;
                         if (hasHeader('プロフィール画像URL') && row['プロフィール画像URL'] !== '') patch.avatarUrl = row['プロフィール画像URL'] || undefined;
+                        
+                        // --- フーディストノート掲載可否 ---
+                        const notePermKey = headers.find(h => h === '掲載可否' || h === 'フーディストノート掲載可否');
+                        if (notePermKey && row[notePermKey] !== '') {
+                            const val = parseNoteFeaturedPermission(row[notePermKey]);
+                            if (val) patch.noteFeaturedPermission = val;
+                        }
+                        const noteMemoKey = headers.find(h => h === '掲載メモ' || h === '掲載不可の理由');
+                        if (noteMemoKey && row[noteMemoKey] !== '') {
+                            patch.noteFeaturedMemo = row[noteMemoKey];
+                        }
 
                         // --- タグ（追加モード: 既存タグは保持し、新しいタグだけ追記） ---
                         if (hasHeader('タグ') && row['タグ'] !== '') {
@@ -164,11 +194,15 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
         Papa.parse<Record<string, string>>(file, {
             header: true,
             skipEmptyLines: 'greedy',
-            transformHeader: (header) => header.trim(),
+            transformHeader: (header) => header.replace(/^\ufeff/, '').trim(),
+            delimiter: '',
             complete: (results) => {
                 try {
                     const now = new Date().toISOString();
-                    const parsed: Foodist[] = results.data.map((row, index: number) => {
+                    const parsed: Foodist[] = results.data
+                        .filter(row => row && Object.values(row).some(v => v !== ''))
+                        .map((row, index: number) => {
+                        const displayName = row['活動名'] || row['displayName'] || row['name'] || '名称未設定';
                         const mediaAccounts: MediaAccount[] = [];
                         let sort = 1;
 
@@ -229,8 +263,8 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                         const childStage = childStageRaw ? childStageRaw.split(/[,、\n]/).map(s => s.trim()).filter(Boolean) : [];
 
                         const f: Foodist = {
-                            id: row['id'] || `foodist-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 5)}`,
-                            displayName: row['活動名'] || row['displayName'] || row['name'] || '名称未設定',
+                            id: row['id'] || `foodist-${Date.now()}-${index}-${Math.floor(Math.random() * 1000000)}`,
+                            displayName,
                             realName: row['本名'] || row['name'] || undefined,
                             title: row['肩書き'] || row['title'] || undefined,
                             membershipStatus: (['あり', 'なし', '要確認'].includes(membershipRaw as any) ? membershipRaw : '要確認') as any,
@@ -248,6 +282,17 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                             listIntro: row['一覧用紹介文'] || row['listIntro'] || undefined,
                             profileText: row['詳細プロフィール'] || row['profileText'] || undefined,
                             avatarUrl: row['プロフィール画像URL'] || row['avatarUrl'] || undefined,
+                            
+                            // フーディストノート掲載可否
+                            noteFeaturedPermission: (() => {
+                                const key = Object.keys(row).find(k => k === '掲載可否' || k === 'フーディストノート掲載可否');
+                                return (key ? parseNoteFeaturedPermission(row[key]) : undefined) || '未設定';
+                            })(),
+                            noteFeaturedMemo: (() => {
+                                const key = Object.keys(row).find(k => k === '掲載メモ' || k === '掲載不可の理由');
+                                return key ? row[key] : undefined;
+                            })(),
+
                             totalFollowers: calcTotalFollowers(mediaAccounts),
                             tagIds: mapTagNamesToIds(row['タグ'] || row['tags'], allTags),
                             mediaAccounts,
