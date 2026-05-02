@@ -94,12 +94,15 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                             <th>Instagram</th>
                             <th>X</th>
                             <th>年代</th>
+                            <th>フーディストノート掲載可否</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredFoodists.map(foodist => (
-                            <tr key={foodist.id}>
+                        {filteredFoodists.map(foodist => {
+                            if (!foodist || !foodist.id) return null;
+                            return (
+                                <tr key={foodist.id}>
                                 <td>
                                     <div className="td-name">{foodist.displayName}</div>
                                     {foodist.realName && foodist.realName !== foodist.displayName && (
@@ -117,6 +120,20 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                 <td>{getInstagramFollowers(foodist)?.toLocaleString() || '-'}</td>
                                 <td>{getXFollowers(foodist)?.toLocaleString() || '-'}</td>
                                 <td>{foodist.ageGroup || '-'}</td>
+                                <td style={{ fontSize: '0.75rem', lineHeight: 1.2 }}>
+                                    <div style={{ 
+                                        color: foodist.noteFeaturedPermission === '掲載不可' ? '#c0392b' : 
+                                               foodist.noteFeaturedPermission?.includes('掲載可') ? '#27ae60' : 'inherit',
+                                        fontWeight: (foodist.noteFeaturedPermission && foodist.noteFeaturedPermission !== '未設定') ? 'bold' : 'normal'
+                                    }}>
+                                        {foodist.noteFeaturedPermission || '-'}
+                                    </div>
+                                    {foodist.noteFeaturedMemo && (
+                                        <div className="td-sub" style={{ maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={foodist.noteFeaturedMemo}>
+                                            {foodist.noteFeaturedMemo}
+                                        </div>
+                                    )}
+                                </td>
                                 <td>
                                     <div style={{ display: 'flex', gap: '4px' }}>
                                         <button className="btn-text" onClick={() => onEdit(foodist)}>編集</button>
@@ -124,10 +141,11 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                     </div>
                                 </td>
                             </tr>
-                        ))}
+                            );
+                        })}
                         {filteredFoodists.length === 0 && (
                             <tr>
-                                <td colSpan={9} className="td-empty">データが見つかりません。</td>
+                                <td colSpan={10} className="td-empty">データが見つかりません。</td>
                             </tr>
                         )}
                     </tbody>
