@@ -43,6 +43,7 @@ const emptyFoodist: Omit<Foodist, 'id'> = {
     tagIds: [],
     mediaAccounts: [],
     notes: [],
+    aliases: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
 };
@@ -210,6 +211,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
         }
     };
 
+    const handleAliasesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value;
+        const list = val.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
+        set('aliases', list);
+    };
+
     // タグをカテゴリ別に整理（全タグ = active問わず）
     const tagsByCategory: Record<TagCategory, Tag[]> = {} as Record<TagCategory, Tag[]>;
     TAG_CATEGORIES.forEach(cat => { tagsByCategory[cat] = []; });
@@ -245,6 +252,21 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 <label className="form-label">本名</label>
                                 <input className="form-input" name="realName" value={form.realName || ''} onChange={handleChange} />
                             </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">エイリアス <span className="form-hint">（表記揺れ対策用の別名。カンマ区切りで複数入力可）</span></label>
+                            <input
+                                className="form-input"
+                                value={(form.aliases || []).join(', ')}
+                                onChange={handleAliasesChange}
+                                placeholder="例: aya_bistro, あやシェフ"
+                            />
+                            {form.aliases && form.aliases.length > 0 && (
+                                <div className="alias-chips">
+                                    {form.aliases.map((a, i) => <span key={i} className="alias-chip">{a}</span>)}
+                                </div>
+                            )}
                         </div>
 
                         <div className="form-row">
