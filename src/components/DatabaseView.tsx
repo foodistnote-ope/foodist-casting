@@ -369,7 +369,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                     </label>
                     <a
                         href="/foodist_patch_template.csv"
-                        download
+                        download="foodist_patch_template.csv"
                         className="btn-secondary"
                         title="部分更新CSVのテンプレートをダウンロード"
                     >
