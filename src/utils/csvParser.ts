@@ -141,12 +141,15 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
                         mediaPatch.forEach(({ type, followerKey, urlKey }) => {
                             const hasFollower = hasHeader(followerKey) && row[followerKey] !== '';
                             const hasUrl = hasHeader(urlKey) && row[urlKey] !== '';
+                            if (hasUrl) {
+                                validateUrl(row[urlKey], patch._matchName || patch._matchId || '対象ユーザー', urlKey);
+                            }
                             if (hasFollower || hasUrl) {
                                 const num = hasFollower ? parseInt(row[followerKey].replace(/,/g, ''), 10) : undefined;
                                 mediaToPatch.push({
                                     type,
                                     metricValue: num && !isNaN(num) ? num : undefined,
-                                    url: hasUrl ? row[urlKey] : undefined,
+                                    url: hasUrl ? row[urlKey].trim() : undefined,
                                 });
                             }
                         });
@@ -172,6 +175,20 @@ const parseNumber = (value?: string): number | undefined => {
     if (!value) return undefined;
     const num = parseInt(value.replace(/[,]/g, ''), 10);
     return isNaN(num) ? undefined : num;
+};
+
+/** URLの形式をバリデーションする */
+const validateUrl = (url: string | undefined, rowName: string, fieldName: string) => {
+    if (!url) return;
+    const trimmed = url.trim();
+    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+        throw new Error(`【${rowName}】の「${fieldName}」には正しいURL（http:// または https:// から始まる文字列）を入力してください。\n入力値: ${url}`);
+    }
+    try {
+        new URL(trimmed);
+    } catch {
+        throw new Error(`【${rowName}】の「${fieldName}」のURL形式が不正です。\n入力値: ${url}`);
+    }
 };
 
 /** カンマ区切りのタグ名をID配列に変換する */
@@ -211,11 +228,14 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                         // --- 媒体アカウントの抽出系ヘルパー ---
                         const addMedia = (type: MediaType, url?: string, name?: string, pvOrFollowers?: string, metricType: MetricType = 'フォロワー数', reels?: string) => {
                             if (!url && !name && !pvOrFollowers) return;
+                            if (url) {
+                                validateUrl(url, displayName, `${type}_URL`);
+                            }
                             mediaAccounts.push({
                                 id: `csv_media_${index}_${sort}`,
                                 mediaType: type,
                                 accountName: name || undefined,
-                                url: url || undefined,
+                                url: url ? url.trim() : undefined,
                                 metricType,
                                 metricValue: parseNumber(pvOrFollowers),
                                 reelsFrequency: reels || undefined,
