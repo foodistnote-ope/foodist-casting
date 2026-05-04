@@ -215,6 +215,31 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             ))}
                         </div>
                     )}
+
+                    {/* フーディストノート掲載可否 */}
+                    <div className="modal-section" style={{ backgroundColor: '#fff9f5', borderRadius: '8px', padding: '16px', marginTop: '24px' }}>
+                        <h3 className="section-title" style={{ color: '#d4844a' }}>フーディストノート掲載可否</h3>
+                        <div className="demo-grid">
+                            <div className="demo-item demo-item-full">
+                                <span className="demo-label">掲載可否状況</span>
+                                <span className="demo-value" style={{ 
+                                    fontWeight: 'bold', 
+                                    color: foodist.noteFeaturedPermission === '掲載不可' ? '#c0392b' : 
+                                           foodist.noteFeaturedPermission?.includes('掲載可') ? '#27ae60' : 'inherit'
+                                }}>
+                                    {val(foodist.noteFeaturedPermission)}
+                                </span>
+                            </div>
+                            {foodist.noteFeaturedMemo && (
+                                <div className="demo-item demo-item-full" style={{ marginTop: 8 }}>
+                                    <span className="demo-label">特記事項・理由</span>
+                                    <span className="demo-value" style={{ whiteSpace: 'pre-wrap', display: 'block', padding: '8px', background: '#fff', borderRadius: '4px', border: '1px solid #eee' }}>
+                                        {foodist.noteFeaturedMemo}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="modal-footer">

@@ -44,6 +44,8 @@ const emptyFoodist: Omit<Foodist, 'id'> = {
     mediaAccounts: [],
     notes: [],
     aliases: [],
+    noteFeaturedPermission: '未設定',
+    noteFeaturedMemo: '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
 };
@@ -52,27 +54,42 @@ const generateId = (prefix: string) => `${prefix}_${Date.now()}_${Math.random().
 
 /** フォームが初期値から変更されているかを判定する簡易ハッシュ（全フィールド対象） */
 const formHash = (f: Omit<Foodist, 'id'>) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { createdAt, updatedAt, ...rest } = f;
     return JSON.stringify(rest);
 };
 
 export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistEditModalProps) => {
     const [form, setForm] = useState<Omit<Foodist, 'id'>>(emptyFoodist);
+    const [aliasInput, setAliasInput] = useState('');
     const [expandedTagCategories, setExpandedTagCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
     const initialHashRef = useRef<string>('');
 
     // フォームを初期化する際に「変更前ハッシュ」を記録
     useEffect(() => {
         if (foodist) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id: _id, ...rest } = foodist;
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm({ ...rest });
             initialHashRef.current = formHash(rest);
         } else {
             const init = { ...emptyFoodist, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setForm(init);
             initialHashRef.current = formHash(init);
         }
     }, [foodist]);
+
+    /** 未保存の変更があるか判定して、あれば確認ダイアログを出して閉じる */
+    const handleClose = useCallback(() => {
+        const isDirty = formHash(form) !== initialHashRef.current || form.displayName.trim() !== (foodist?.displayName || '');
+        if (isDirty) {
+            const confirmed = window.confirm('入力中の内容が保存されていません。\n破棄して閉じますか？');
+            if (!confirmed) return;
+        }
+        onClose();
+    }, [form, foodist, onClose]);
 
     // ESC キーで確認ダイアログ経由で閉じる
     useEffect(() => {
@@ -84,17 +101,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    });
-
-    /** 未保存の変更があるか判定して、あれば確認ダイアログを出して閉じる */
-    const handleClose = useCallback(() => {
-        const isDirty = formHash(form) !== initialHashRef.current || form.displayName.trim() !== (foodist?.displayName || '');
-        if (isDirty) {
-            const confirmed = window.confirm('入力中の内容が保存されていません。\n破棄して閉じますか？');
-            if (!confirmed) return;
-        }
-        onClose();
-    }, [form, foodist, onClose]);
+    }, [handleClose]);
 
     const set = <K extends keyof typeof form>(key: K, value: typeof form[K]) => {
         setForm(prev => ({ ...prev, [key]: value }));
@@ -211,10 +218,22 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
         }
     };
 
-    const handleAliasesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-        const list = val.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
-        set('aliases', list);
+    const addAlias = () => {
+        const val = aliasInput.trim();
+        if (val && !(form.aliases || []).includes(val)) {
+            setForm(prev => ({
+                ...prev,
+                aliases: [...(prev.aliases || []), val]
+            }));
+        }
+        setAliasInput('');
+    };
+
+    const removeAlias = (val: string) => {
+        setForm(prev => ({
+            ...prev,
+            aliases: (prev.aliases || []).filter(a => a !== val)
+        }));
     };
 
     // タグをカテゴリ別に整理（全タグ = active問わず）
@@ -255,18 +274,28 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">エイリアス <span className="form-hint">（表記揺れ対策用の別名。カンマ区切りで複数入力可）</span></label>
-                            <input
-                                className="form-input"
-                                value={(form.aliases || []).join(', ')}
-                                onChange={handleAliasesChange}
-                                placeholder="例: aya_bistro, あやシェフ"
-                            />
-                            {form.aliases && form.aliases.length > 0 && (
-                                <div className="alias-chips">
-                                    {form.aliases.map((a, i) => <span key={i} className="alias-chip">{a}</span>)}
-                                </div>
-                            )}
+                            <label className="form-label">エイリアス <span className="form-hint">（表記揺れ対策用の別名。カンマまたはEnterで確定）</span></label>
+                            <div className="alias-chips-container">
+                                {(form.aliases || []).map(a => (
+                                    <span key={a} className="alias-chip">
+                                        {a}
+                                        <button type="button" onClick={() => removeAlias(a)} className="alias-chip-remove">×</button>
+                                    </span>
+                                ))}
+                                <input
+                                    className="alias-chip-input"
+                                    value={aliasInput}
+                                    onChange={(e) => setAliasInput(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ',' || e.key === '、') {
+                                            e.preventDefault();
+                                            addAlias();
+                                        }
+                                    }}
+                                    onBlur={addAlias}
+                                    placeholder="別名を入力..."
+                                />
+                            </div>
                         </div>
 
                         <div className="form-row">
@@ -532,6 +561,34 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         <button type="button" className="btn-secondary btn-add-media" onClick={addNote}>
                             ＋ メモを追加する
                         </button>
+
+                        {/* ===== フーディストノート掲載可否 ===== */}
+                        <h3 className="form-section-title">フーディストノート掲載可否</h3>
+                        <div className="form-group">
+                            <label className="form-label">掲載可否</label>
+                            <select 
+                                className="form-select" 
+                                name="noteFeaturedPermission" 
+                                value={form.noteFeaturedPermission || '未設定'} 
+                                onChange={handleChange}
+                            >
+                                <option value="未設定">-- 未設定 --</option>
+                                <option value="掲載可（事前確認が必要）">掲載可（事前確認が必要）</option>
+                                <option value="掲載可（事前確認は不要、掲載後に案内があればOK）">掲載可（事前確認は不要、掲載後に案内があればOK）</option>
+                                <option value="掲載不可">掲載不可</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">特記事項・理由</label>
+                            <textarea 
+                                className="form-textarea" 
+                                name="noteFeaturedMemo" 
+                                value={form.noteFeaturedMemo || ''} 
+                                onChange={handleChange} 
+                                rows={2} 
+                                placeholder="掲載不可の理由や、媒体ごとの可否詳細など" 
+                            />
+                        </div>
 
                     </form>
                 </div>
