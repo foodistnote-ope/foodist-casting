@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Tag } from '../data/types';
 import { GENDER_OPTIONS } from '../data/types';
 import './FilterSidebar.css';
@@ -38,6 +38,8 @@ interface FilterSidebarProps {
     setSelectedPlatforms: (v: string[]) => void;
     selectedGenders: string[];
     setSelectedGenders: (v: string[]) => void;
+    selectedNoteFeaturedPermissions: string[];
+    setSelectedNoteFeaturedPermissions: (v: string[]) => void;
     // タグカテゴリ別選択済みIDリスト
     selectedQualificationTagIds: string[];
     setSelectedQualificationTagIds: (v: string[]) => void;
@@ -80,6 +82,12 @@ const FOLLOWER_OPTIONS = [
     '100万〜200万未満', '200万以上'
 ];
 const PLATFORM_OPTIONS = ['ブログ', 'Instagram', 'X', 'TikTok', 'YouTube', '公式ホームページ', 'その他'];
+const NOTE_FEATURED_OPTIONS = [
+    '掲載可（事前確認が必要）',
+    '掲載可（事前確認は不要、掲載後に案内があればOK）',
+    '掲載不可',
+    '未設定'
+];
 
 const SHOW_MORE_THRESHOLD = 8;
 
@@ -166,6 +174,7 @@ export const FilterSidebar = ({
     selectedYouTubeFollowers, setSelectedYouTubeFollowers,
     selectedPlatforms, setSelectedPlatforms,
     selectedGenders, setSelectedGenders,
+    selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions,
     selectedQualificationTagIds, setSelectedQualificationTagIds,
     selectedAchievementTagIds, setSelectedAchievementTagIds,
     selectedWorkTagIds, setSelectedWorkTagIds,
@@ -177,6 +186,18 @@ export const FilterSidebar = ({
     alcoholTags,
     featureTags
 }: FilterSidebarProps) => {
+
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+    // モバイルドロワーが開いているときはbodyのスクロールを止める
+    useEffect(() => {
+        if (isMobileOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isMobileOpen]);
 
     const handleReset = () => {
         setSearchQuery('');
@@ -196,6 +217,7 @@ export const FilterSidebar = ({
         setSelectedYouTubeFollowers([]);
         setSelectedPlatforms([]);
         setSelectedGenders([]);
+        setSelectedNoteFeaturedPermissions([]);
         setSelectedQualificationTagIds([]);
         setSelectedAchievementTagIds([]);
         setSelectedWorkTagIds([]);
@@ -206,22 +228,15 @@ export const FilterSidebar = ({
         selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
         selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
         selectedChildStages, selectedFollowers, selectedInstagramFollowers,
-        selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
         selectedPlatforms, selectedGenders,
+        selectedNoteFeaturedPermissions,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
 
     // 都道府県リスト（居住地・出身地共通）
 
-    return (
-        <aside className="filter-sidebar">
-            <div className="filter-header">
-                <h2>絞り込み条件
-                    {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
-                </h2>
-                <button className="btn-reset" onClick={handleReset} aria-label="条件をリセット">リセット</button>
-            </div>
-
+    const filterContents = (
+        <>
             {/* キーワード検索 */}
             <div className="filter-section open">
                 <div className="filter-section-body" style={{ paddingTop: 0 }}>
@@ -382,6 +397,62 @@ export const FilterSidebar = ({
                     showMoreThreshold={SHOW_MORE_THRESHOLD}
                 />
             </FilterSection>
-        </aside>
+
+            {/* フーディストノート掲載可否 */}
+            <FilterSection title="フーディストノート掲載可否" badge={selectedNoteFeaturedPermissions.length}>
+                <CheckList items={NOTE_FEATURED_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedNoteFeaturedPermissions} onToggle={v => toggle(v, selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions)} />
+            </FilterSection>
+        </>
+    );
+
+    return (
+        <>
+            {/* ===== モバイル: 絞り込みボタン（フィルターサイドバー外に浮遊） ===== */}
+            <button
+                className="mobile-filter-toggle"
+                onClick={() => setIsMobileOpen(true)}
+                aria-label="絞り込み条件を開く"
+            >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"/>
+                    <line x1="8" y1="12" x2="16" y2="12"/>
+                    <line x1="11" y1="18" x2="13" y2="18"/>
+                </svg>
+                絞り込み
+                {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
+            </button>
+
+            {/* ===== モバイル: オーバーレイ + ドロワー ===== */}
+            {isMobileOpen && (
+                <div className="mobile-filter-overlay" onClick={() => setIsMobileOpen(false)}>
+                    <aside className="filter-sidebar mobile-drawer" onClick={e => e.stopPropagation()}>
+                        <div className="filter-header">
+                            <h2>絞り込み条件
+                                {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
+                            </h2>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                                <button className="btn-reset" onClick={handleReset} aria-label="条件をリセット">リセット</button>
+                                <button className="btn-reset" onClick={() => setIsMobileOpen(false)} aria-label="閉じる" style={{ color: '#475569', borderColor: '#94a3b8' }}>✕ 閉じる</button>
+                            </div>
+                        </div>
+                        <div className="filter-drawer-body">
+                            {filterContents}
+                        </div>
+                    </aside>
+                </div>
+            )}
+
+            {/* ===== デスクトップ: 通常のサイドバー ===== */}
+            <aside className="filter-sidebar desktop-filter-sidebar">
+                <div className="filter-header">
+                    <h2>絞り込み条件
+                        {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
+                    </h2>
+                    <button className="btn-reset" onClick={handleReset} aria-label="条件をリセット">リセット</button>
+                </div>
+                {filterContents}
+            </aside>
+        </>
     );
 };
+
