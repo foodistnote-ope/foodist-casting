@@ -213,3 +213,92 @@
 .search-input::placeholder {
     color: #94a3b8;
 }
+
+/* ========================================
+   モバイル用スタイル（≤768px）
+   ======================================== */
+
+/* モバイルでは絞り込みボタンを表示し、デスクトップサイドバーを非表示 */
+.mobile-filter-toggle {
+    display: none;
+}
+
+/* モバイル用オーバーレイ */
+.mobile-filter-overlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* デスクトップ用サイドバーを非表示 */
+    .desktop-filter-sidebar {
+        display: none;
+    }
+
+    /* 絞り込みボタンを表示（fixed配置でフレックスフローから切り離す） */
+    .mobile-filter-toggle {
+        display: inline-flex;
+        position: fixed;
+        bottom: 72px; /* タブバー（60px）の上に配置 */
+        right: 16px;
+        z-index: 90;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 18px;
+        background: var(--color-brand-primary, #e65100);
+        color: white;
+        border: none;
+        border-radius: 24px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(230, 81, 0, 0.4);
+        transition: all 0.15s;
+        white-space: nowrap;
+    }
+
+    .mobile-filter-toggle:hover {
+        background: #ff8a65;
+        box-shadow: 0 6px 16px rgba(230, 81, 0, 0.5);
+    }
+
+    .mobile-filter-toggle .filter-badge {
+        background: white;
+        color: var(--color-brand-primary, #e65100);
+    }
+
+
+    /* モバイルオーバーレイを表示 */
+    .mobile-filter-overlay {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 200;
+        align-items: flex-end;
+    }
+
+    /* ドロワー本体 */
+    .mobile-drawer {
+        width: 100% !important;
+        min-width: unset !important;
+        height: 85vh;
+        border-right: none !important;
+        border-radius: 16px 16px 0 0;
+        position: static !important;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    }
+
+    .mobile-drawer .filter-header {
+        flex-shrink: 0;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .filter-drawer-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
