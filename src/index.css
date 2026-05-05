@@ -226,3 +226,88 @@ img {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* ========================================
+   レスポンシブ対応（モバイル ≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+  /* サイドナビをタブバーに切り替え */
+  .sidebar {
+    width: 100% !important;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    flex-direction: row;
+    z-index: 100;
+    border-right: none;
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* ブランド名を非表示 */
+  .sidebar .sidebar-brand {
+    display: none;
+  }
+
+  /* ナビをhorizontalに */
+  .sidebar .sidebar-nav {
+    padding: 0;
+    width: 100%;
+  }
+
+  .sidebar .sidebar-nav ul {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .sidebar .sidebar-nav ul li {
+    flex: 1;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 4px;
+    font-size: 0.7rem;
+    border-right: none !important;
+    border-top: 3px solid transparent;
+    text-align: center;
+  }
+
+  .sidebar .sidebar-nav ul li.active {
+    border-top: 3px solid var(--color-brand-primary);
+    border-right: none !important;
+    background-color: #fff3e0;
+  }
+
+  .sidebar .sidebar-nav ul li .nav-icon {
+    font-size: 1.2rem;
+  }
+
+  /* メインコンテンツの下にタブバー分の余白 */
+  .main-content {
+    padding-bottom: 60px;
+  }
+
+  /* ヘッダーのパディングを縮小 */
+  .top-header {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  /* カードグリッドをシングルカラムに */
+  .foodist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* content-padのパディングを縮小 */
+  .content-pad {
+    padding: var(--spacing-4);
+  }
+
+  /* app-container全体の幅制限を解除 */
+  .app-container {
+    overflow-x: hidden;
+  }
+}

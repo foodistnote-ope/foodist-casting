@@ -209,19 +209,24 @@ function App() {
     return foodists.filter(f => {
       // 1. キーワード検索（活動名・肩書き・一覧用紹介文・タグ名・エイリアス等）
       const q = searchQuery.toLowerCase();
+      const nq = normalizeString(searchQuery);
       const tagNames = f.tagIds.map(id => tagMap.get(id)?.name || '').join(' ').toLowerCase();
+      const nTagNames = normalizeString(tagNames);
       
       if (q && !f.displayName.toLowerCase().includes(q) &&
+        !normalizeString(f.displayName).includes(nq) &&
         !(f.title || '').toLowerCase().includes(q) &&
+        !normalizeString(f.title).includes(nq) &&
         !(f.listIntro || '').toLowerCase().includes(q) &&
         !(f.realName || '').toLowerCase().includes(q) &&
-        !(f.aliases ?? []).some(a => a.toLowerCase().includes(q)) &&
-        !tagNames.includes(q) &&
+        !normalizeString(f.realName).includes(nq) &&
+        !(f.aliases ?? []).some(a => a.toLowerCase().includes(q) || normalizeString(a).includes(nq)) &&
+        !tagNames.includes(q) && !nTagNames.includes(nq) &&
         !f.mediaAccounts.some(acc => 
           (acc.accountName || '').toLowerCase().includes(q) || 
           (acc.url || '').toLowerCase().includes(q)
         ) &&
-        !f.notes.some(n => n.content.toLowerCase().includes(q))
+        !f.notes.some(n => n.content.toLowerCase().includes(q) || normalizeString(n.content).includes(nq))
       ) return false;
 
       // 2. 居住地
@@ -573,7 +578,11 @@ function App() {
                         .slice(0, 5);
 
                       return (
-                        <div key={foodist.id} className="foodist-card" onClick={() => openFoodistModal(foodist)}>
+                        <div key={foodist.id} className="foodist-card" onClick={() => {
+                          const selection = window.getSelection();
+                          if (selection && selection.toString().length > 0) return;
+                          openFoodistModal(foodist);
+                        }}>
                           <div className="card-top-decoration"></div>
                           <div className="card-content">
                             <div className="card-main-info">

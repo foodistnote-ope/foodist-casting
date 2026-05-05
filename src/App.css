@@ -225,3 +225,29 @@
   background: #fef3c7;
   color: #92400e;
 }
+
+/* ========================================
+   モバイル用スタイル（≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+  /* ヘッダーアクションのボタンをスマホで縮小 */
+  .header-actions .btn-secondary {
+    display: none;
+  }
+
+  /* 新規登録ボタンは残す */
+  .header-actions .btn-primary {
+    margin-right: 0 !important;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  /* search-overview のモバイル調整 */
+  .search-overview {
+    flex-wrap: wrap;
+  }
+
+  .search-overview p {
+    font-size: 0.85rem;
+  }
+}
