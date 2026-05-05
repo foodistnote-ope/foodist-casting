@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Papa from 'papaparse';
 import type { Foodist, Tag } from '../data/types';
+import { normalizeString } from '../hooks/useFoodists';
 import './DatabaseView.css';
 
 interface DatabaseViewProps {
@@ -227,19 +228,24 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
             const q = searchQuery.toLowerCase();
             if (!q) return true;
 
+            const nq = normalizeString(searchQuery);
             const tagNames = f.tagIds.map(id => allTags.find(t => t.id === id)?.name || '').join(' ').toLowerCase();
+            const nTagNames = normalizeString(tagNames);
 
             return f.displayName.toLowerCase().includes(q) ||
+            normalizeString(f.displayName).includes(nq) ||
             (f.realName || '').toLowerCase().includes(q) ||
+            normalizeString(f.realName).includes(nq) ||
             (f.title || '').toLowerCase().includes(q) ||
+            normalizeString(f.title).includes(nq) ||
             (f.listIntro || '').toLowerCase().includes(q) ||
-            (f.aliases ?? []).some(a => a.toLowerCase().includes(q)) ||
-            tagNames.includes(q) ||
+            (f.aliases ?? []).some(a => a.toLowerCase().includes(q) || normalizeString(a).includes(nq)) ||
+            tagNames.includes(q) || nTagNames.includes(nq) ||
             f.mediaAccounts.some(acc => 
               (acc.accountName || '').toLowerCase().includes(q) || 
               (acc.url || '').toLowerCase().includes(q)
             ) ||
-            f.notes.some(n => n.content.toLowerCase().includes(q));
+            f.notes.some(n => n.content.toLowerCase().includes(q) || normalizeString(n.content).includes(nq));
         });
 
         if (sortConfig) {
