@@ -318,6 +318,73 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             <input className="form-input" name="avatarUrl" value={form.avatarUrl || ''} onChange={handleChange} placeholder="https://..." />
                         </div>
 
+                        {/* ===== SNS・媒体情報 ===== */}
+                        <h3 className="form-section-title">SNS・媒体情報
+                            <span className="form-hint" style={{ marginLeft: 8 }}>総フォロワー数（自動）: {previewTotal != null ? previewTotal.toLocaleString() : '未設定'}</span>
+                        </h3>
+
+                        {form.mediaAccounts.map((acc, idx) => (
+                            <div key={acc.id} className="media-account-row">
+                                <div className="media-account-header">
+                                    <span className="media-account-num">#{idx + 1}</span>
+                                    <button type="button" className="btn-icon-danger" onClick={() => removeMedia(acc.id)}>削除</button>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">媒体種別</label>
+                                        <select className="form-select" value={acc.mediaType} onChange={e => updateMedia(acc.id, { mediaType: e.target.value as MediaType })}>
+                                            {MEDIA_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                                        </select>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">アカウント名・媒体名</label>
+                                        <input className="form-input" value={acc.accountName || ''} onChange={e => updateMedia(acc.id, { accountName: e.target.value })} placeholder="例: mizuki_31cafe" />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">URL</label>
+                                        <input className="form-input" value={acc.url || ''} onChange={e => updateMedia(acc.id, { url: e.target.value })} placeholder="https://..." />
+                                    </div>
+                                    {acc.mediaType === 'Instagram' && (
+                                        <div className="form-group" style={{ flex: 0.5 }}>
+                                            <label className="form-label">リール投稿頻度</label>
+                                            <input className="form-input" value={acc.reelsFrequency || ''} onChange={e => updateMedia(acc.id, { reelsFrequency: e.target.value })} placeholder="例: 週3回" />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">数値種別</label>
+                                        <select className="form-select" value={acc.metricType} onChange={e => updateMedia(acc.id, { metricType: e.target.value as MetricType })}>
+                                            {METRIC_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                                        </select>
+                                    </div>
+                                    {acc.metricType !== 'なし' && (
+                                        <div className="form-group">
+                                            <label className="form-label">数値</label>
+                                            <input type="number" className="form-input" value={acc.metricValue ?? ''} min={0}
+                                                onChange={e => updateMedia(acc.id, { metricValue: e.target.value ? parseInt(e.target.value) : undefined })} />
+                                        </div>
+                                    )}
+                                    <div className="form-group" style={{ minWidth: 80 }}>
+                                        <label className="form-label">詳細表示</label>
+                                        <label className="checkbox-label" style={{ marginTop: 8 }}>
+                                            <input type="checkbox" checked={acc.showOnDetail} onChange={e => updateMedia(acc.id, { showOnDetail: e.target.checked })} />
+                                            <span className="checkbox-text">表示する</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                {FOLLOWER_CONTRIBUTING_MEDIA.includes(acc.mediaType) && acc.metricValue != null && (
+                                    <p className="form-hint" style={{ marginTop: 4 }}>※ 総フォロワー数に加算されます</p>
+                                )}
+                            </div>
+                        ))}
+
+                        <button type="button" className="btn-secondary btn-add-media" onClick={addMedia}>
+                            ＋ 媒体を追加する
+                        </button>
+
                         {/* ===== 属性・デモグラフィ ===== */}
                         <h3 className="form-section-title">属性情報</h3>
 
@@ -439,72 +506,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             <textarea className="form-textarea" name="profileText" value={form.profileText || ''} onChange={handleChange} rows={5} />
                         </div>
 
-                        {/* ===== SNS・媒体情報 ===== */}
-                        <h3 className="form-section-title">SNS・媒体情報
-                            <span className="form-hint" style={{ marginLeft: 8 }}>総フォロワー数（自動）: {previewTotal != null ? previewTotal.toLocaleString() : '未設定'}</span>
-                        </h3>
 
-                        {form.mediaAccounts.map((acc, idx) => (
-                            <div key={acc.id} className="media-account-row">
-                                <div className="media-account-header">
-                                    <span className="media-account-num">#{idx + 1}</span>
-                                    <button type="button" className="btn-icon-danger" onClick={() => removeMedia(acc.id)}>削除</button>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label className="form-label">媒体種別</label>
-                                        <select className="form-select" value={acc.mediaType} onChange={e => updateMedia(acc.id, { mediaType: e.target.value as MediaType })}>
-                                            {MEDIA_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="form-label">アカウント名・媒体名</label>
-                                        <input className="form-input" value={acc.accountName || ''} onChange={e => updateMedia(acc.id, { accountName: e.target.value })} placeholder="例: mizuki_31cafe" />
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label className="form-label">URL</label>
-                                        <input className="form-input" value={acc.url || ''} onChange={e => updateMedia(acc.id, { url: e.target.value })} placeholder="https://..." />
-                                    </div>
-                                    {acc.mediaType === 'Instagram' && (
-                                        <div className="form-group" style={{ flex: 0.5 }}>
-                                            <label className="form-label">リール投稿頻度</label>
-                                            <input className="form-input" value={acc.reelsFrequency || ''} onChange={e => updateMedia(acc.id, { reelsFrequency: e.target.value })} placeholder="例: 週3回" />
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label className="form-label">数値種別</label>
-                                        <select className="form-select" value={acc.metricType} onChange={e => updateMedia(acc.id, { metricType: e.target.value as MetricType })}>
-                                            {METRIC_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                        </select>
-                                    </div>
-                                    {acc.metricType !== 'なし' && (
-                                        <div className="form-group">
-                                            <label className="form-label">数値</label>
-                                            <input type="number" className="form-input" value={acc.metricValue ?? ''} min={0}
-                                                onChange={e => updateMedia(acc.id, { metricValue: e.target.value ? parseInt(e.target.value) : undefined })} />
-                                        </div>
-                                    )}
-                                    <div className="form-group" style={{ minWidth: 80 }}>
-                                        <label className="form-label">詳細表示</label>
-                                        <label className="checkbox-label" style={{ marginTop: 8 }}>
-                                            <input type="checkbox" checked={acc.showOnDetail} onChange={e => updateMedia(acc.id, { showOnDetail: e.target.checked })} />
-                                            <span className="checkbox-text">表示する</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                {FOLLOWER_CONTRIBUTING_MEDIA.includes(acc.mediaType) && acc.metricValue != null && (
-                                    <p className="form-hint" style={{ marginTop: 4 }}>※ 総フォロワー数に加算されます</p>
-                                )}
-                            </div>
-                        ))}
-
-                        <button type="button" className="btn-secondary btn-add-media" onClick={addMedia}>
-                            ＋ 媒体を追加する
-                        </button>
 
                         {/* ===== 属性タグ ===== */}
                         <h3 className="form-section-title">属性タグ</h3>
