@@ -238,7 +238,7 @@
     .mobile-filter-toggle {
         display: inline-flex;
         position: fixed;
-        bottom: 72px; /* タブバー（60px）の上に配置 */
+        bottom: 84px; /* タブバーの上に十分な余白を確保 */
         right: 16px;
         z-index: 90;
         align-items: center;
