@@ -33,20 +33,13 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'name',
         label: '活動名',
         defaultVisible: true,
-        render: (f) => (
-            <>
-                <div className="td-name">{f.displayName}</div>
-                {f.realName && f.realName !== f.displayName && (
-                    <div className="td-sub">{f.realName}</div>
-                )}
-            </>
-        ),
+        render: (f) => <div className="td-name">{f.displayName}</div>,
         sortValue: (f) => f.displayName,
     },
     {
         id: 'realName',
         label: '本名',
-        defaultVisible: false,
+        defaultVisible: true,
         render: (f) => f.realName || '-',
         sortValue: (f) => f.realName || '',
     },
@@ -167,6 +160,13 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
         ),
         sortValue: (f) => f.noteFeaturedPermission || '',
     },
+    {
+        id: 'createdAt',
+        label: '登録日',
+        defaultVisible: true,
+        render: (f) => f.createdAt ? new Date(f.createdAt).toLocaleDateString('ja-JP') : '-',
+        sortValue: (f) => f.createdAt || '',
+    },
 ];
 
 export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDelete, isImporting, onPatchImport, isPatchImporting }: DatabaseViewProps) => {
@@ -189,7 +189,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
     const columnDropdownRef = useRef<HTMLDivElement>(null);
 
     // Sorting state
-    const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+    const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>({ key: 'createdAt', direction: 'desc' });
 
     // Save visible columns
     useEffect(() => {
