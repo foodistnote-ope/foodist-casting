@@ -9,7 +9,7 @@ interface ImportResultModalProps {
         updated?: number;
     };
     failures?: {
-        type: 'notFound' | 'conflict' | 'duplicate';
+        type: 'notFound' | 'conflict' | 'duplicate' | 'noUpdate';
         label: string;
         items: string[];
     }[];
