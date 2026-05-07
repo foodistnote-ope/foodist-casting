@@ -28,7 +28,14 @@ const FOLLOWER_RANGES: Record<string, FollowerRange> = {
 
 function App() {
   // ---- ビュー ----
-  const [currentView, setCurrentView] = useState<'dashboard' | 'database'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'database'>(() => {
+    return (localStorage.getItem('app_current_view') as 'dashboard' | 'database') || 'dashboard';
+  });
+
+  // 表示モードの永続化
+  useEffect(() => {
+    localStorage.setItem('app_current_view', currentView);
+  }, [currentView]);
 
   // ---- フィルター状態 ----
   const [searchQuery, setSearchQuery] = useState('');
