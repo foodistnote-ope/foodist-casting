@@ -165,13 +165,14 @@ function App() {
       const confirmMsg = `部分更新CSVを読み込みました。\n対象レコード数: ${patches.length}件\n\n「id」または「活動名」でマッチした既存データに差分を上書きします。\n新規登録はされません。\n\n実行しますか？`;
       if (!window.confirm(confirmMsg)) return;
 
-      const { updated, notFound, conflicts } = await patchFoodists(patches);
+      const { updated, notFound, conflicts, noUpdateFields } = await patchFoodists(patches);
       setImportResult({
         title: '部分更新結果',
         summary: { success: updated },
         failures: [
           { type: 'notFound', label: 'マッチしなかった行', items: notFound },
-          { type: 'conflict', label: '複数の候補が見つかりスキップ', items: conflicts }
+          { type: 'conflict', label: '複数の候補が見つかりスキップ', items: conflicts },
+          { type: 'noUpdate' as any, label: '有効な更新項目が見つからなかった行', items: noUpdateFields }
         ]
       });
     } catch (err) {
