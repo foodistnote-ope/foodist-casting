@@ -293,15 +293,22 @@ export const useFoodists = () => {
      * - メモ: 既存メモを保持しつつ追記
      * - SNSフォロワー数: 対象プラットフォームの metricValue / url を上書き
      */
-    const patchFoodists = useCallback(async (patches: FoodistPatch[]): Promise<{ updated: number; notFound: string[]; conflicts: string[] }> => {
+    const patchFoodists = useCallback(async (patches: FoodistPatch[]): Promise<{ updated: number; notFound: string[]; conflicts: string[]; noUpdateFields: string[] }> => {
         const now = new Date().toISOString();
         let updatedCount = 0;
         const notFound: string[] = [];
         const conflicts: string[] = [];
+        const noUpdateFields: string[] = [];
 
         const newList = foodists.map(f => ({ ...f }));
 
         for (const patch of patches) {
+            // 0. 更新項目がない場合はスキップ
+            if (patch._noUpdateFields) {
+                noUpdateFields.push(patch._matchName || patch._matchId || '（不明）');
+                continue;
+            }
+
             // 1. IDでの直接マッチング
             const targetId = patch._matchId;
             let targetIndex = -1;
@@ -408,7 +415,7 @@ export const useFoodists = () => {
             _applyAndSave(newList, () => putManyFoodists(newList));
         }
 
-        return { updated: updatedCount, notFound, conflicts };
+        return { updated: updatedCount, notFound, conflicts, noUpdateFields };
     }, [foodists, _applyAndSave]);
 
     return {
