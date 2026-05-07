@@ -222,18 +222,43 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         <div className="demo-grid">
                             <div className="demo-item demo-item-full">
                                 <span className="demo-label">掲載可否状況</span>
-                                <span className="demo-value" style={{ 
-                                    fontWeight: 'bold', 
-                                    color: foodist.noteFeaturedPermission === '掲載不可' ? '#c0392b' : 
-                                           foodist.noteFeaturedPermission?.includes('掲載可') ? '#27ae60' : 'inherit'
-                                }}>
-                                    {val(foodist.noteFeaturedPermission)}
-                                </span>
+                                {(() => {
+                                    const perm = foodist.noteFeaturedPermission;
+                                    const hasMemo = !!foodist.noteFeaturedMemo;
+                                    const isOk = perm === '掲載可（事前確認は不要、掲載後に案内があればOK）';
+                                    const isOkWithConfirm = perm === '掲載可（事前確認が必要）';
+                                    const isNg = perm === '掲載不可';
+                                    const permColor = isNg ? '#c0392b'
+                                        : isOkWithConfirm ? '#b7791f'
+                                        : isOk && !hasMemo ? '#27ae60'
+                                        : isOk && hasMemo ? '#b7791f'
+                                        : 'inherit';
+                                    return (
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                            <span className="demo-value" style={{ fontWeight: 'bold', color: permColor }}>
+                                                {val(perm)}
+                                            </span>
+                                            {hasMemo && (
+                                                <span style={{
+                                                    fontSize: '0.75rem',
+                                                    background: '#fef3c7',
+                                                    color: '#92400e',
+                                                    border: '1px solid #fbbf24',
+                                                    borderRadius: '4px',
+                                                    padding: '2px 8px',
+                                                    fontWeight: 'bold',
+                                                }}>
+                                                    特記事項あり
+                                                </span>
+                                            )}
+                                        </span>
+                                    );
+                                })()}
                             </div>
                             {foodist.noteFeaturedMemo && (
                                 <div className="demo-item demo-item-full" style={{ marginTop: 8 }}>
                                     <span className="demo-label">特記事項・理由</span>
-                                    <span className="demo-value" style={{ whiteSpace: 'pre-wrap', display: 'block', padding: '8px', background: '#fff', borderRadius: '4px', border: '1px solid #eee' }}>
+                                    <span className="demo-value" style={{ whiteSpace: 'pre-wrap', display: 'block', padding: '8px', background: '#fffbeb', borderRadius: '4px', border: '1px solid #fbbf24' }}>
                                         {foodist.noteFeaturedMemo}
                                     </span>
                                 </div>

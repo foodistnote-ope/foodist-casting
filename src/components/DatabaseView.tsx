@@ -142,22 +142,46 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'notePermission',
         label: 'ノート掲載',
         defaultVisible: true,
-        render: (f) => (
-            <div style={{ fontSize: '0.75rem', lineHeight: 1.2 }}>
-                <div style={{ 
-                    color: f.noteFeaturedPermission === '掲載不可' ? '#c0392b' : 
-                           f.noteFeaturedPermission?.includes('掲載可') ? '#27ae60' : 'inherit',
-                    fontWeight: (f.noteFeaturedPermission && f.noteFeaturedPermission !== '未設定') ? 'bold' : 'normal'
-                }}>
-                    {f.noteFeaturedPermission || '-'}
-                </div>
-                {f.noteFeaturedMemo && (
-                    <div className="td-sub" style={{ maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={f.noteFeaturedMemo}>
-                        {f.noteFeaturedMemo}
+        render: (f) => {
+            const perm = f.noteFeaturedPermission;
+            const hasMemo = !!f.noteFeaturedMemo;
+            const isOk = perm === '掲載可（事前確認は不要、掲載後に案内があればOK）';
+            const isOkWithConfirm = perm === '掲載可（事前確認が必要）';
+            const isNg = perm === '掲載不可';
+            const permColor = isNg ? '#c0392b'
+                : isOkWithConfirm ? '#b7791f'
+                : isOk && !hasMemo ? '#27ae60'
+                : isOk && hasMemo ? '#b7791f'
+                : 'inherit';
+            return (
+                <div style={{ fontSize: '0.75rem', lineHeight: 1.4 }}>
+                    <div style={{ 
+                        color: permColor,
+                        fontWeight: (perm && perm !== '未設定') ? 'bold' : 'normal',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        flexWrap: 'wrap',
+                    }}>
+                        {perm || '-'}
+                        {hasMemo && (
+                            <span style={{
+                                fontSize: '0.65rem',
+                                background: '#fef3c7',
+                                color: '#92400e',
+                                border: '1px solid #fbbf24',
+                                borderRadius: '3px',
+                                padding: '0 4px',
+                                fontWeight: 'bold',
+                                whiteSpace: 'nowrap',
+                            }} title={f.noteFeaturedMemo}>
+                                特記事項あり
+                            </span>
+                        )}
                     </div>
-                )}
-            </div>
-        ),
+                </div>
+            );
+        },
         sortValue: (f) => f.noteFeaturedPermission || '',
     },
     {
