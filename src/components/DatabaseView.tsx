@@ -139,6 +139,13 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f, getFollowers) => getFollowers(f, 'YouTube') || 0,
     },
     {
+        id: 'blog',
+        label: 'ブログ',
+        defaultVisible: false,
+        render: (f) => f.mediaAccounts.some(a => a.mediaType === 'ブログ') ? 'あり' : 'なし',
+        sortValue: (f) => f.mediaAccounts.some(a => a.mediaType === 'ブログ') ? 1 : 0,
+    },
+    {
         id: 'notePermission',
         label: 'ノート掲載',
         defaultVisible: true,
