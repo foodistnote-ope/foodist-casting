@@ -334,13 +334,25 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
         <div className="database-view">
             <header className="db-header">
                 <div className="db-actions">
-                    <input
-                        type="text"
-                        placeholder="名前・肩書き・アカウント・メモで検索..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="db-search"
-                    />
+                    <div className="db-search-wrapper">
+                        <input
+                            type="text"
+                            placeholder="名前・肩書き・アカウント・メモで検索..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="db-search"
+                        />
+                        {searchQuery && (
+                            <button
+                                className="search-clear-btn"
+                                onClick={() => setSearchQuery('')}
+                                aria-label="検索をクリア"
+                                type="button"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
                     
                     {/* Column Toggler */}
                     <div className="column-dropdown-container" ref={columnDropdownRef}>

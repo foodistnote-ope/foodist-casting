@@ -240,13 +240,25 @@ export const FilterSidebar = ({
             {/* キーワード検索 */}
             <div className="filter-section open">
                 <div className="filter-section-body" style={{ paddingTop: 0 }}>
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="活動名・肩書き・アカウント・メモで検索..."
-                        value={searchQuery}
-                        onChange={e => setSearchQuery(e.target.value)}
-                    />
+                    <div className="search-input-wrapper">
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="活動名・肩書き・アカウント・メモで検索..."
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <button
+                                className="search-clear-btn"
+                                onClick={() => setSearchQuery('')}
+                                aria-label="検索をクリア"
+                                type="button"
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
