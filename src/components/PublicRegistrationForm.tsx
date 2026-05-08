@@ -46,6 +46,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     aliases: [],
     noteFeaturedPermission: '未設定',
     noteFeaturedMemo: '',
+    cookingClassStatus: '未確認',
     createdAt: '',
     updatedAt: '',
 };
@@ -284,20 +285,69 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
                         </div>
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">肩書き</label>
-                                <input name="title" className="form-input" value={form.title} onChange={handleChange} placeholder="例: 料理研究家、お弁当作家" />
+                        <div className="form-group">
+                            <label className="form-label">肩書き</label>
+                            <input name="title" className="form-input" value={form.title} onChange={handleChange} placeholder="例: 料理研究家、お弁当作家" />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label required">性別</label>
+                            <div className="radio-group-horizontal">
+                                {['女性', '男性', 'その他', '非公開'].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.gender === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="gender" 
+                                            value={opt} 
+                                            checked={form.gender === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">性別</label>
-                                <select name="gender" className="form-select" value={form.gender} onChange={handleChange}>
-                                    <option value="">選択してください</option>
-                                    <option value="女性">女性</option>
-                                    <option value="男性">男性</option>
-                                    <option value="その他">その他</option>
-                                    <option value="非公開">非公開</option>
-                                </select>
+                        </div>
+
+                        <div className="form-group" style={{ marginBottom: '24px' }}>
+                            <label className="form-label required">PR企画でのお顔出しは可能ですか？</label>
+                            <div className="radio-group-horizontal">
+                                {['可', '条件付き可', '不可'].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.faceVisibility === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="faceVisibility" 
+                                            value={opt} 
+                                            checked={form.faceVisibility === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="form-group" style={{ marginBottom: '24px' }}>
+                            <label className="form-label required">個人で料理教室を運営されていますか？（リアル・オンライン問わず）</label>
+                            <div className="radio-group vertical">
+                                {[
+                                    '現在運営している',
+                                    '過去運営していたことがある',
+                                    '運営したことがない'
+                                ].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.cookingClassStatus === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="cookingClassStatus" 
+                                            value={opt} 
+                                            checked={form.cookingClassStatus === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
                             </div>
                         </div>
 
@@ -330,24 +380,41 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
                         </div>
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">婚姻状況</label>
-                                <select name="maritalStatus" className="form-select" value={form.maritalStatus || ''} onChange={handleChange}>
-                                    <option value="">選択してください</option>
-                                    <option value="未婚">未婚</option>
-                                    <option value="既婚">既婚</option>
-                                    <option value="非公開">非公開</option>
-                                </select>
+                        <div className="form-group">
+                            <label className="form-label required">婚姻状況</label>
+                            <div className="radio-group-horizontal">
+                                {['未婚', '既婚', '非公開'].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.maritalStatus === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="maritalStatus" 
+                                            value={opt} 
+                                            checked={form.maritalStatus === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">お子さまの有無</label>
-                                <select name="hasChildren" className="form-select" value={form.hasChildren || ''} onChange={handleChange}>
-                                    <option value="未確認">選択してください</option>
-                                    <option value="なし">なし</option>
-                                    <option value="あり">あり</option>
-                                    <option value="非公開">非公開</option>
-                                </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label required">お子さまの有無</label>
+                            <div className="radio-group-horizontal">
+                                {['なし', 'あり', '非公開'].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.hasChildren === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="hasChildren" 
+                                            value={opt} 
+                                            checked={form.hasChildren === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
                             </div>
                         </div>
 
@@ -408,7 +475,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         </select>
                                     </div>
                                     <div className="form-group">
-                                        <label className="form-label">フォロワー数 / PV数</label>
+                                        <label className="form-label">
+                                            {acc.metricType === 'PV' ? '月間PV数' : 'フォロワー数'}
+                                        </label>
                                         <input type="number" className="form-input" value={acc.metricValue || ''} onChange={e => updateMedia(acc.id, { metricValue: parseInt(e.target.value) || 0 })} placeholder="0" />
                                     </div>
                                 </div>

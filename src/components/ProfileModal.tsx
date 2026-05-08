@@ -145,6 +145,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">顔出し可否</span><span className="demo-value">{val(foodist.faceVisibility)}</span></div>
                             <div className="demo-item"><span className="demo-label">子どもの有無</span><span className="demo-value">{val(foodist.hasChildren)}</span></div>
                             <div className="demo-item"><span className="demo-label">子どもの数</span><span className="demo-value">{foodist.childrenCount ? `${foodist.childrenCount}人` : '未設定'}</span></div>
+                            <div className="demo-item"><span className="demo-label">料理教室の運営</span><span className="demo-value">{val(foodist.cookingClassStatus)}</span></div>
                             <div className="demo-item demo-item-full">
                                 <span className="demo-label">子育てステージ</span>
                                 <span className="demo-value">
@@ -167,7 +168,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-grid">
                                 {metricRows.map(acc => (
                                     <div key={acc.id} className="demo-item">
-                                        <span className="demo-label">{acc.mediaType} {acc.metricType}</span>
+                                        <span className="demo-label">{acc.mediaType} {acc.metricType === 'PV' ? '月間PV' : acc.metricType}</span>
                                         <span className="demo-value">{acc.metricValue!.toLocaleString()}</span>
                                     </div>
                                 ))}
