@@ -63,6 +63,7 @@ export const DEFAULT_TAGS: Tag[] = [
     // =============================================
     // 得意な料理ジャンル
     // =============================================
+    { id: 'tag_d036', name: '簡単', category: '得意な料理ジャンル', sortOrder: 0, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d001', name: '時短', category: '得意な料理ジャンル', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d002', name: '節約', category: '得意な料理ジャンル', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d003', name: '作り置き', category: '得意な料理ジャンル', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
@@ -72,9 +73,6 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_d007', name: '家族ごはん', category: '得意な料理ジャンル', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d008', name: 'パン', category: '得意な料理ジャンル', sortOrder: 8, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d009', name: 'お菓子', category: '得意な料理ジャンル', sortOrder: 9, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_d010', name: '日々の献立', category: 'よく発信しているテーマ', sortOrder: 10, active: false, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_d011', name: 'お菓子作り', category: 'よく発信しているテーマ', sortOrder: 11, active: false, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_d012', name: 'お酒に合う', category: 'よく発信しているテーマ', sortOrder: 12, active: false, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d013', name: '発酵', category: '得意な料理ジャンル', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d014', name: '米粉', category: '得意な料理ジャンル', sortOrder: 14, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d015', name: '和食', category: '得意な料理ジャンル', sortOrder: 15, active: true, searchVisible: true, createdAt: now, updatedAt: now },
@@ -98,7 +96,6 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_d033', name: 'アウトドア', category: '得意な料理ジャンル', sortOrder: 33, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d034', name: 'イタリアン', category: '得意な料理ジャンル', sortOrder: 34, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_d035', name: 'フレンチ', category: '得意な料理ジャンル', sortOrder: 35, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_d036', name: '簡単', category: '得意な料理ジャンル', sortOrder: 36, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // 飲酒について
