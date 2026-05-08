@@ -49,11 +49,22 @@ export const useTags = () => {
                     // DEFAULT_TAGS にあって未登録のものを追加（新タグ追加時の自動補完）
                     const loadedIds = new Set(loaded.map(t => t.id));
                     const missing = DEFAULT_TAGS.filter(t => !loadedIds.has(t.id));
-                    const finalTags = [...loaded, ...missing];
+                    
+                    // 登録済みタグの metadata (sortOrder 等) が DEFAULT_TAGS と乖離している場合は更新
+                    const updated = loaded.map(t => {
+                        const def = DEFAULT_TAGS.find(dt => dt.id === t.id);
+                        if (def && (def.sortOrder !== t.sortOrder || def.name !== t.name)) {
+                            return { ...t, sortOrder: def.sortOrder, name: def.name, updatedAt: new Date().toISOString() };
+                        }
+                        return t;
+                    });
 
-                    if (missing.length > 0) {
-                        console.info(`[useTags] ${missing.length} 件の新しいデフォルトタグを追加しました`);
-                        _upsertTagsToSupabase(missing);
+                    const changedTags = updated.filter((t, i) => t !== loaded[i]);
+                    const finalTags = [...updated, ...missing];
+
+                    if (missing.length > 0 || changedTags.length > 0) {
+                        console.info(`[useTags] ${missing.length} 件の新タグ追加と ${changedTags.length} 件のタグ更新を同期します`);
+                        _upsertTagsToSupabase([...missing, ...changedTags]);
                     }
 
                     setTagsState(finalTags);
