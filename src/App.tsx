@@ -523,17 +523,21 @@ function App() {
                 <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   {/* 新規登録 */}
                   <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
-                    + 新規登録
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    新規登録
                   </button>
                   {/* JSONバックアップ */}
                   <button className="btn-secondary" onClick={exportToJson} title="現在のデータをJSONファイルとしてダウンロード">
-                    💾 バックアップ
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    バックアップ
                   </button>
                   <label className="btn-secondary" style={{ cursor: 'pointer' }} title="JSONバックアップファイルを読み込んで復元">
-                    📂 復元
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    復元
                     <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleJsonImport} />
                   </label>
                   <button className="btn-secondary" onClick={() => setIsTagSettingsOpen(true)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                     タグの管理
                   </button>
                 </div>
