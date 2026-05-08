@@ -430,3 +430,14 @@
     .form-row { flex-direction: column; gap: 0; }
     .image-upload-wrapper { flex-direction: column; text-align: center; }
 }
+
+.form-child-details {
+    margin-top: 16px;
+    padding: 24px;
+    background: #fffaf5;
+    border: 1px solid #ffedd5;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
