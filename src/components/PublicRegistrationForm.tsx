@@ -332,6 +332,54 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
                         <div className="form-row">
                             <div className="form-group">
+                                <label className="form-label">婚姻状況</label>
+                                <select name="maritalStatus" className="form-select" value={form.maritalStatus || ''} onChange={handleChange}>
+                                    <option value="">選択してください</option>
+                                    <option value="未婚">未婚</option>
+                                    <option value="既婚">既婚</option>
+                                    <option value="非公開">非公開</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">お子さまの有無</label>
+                                <select name="hasChildren" className="form-select" value={form.hasChildren || ''} onChange={handleChange}>
+                                    <option value="未確認">選択してください</option>
+                                    <option value="なし">なし</option>
+                                    <option value="あり">あり</option>
+                                    <option value="非公開">非公開</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {form.hasChildren === 'あり' && (
+                            <div className="form-child-details animate-fade-in" style={{ marginBottom: '24px' }}>
+                                <div className="form-group">
+                                    <label className="form-label">お子さまの人数</label>
+                                    <select name="childrenCount" className="form-select" value={form.childrenCount || ''} onChange={handleChange}>
+                                        <option value="">選択してください</option>
+                                        <option value="1人">1人</option>
+                                        <option value="2人">2人</option>
+                                        <option value="3人">3人</option>
+                                        <option value="4人以上">4人以上</option>
+                                        <option value="非公開">非公開</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">子育てステージ（複数選択可）</label>
+                                    <div className="tag-grid" style={{ padding: '8px 0' }}>
+                                        {CHILD_STAGES.filter(s => s !== '未確認' && s !== '非公開').map(stage => (
+                                            <label key={stage} className={`tag-pill ${form.childStage.includes(stage) ? 'active' : ''}`}>
+                                                <input type="checkbox" checked={form.childStage.includes(stage)} onChange={() => toggleChildStage(stage)} />
+                                                {stage}
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="form-row">
+                            <div className="form-group">
                                 <label className="form-label">生年月日</label>
                                 <input type="date" name="birthDate" className="form-input" value={form.birthDate} onChange={handleChange} />
                             </div>
@@ -391,6 +439,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     {/* ===== スキル・属性 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">専門・得意ジャンル</h2>
+                        <p className="form-hint mb-16">※該当する項目がない場合は、下記の自己紹介欄にご入力ください</p>
                         {TAG_CATEGORIES.filter(cat => cat !== 'NG・留意事項').map(cat => {
                             const tags = allTags
                                 .filter(t => t.category === cat && t.active)
@@ -427,8 +476,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     <section className="form-section">
                         <h2 className="section-title">自己紹介</h2>
                         <div className="form-group">
-                            <label className="form-label">詳細プロフィール</label>
-                            <textarea name="profileText" className="form-textarea" value={form.profileText} onChange={handleChange} rows={5} placeholder="活動実績、お仕事の依頼について、得意なことなど自由に入力してください。" />
+                            <textarea name="profileText" className="form-textarea" value={form.profileText} onChange={handleChange} rows={5} placeholder="経歴、活動内容、活動実績、お仕事の依頼について、得意なこと、アピールポイントなど自由に入力してください。" />
                         </div>
                     </section>
 
