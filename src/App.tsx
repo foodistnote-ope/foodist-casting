@@ -66,6 +66,7 @@ function App() {
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions] = useState<string[]>([]);
+  const [selectedCookingClassStatuses, setSelectedCookingClassStatuses] = useState<string[]>([]);
 
   // ---- モーダル状態 ----
   const [selectedFoodist, setSelectedFoodist] = useState<Foodist | null>(null);
@@ -359,6 +360,9 @@ function App() {
       // 12. フーディストノート掲載可否
       if (selectedNoteFeaturedPermissions.length > 0 && !selectedNoteFeaturedPermissions.includes(f.noteFeaturedPermission || '未設定')) return false;
 
+      // 13. 料理教室の運営状況
+      if (selectedCookingClassStatuses.length > 0 && !selectedCookingClassStatuses.includes(f.cookingClassStatus || '未確認')) return false;
+
       return true;
     }).sort((a, b) => (b.totalFollowers || 0) - (a.totalFollowers || 0));
   }, [
@@ -370,6 +374,7 @@ function App() {
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     selectedAlcoholTagIds, selectedGenders,
     selectedNoteFeaturedPermissions,
+    selectedCookingClassStatuses,
   ]);
 
   const handleResetFilters = () => {
@@ -396,6 +401,7 @@ function App() {
     setSelectedAlcoholTagIds([]);
     setSelectedGenders([]);
     setSelectedNoteFeaturedPermissions([]);
+    setSelectedCookingClassStatuses([]);
   };
 
   /*
@@ -455,6 +461,7 @@ function App() {
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     selectedAlcoholTagIds, selectedGenders,
     selectedNoteFeaturedPermissions,
+    selectedCookingClassStatuses,
   ].some(a => a.length > 0);
 
   // SNSフォロワーフィルターのアクティブなプラットフォームを特定し、そのフォロワー数で降順ソート
@@ -568,6 +575,7 @@ function App() {
                   selectedAlcoholTagIds={selectedAlcoholTagIds} setSelectedAlcoholTagIds={setSelectedAlcoholTagIds}
                   selectedGenders={selectedGenders} setSelectedGenders={setSelectedGenders}
                   selectedNoteFeaturedPermissions={selectedNoteFeaturedPermissions} setSelectedNoteFeaturedPermissions={setSelectedNoteFeaturedPermissions}
+                  selectedCookingClassStatuses={selectedCookingClassStatuses} setSelectedCookingClassStatuses={setSelectedCookingClassStatuses}
                   qualificationTags={qualificationTags}
                   achievementTags={achievementTags}
                   workTags={workTags}
