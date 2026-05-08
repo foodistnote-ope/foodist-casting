@@ -129,6 +129,15 @@ export type ChildStage = typeof CHILD_STAGES[number];
 // --- 性別 ---
 export const GENDER_OPTIONS = ['女性', '男性', 'その他', '非公開'];
 
+// --- 料理教室の運営状況 ---
+export const COOKING_CLASS_STATUS_OPTIONS = [
+    '現在運営している',
+    '過去運営していたことがある',
+    '運営したことがない',
+    '未確認'
+] as const;
+export type CookingClassStatus = typeof COOKING_CLASS_STATUS_OPTIONS[number];
+
 // --- フーディスト基本マスタ ---
 export interface Foodist {
     id: string;
@@ -160,6 +169,12 @@ export interface Foodist {
     mediaAccounts: MediaAccount[];
     notes: FoodieNote[];
     aliases?: string[];         // 照合用の別名（エイリアス）
+    /** フーディストノート記事掲載可否 */
+    noteFeaturedPermission?: '掲載可（事前確認が必要）' | '掲載可（事前確認は不要、掲載後に案内があればOK）' | '掲載不可' | '未設定';
+    /** 掲載可否に関するメモ（特記事項・掲載不可理由など） */
+    noteFeaturedMemo?: string;
+    /** 料理教室の運営状況 */
+    cookingClassStatus?: CookingClassStatus;
     createdAt: string;
     updatedAt: string;
 }
@@ -170,3 +185,11 @@ export const calcTotalFollowers = (accounts: MediaAccount[]): number | undefined
     if (contributingAccounts.length === 0) return undefined;
     return contributingAccounts.reduce((sum, a) => sum + (a.metricValue || 0), 0);
 };
+// --- 申請中データ ---
+export interface RegistrationApplication {
+    id: string;
+    data: Omit<Foodist, 'id'> & { email: string }; // 申請時は ID なし、通知用メールアドレスあり
+    status: 'pending' | 'approved' | 'rejected';
+    createdAt: string;
+    updatedAt: string;
+}
