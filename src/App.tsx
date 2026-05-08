@@ -11,6 +11,9 @@ import { useFoodists, normalizeString } from './hooks/useFoodists';
 import { parseFoodistCsv, parsePatchCsv } from './utils/csvParser';
 import { AuthGate } from './components/AuthGate';
 import { ImportResultModal } from './components/ImportResultModal';
+import { PublicRegistrationForm } from './components/PublicRegistrationForm';
+import { ApplicationReviewView } from './components/ApplicationReviewView';
+import { updateApplicationStatus } from './lib/supabaseDb';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -28,9 +31,11 @@ const FOLLOWER_RANGES: Record<string, FollowerRange> = {
 
 function App() {
   // ---- ビュー ----
-  const [currentView, setCurrentView] = useState<'dashboard' | 'database'>(() => {
-    return (localStorage.getItem('app_current_view') as 'dashboard' | 'database') || 'dashboard';
+  const [currentView, setCurrentView] = useState<'dashboard' | 'database' | 'review'>(() => {
+    return (localStorage.getItem('app_current_view') as any) || 'dashboard';
   });
+
+  const isPublicApplyPage = window.location.pathname === '/apply';
 
   // 表示モードの永続化
   useEffect(() => {
@@ -502,6 +507,10 @@ function App() {
     );
   }
 
+  if (isPublicApplyPage) {
+    return <PublicRegistrationForm allTags={tags} />;
+  }
+
   return (
     <AuthGate>
       <div className="app-container">
@@ -685,7 +694,7 @@ function App() {
               </div>
             </div>
           </main>
-        ) : (
+        ) : currentView === 'database' ? (
           <DatabaseView
             foodists={foodists}
             allTags={tags}
@@ -699,6 +708,30 @@ function App() {
             isImporting={isImportingCsv}
             onPatchImport={handlePatchCsvImport}
             isPatchImporting={isPatchingCsv}
+          />
+        ) : (
+          <ApplicationReviewView 
+            allTags={tags} 
+            onEdit={app => {
+              if (!app || !app.data) return;
+              
+              // クラッシュ防止：不足している配列項目を空のリストで補完する
+              const foodistData = {
+                tagIds: [],
+                mediaAccounts: [],
+                notes: [],
+                childStage: [],
+                aliases: [],
+                ...JSON.parse(JSON.stringify(app.data)), // 申請データをコピー
+                id: app.id
+              };
+              
+              // 不要な内部項目（email等）を除去
+              if ((foodistData as any).email) delete (foodistData as any).email;
+              
+              setEditingFoodist(foodistData as Foodist);
+              setIsEditModalOpen(true);
+            }}
           />
         )}
 
@@ -748,10 +781,35 @@ function App() {
             foodist={editingFoodist}
             allTags={tags}
             onClose={() => { setIsEditModalOpen(false); setEditingFoodist(null); }}
-            onSave={data => {
+            onSave={async (data) => {
               if ('id' in data) {
-                updateFoodist(data as Foodist);
+                const isApplication = !data.id.startsWith('foodist-');
+                
+                if (isApplication) {
+                  // 審査画面からの承認フロー
+                  const now = new Date().toISOString();
+                  const newId = `foodist-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+                  const foodist: Foodist = {
+                    ...data,
+                    id: newId,
+                    createdAt: now,
+                    updatedAt: now,
+                  } as Foodist;
+
+                  try {
+                    await addFoodist(foodist);
+                    await updateApplicationStatus(data.id, 'approved');
+                    alert('承認・登録が完了しました。');
+                  } catch (err) {
+                    console.error('Approval failed:', err);
+                    alert('承認処理に失敗しました。');
+                  }
+                } else {
+                  // 通常のデータ更新
+                  updateFoodist(data as Foodist);
+                }
               } else {
+                // 新規追加
                 addFoodist(data);
               }
               setIsEditModalOpen(false);
