@@ -400,12 +400,23 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                     </div>
 
                     <button className="btn-secondary" onClick={handleExportCsv} title="表示中のデータをCSV形式でダウンロード">
-                        ⬇️ CSV出力
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        CSV出力
                     </button>
 
-                    <button className="btn-primary" onClick={onAdd}>+ 新規登録</button>
+                    <button className="btn-primary" onClick={onAdd}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        新規登録
+                    </button>
                     <label className={`btn-secondary ${isImporting ? 'loading' : ''}`} style={{ cursor: 'pointer' }} title="新規フーディストを一括追加するCSV">
-                        {isImporting ? '読込中...' : '新規追加CSV'}
+                        {isImporting ? (
+                            '読込中...'
+                        ) : (
+                            <>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                                新規追加CSV
+                            </>
+                        )}
                         <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onImport} disabled={isImporting} />
                     </label>
                     <label
@@ -413,7 +424,14 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                         style={{ cursor: 'pointer', borderColor: '#d4844a', color: '#d4844a' }}
                         title="既存フーディストの特定項目を一括更新するCSV（新規追加はされません）"
                     >
-                        {isPatchImporting ? '更新中...' : '🔄 部分更新CSV'}
+                        {isPatchImporting ? (
+                            '更新中...'
+                        ) : (
+                            <>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                部分更新CSV
+                            </>
+                        )}
                         <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onPatchImport} disabled={isPatchImporting} />
                     </label>
                     <a
@@ -422,6 +440,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                         className="btn-secondary"
                         title="部分更新CSVのテンプレートをダウンロード"
                     >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         更新テンプレ
                     </a>
                 </div>
@@ -465,8 +484,16 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                     ))}
                                     <td>
                                         <div style={{ display: 'flex', gap: '4px' }}>
-                                            <button className="btn-text" onClick={() => onEdit(foodist)}>編集</button>
-                                            {onDelete && <button className="btn-icon-danger" style={{ fontSize: '0.8rem', padding: '4px 8px', height: 'auto' }} onClick={() => onDelete(foodist.id)}>削除</button>}
+                                            <button className="btn-text" style={{ display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => onEdit(foodist)}>
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                                編集
+                                            </button>
+                                            {onDelete && (
+                                                <button className="btn-icon-danger" style={{ fontSize: '0.8rem', padding: '4px 8px', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => onDelete(foodist.id)}>
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                                    削除
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>
