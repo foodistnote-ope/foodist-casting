@@ -392,7 +392,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     <section className="form-section">
                         <h2 className="section-title">専門・得意ジャンル</h2>
                         {TAG_CATEGORIES.filter(cat => cat !== 'NG・留意事項').map(cat => {
-                            const tags = allTags.filter(t => t.category === cat && t.active);
+                            const tags = allTags
+                                .filter(t => t.category === cat && t.active)
+                                .sort((a, b) => a.sortOrder - b.sortOrder);
                             const isOpen = expandedCategories.has(cat);
                             return (
                                 <div key={cat} className="category-group">
