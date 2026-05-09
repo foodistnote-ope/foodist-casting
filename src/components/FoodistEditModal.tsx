@@ -239,7 +239,9 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
     // タグをカテゴリ別に整理（全タグ = active問わず）
     const tagsByCategory: Record<TagCategory, Tag[]> = {} as Record<TagCategory, Tag[]>;
     TAG_CATEGORIES.forEach(cat => { tagsByCategory[cat] = []; });
-    allTags.forEach(tag => { tagsByCategory[tag.category]?.push(tag); });
+    [...allTags].sort((a, b) => a.sortOrder - b.sortOrder).forEach(tag => {
+        tagsByCategory[tag.category]?.push(tag);
+    });
 
     return (
         <div
@@ -362,7 +364,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     </div>
                                     {acc.metricType !== 'なし' && (
                                         <div className="form-group">
-                                            <label className="form-label">数値</label>
+                                            <label className="form-label">{acc.metricType === 'PV' ? '月間PV数' : '数値'}</label>
                                             <input type="number" className="form-input" value={acc.metricValue ?? ''} min={0}
                                                 onChange={e => updateMedia(acc.id, { metricValue: e.target.value ? parseInt(e.target.value) : undefined })} />
                                         </div>
@@ -458,6 +460,18 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
                         <div className="form-row">
                             <div className="form-group">
+                                <label className="form-label">料理教室の運営</label>
+                                <select className="form-select" name="cookingClassStatus" value={form.cookingClassStatus || '未確認'} onChange={handleChange}>
+                                    <option value="未確認">-- 未確認 --</option>
+                                    <option value="現在運営している">現在運営している</option>
+                                    <option value="過去運営していたことがある">過去運営していたことがある</option>
+                                    <option value="運営したことがない">運営したことがない</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
                                 <label className="form-label">子どもの有無</label>
                                 <select className="form-select" name="hasChildren" value={form.hasChildren} onChange={handleChange}>
                                     <option value="あり">あり</option>
@@ -524,12 +538,15 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     </button>
                                     {isOpen && (
                                         <div className="tags-checkbox-group">
-                                            {visibleTags.map(tag => (
-                                                <label key={tag.id} className={`tag-checkbox-label ${form.tagIds.includes(tag.id) ? 'selected' : ''}`}>
-                                                    <input type="checkbox" style={{ display: 'none' }} checked={form.tagIds.includes(tag.id)} onChange={() => toggleTagId(tag.id)} />
-                                                    {tag.name}
-                                                </label>
-                                            ))}
+                                            {visibleTags
+                                                .slice()
+                                                .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999))
+                                                .map(tag => (
+                                                    <label key={tag.id} className={`tag-checkbox-label ${form.tagIds.includes(tag.id) ? 'selected' : ''}`}>
+                                                        <input type="checkbox" style={{ display: 'none' }} checked={form.tagIds.includes(tag.id)} onChange={() => toggleTagId(tag.id)} />
+                                                        {tag.name}
+                                                    </label>
+                                                ))}
                                             {visibleTags.length === 0 && <span style={{ color: '#64748b', fontSize: '0.82rem' }}>タグがありません</span>}
                                         </div>
                                     )}
