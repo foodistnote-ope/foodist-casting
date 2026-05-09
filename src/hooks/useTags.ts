@@ -157,14 +157,14 @@ export const useTags = () => {
     const getSearchableTags = useCallback((category: TagCategory): Tag[] => {
         return tags
             .filter(t => t.category === category && t.active && t.searchVisible)
-            .sort((a, b) => a.sortOrder - b.sortOrder);
+            .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
     }, [tags]);
 
     /** 編集画面用: active にかかわらず全タグをカテゴリで返す */
     const getAllTagsByCategory = useCallback((category: TagCategory): Tag[] => {
         return tags
             .filter(t => t.category === category)
-            .sort((a, b) => a.sortOrder - b.sortOrder);
+            .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
     }, [tags]);
 
     /** IDからタグ情報を返す */
