@@ -440,6 +440,51 @@ function App() {
     console.info('[App] タグの整理（v5）が完了しました');
   }, [loading, foodists, removeTagsFromAll]);
 
+  // ---- データ移行: 不要タグの整理 (v6: 資格・専門) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v6';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_q014 (スイーツコンシェルジュ), tag_q016 (マクロビオティック関連資格), tag_q017 (キャンプインストラクター)
+    const deletedTagIds = ['tag_q014', 'tag_q016', 'tag_q017'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v6）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
+  // ---- データ移行: 不要タグの整理 (v7: 料理研究家・料理家) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v7';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_q003 (料理研究家), tag_q004 (料理家)
+    const deletedTagIds = ['tag_q003', 'tag_q004'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v7）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
+  // ---- データ移行: 不要タグの整理 (v8: パン講師・製菓講師) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v8';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_q006 (パン講師), tag_q007 (製菓講師)
+    const deletedTagIds = ['tag_q006', 'tag_q007'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v8）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
   // ---- URLベースのディープリンク ----
   // フーディストがロードされたらURLパラメータをチェックし、对象のモーダルを自動で開く
   useEffect(() => {
