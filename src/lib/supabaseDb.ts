@@ -12,7 +12,7 @@ export const getAllFoodists = async (): Promise<Foodist[]> => {
         .from('foodists')
         .select('data');
     if (error) throw error;
-    return (data ?? []).map(row => row.data as Foodist);
+    return (data ?? []).map(row => row.data as Foodist).filter(f => f != null);
 };
 
 /** 登録件数を取得 */
