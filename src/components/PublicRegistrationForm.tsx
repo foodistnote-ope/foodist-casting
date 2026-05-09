@@ -287,7 +287,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
                         <div className="form-group">
                             <label className="form-label">肩書き</label>
-                            <input name="title" className="form-input" value={form.title} onChange={handleChange} placeholder="例: 料理研究家、お弁当作家" />
+                            <input name="title" className="form-input" value={form.title} onChange={handleChange} placeholder="例: 料理研究家、料理家、パン講師" />
                         </div>
 
                         <div className="form-group">
@@ -512,30 +512,18 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         {TAG_CATEGORIES.filter(cat => cat !== 'NG・留意事項').map(cat => {
                             const tags = allTags
                                 .filter(t => t.category === cat && t.active)
-                                .sort((a, b) => a.sortOrder - b.sortOrder);
-                            const isOpen = expandedCategories.has(cat);
+                                .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
                             return (
                                 <div key={cat} className="category-group">
-                                    <button type="button" className="category-toggle" onClick={() => {
-                                        setExpandedCategories(prev => {
-                                            const next = new Set(prev);
-                                            if (next.has(cat)) next.delete(cat); else next.add(cat);
-                                            return next;
-                                        });
-                                    }}>
-                                        <span>{cat}</span>
-                                        <svg className={`chevron-icon ${isOpen ? 'open' : ''}`} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                                    </button>
-                                    {isOpen && (
-                                        <div className="tag-grid">
-                                            {tags.map(t => (
-                                                <label key={t.id} className={`tag-pill ${form.tagIds.includes(t.id) ? 'active' : ''}`}>
-                                                    <input type="checkbox" checked={form.tagIds.includes(t.id)} onChange={() => toggleTag(t.id)} />
-                                                    {t.name}
-                                                </label>
-                                            ))}
-                                        </div>
-                                    )}
+                                    <h3 className="category-title-static">{cat}</h3>
+                                    <div className="tag-grid">
+                                        {tags.map(t => (
+                                            <label key={t.id} className={`tag-pill ${form.tagIds.includes(t.id) ? 'active' : ''}`}>
+                                                <input type="checkbox" checked={form.tagIds.includes(t.id)} onChange={() => toggleTag(t.id)} />
+                                                {t.name}
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
                             );
                         })}
