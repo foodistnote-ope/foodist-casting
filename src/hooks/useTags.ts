@@ -44,7 +44,7 @@ export const useTags = () => {
                 if (error) throw error;
 
                 if (data && data.length > 0) {
-                    const loaded = data.map(row => row.data as Tag);
+                    const loaded = data.map(row => row.data as Tag).filter(t => t != null);
 
                     // DEFAULT_TAGS にあって未登録のものを追加（新タグ追加時の自動補完）
                     const loadedIds = new Set(loaded.map(t => t.id));

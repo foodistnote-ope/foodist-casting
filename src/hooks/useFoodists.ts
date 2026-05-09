@@ -172,6 +172,23 @@ export const useFoodists = () => {
         _applyAndSave(updated, () => putManyFoodists(updated));
     }, [foodists, _applyAndSave]);
 
+    /** 指定したタグIDを全フーディストから一括削除する */
+    const removeTagsFromAll = useCallback((tagIdsToRemove: string[]) => {
+        const now = new Date().toISOString();
+        const updatedToSave: Foodist[] = [];
+        const newList = foodists.map(f => {
+            const newTagIds = (f.tagIds || []).filter(id => !tagIdsToRemove.includes(id));
+            if (newTagIds.length === (f.tagIds || []).length) return f;
+            const updated = { ...f, tagIds: newTagIds, updatedAt: now };
+            updatedToSave.push(updated);
+            return updated;
+        });
+
+        if (updatedToSave.length > 0) {
+            _applyAndSave(newList, () => putManyFoodists(updatedToSave));
+        }
+    }, [foodists, _applyAndSave]);
+
     // ---- JSON エクスポート ----
     const exportToJson = useCallback(() => {
         const payload = {
@@ -433,5 +450,6 @@ export const useFoodists = () => {
         importFromJson,
         mergeFoodists,
         patchFoodists,
+        removeTagsFromAll,
     };
 };
