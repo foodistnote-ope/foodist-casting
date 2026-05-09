@@ -40,6 +40,8 @@ interface FilterSidebarProps {
     setSelectedGenders: (v: string[]) => void;
     selectedNoteFeaturedPermissions: string[];
     setSelectedNoteFeaturedPermissions: (v: string[]) => void;
+    selectedCookingClassStatuses: string[];
+    setSelectedCookingClassStatuses: (v: string[]) => void;
     // タグカテゴリ別選択済みIDリスト
     selectedQualificationTagIds: string[];
     setSelectedQualificationTagIds: (v: string[]) => void;
@@ -84,9 +86,13 @@ const FOLLOWER_OPTIONS = [
 const PLATFORM_OPTIONS = ['ブログ', 'Instagram', 'X', 'TikTok', 'YouTube', '公式ホームページ', 'その他'];
 const NOTE_FEATURED_OPTIONS = [
     '掲載可（事前確認が必要）',
-    '掲載可（事前確認は不要、掲載後に案内があればOK）',
-    '掲載不可',
     '未設定'
+];
+const COOKING_CLASS_OPTIONS = [
+    '現在運営している',
+    '過去運営していたことがある',
+    '運営したことがない',
+    '未確認'
 ];
 
 const SHOW_MORE_THRESHOLD = 8;
@@ -175,6 +181,7 @@ export const FilterSidebar = ({
     selectedPlatforms, setSelectedPlatforms,
     selectedGenders, setSelectedGenders,
     selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions,
+    selectedCookingClassStatuses, setSelectedCookingClassStatuses,
     selectedQualificationTagIds, setSelectedQualificationTagIds,
     selectedAchievementTagIds, setSelectedAchievementTagIds,
     selectedWorkTagIds, setSelectedWorkTagIds,
@@ -221,7 +228,9 @@ export const FilterSidebar = ({
         setSelectedQualificationTagIds([]);
         setSelectedAchievementTagIds([]);
         setSelectedWorkTagIds([]);
+        setSelectedAlcoholTagIds([]);
         setSelectedFeatureTagIds([]);
+        setSelectedCookingClassStatuses([]);
     };
 
     const totalActiveFilters = [
@@ -230,6 +239,7 @@ export const FilterSidebar = ({
         selectedChildStages, selectedFollowers, selectedInstagramFollowers,
         selectedPlatforms, selectedGenders,
         selectedNoteFeaturedPermissions,
+        selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
 
@@ -408,6 +418,11 @@ export const FilterSidebar = ({
                     onToggle={v => toggle(v, selectedFeatureTagIds, setSelectedFeatureTagIds)}
                     showMoreThreshold={SHOW_MORE_THRESHOLD}
                 />
+            </FilterSection>
+
+            {/* 料理教室の運営状況 */}
+            <FilterSection title="料理教室の運営状況" badge={selectedCookingClassStatuses.length}>
+                <CheckList items={COOKING_CLASS_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedCookingClassStatuses} onToggle={v => toggle(v, selectedCookingClassStatuses, setSelectedCookingClassStatuses)} />
             </FilterSection>
 
             {/* フーディストノート掲載可否 */}
