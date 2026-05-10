@@ -19,40 +19,32 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_q010', name: '発酵関連資格', category: '資格・専門', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_q011', name: '食育関連資格', category: '資格・専門', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_q012', name: '離乳食関連資格', category: '資格・専門', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_q013', name: 'スポーツ栄養関連', category: '資格・専門', sortOrder: 14, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_q021', name: '腸活関連資格', category: '資格・専門', sortOrder: 15, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // 実績
     // =============================================
-    { id: 'tag_a001', name: '料理教室運営', category: '実績', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a002', name: '料理教室講師', category: '実績', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a003', name: 'パン教室運営', category: '実績', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a004', name: 'お菓子教室運営', category: '実績', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a005', name: '書籍出版', category: '実績', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a006', name: 'テレビ出演', category: '実績', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a007', name: '雑誌掲載', category: '実績', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a008', name: 'Webメディア掲載', category: '実績', sortOrder: 8, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a009', name: 'レシピ連載', category: '実績', sortOrder: 9, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a010', name: '監修', category: '実績', sortOrder: 10, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a011', name: '商品開発', category: '実績', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a012', name: '企業タイアップ', category: '実績', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a013', name: 'イベント登壇', category: '実績', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_a017', name: '受賞歴', category: '実績', sortOrder: 17, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a005', name: '書籍出版', category: '実績', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a006', name: 'テレビ出演', category: '実績', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a007', name: '雑誌掲載', category: '実績', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a008', name: 'Webメディア掲載', category: '実績', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a013', name: 'イベント登壇', category: '実績', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a017', name: '受賞歴', category: '実績', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // 対応可能業務
     // =============================================
     { id: 'tag_w001', name: 'レシピ開発', category: '対応可能業務', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w002', name: '記事執筆', category: '対応可能業務', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w003', name: '監修', category: '対応可能業務', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w004', name: 'SNS投稿', category: '対応可能業務', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w005', name: '写真撮影', category: '対応可能業務', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w009', name: '動画制作', category: '対応可能業務', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w011', name: 'ライブ配信', category: '対応可能業務', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w003', name: '監修', category: '対応可能業務', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w002', name: '記事執筆', category: '対応可能業務', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w005', name: '写真撮影', category: '対応可能業務', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w019', name: 'フードスタイリング', category: '対応可能業務', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a011', name: '商品開発', category: '対応可能業務', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_a012', name: '企業タイアップ', category: '対応可能業務', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w004', name: 'SNS投稿', category: '対応可能業務', sortOrder: 8, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w009', name: '動画制作', category: '対応可能業務', sortOrder: 9, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w011', name: 'ライブ配信', category: '対応可能業務', sortOrder: 10, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_w020', name: '出張講師・レッスン', category: '対応可能業務', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w012', name: 'イベント登壇', category: '対応可能業務', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w013', name: 'インタビュー対応', category: '対応可能業務', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w019', name: 'フードスタイリング', category: '対応可能業務', sortOrder: 19, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // 得意な料理ジャンル
@@ -95,4 +87,3 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_al02', name: 'お酒を飲まない', category: '飲酒について', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_al03', name: 'お酒は飲まないがPR可', category: '飲酒について', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 ];
-
