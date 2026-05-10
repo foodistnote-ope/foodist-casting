@@ -80,7 +80,7 @@ function App() {
   } | null>(null);
 
   // ---- データ ----
-  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
+  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, removeTagsFromAll, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
   const { tags, tagsLoading, addTag, removeTag, toggleTagActive, deactivateTag, getSearchableTags } = useTags();
 
   // 各カテゴリの検索可能タグ（active=true & searchVisible=true）
@@ -224,7 +224,7 @@ function App() {
       // 1. キーワード検索（活動名・肩書き・一覧用紹介文・タグ名・エイリアス等）
       const q = searchQuery.toLowerCase();
       const nq = normalizeString(searchQuery);
-      const tagNames = f.tagIds.map(id => tagMap.get(id)?.name || '').join(' ').toLowerCase();
+      const tagNames = (f.tagIds || []).map(id => tagMap.get(id)?.name || '').join(' ').toLowerCase();
       const nTagNames = normalizeString(tagNames);
       
       if (q && !f.displayName.toLowerCase().includes(q) &&
@@ -355,7 +355,7 @@ function App() {
         ...selectedFeatureTagIds,
         ...selectedAlcoholTagIds,
       ];
-      if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => f.tagIds.includes(id))) return false;
+      if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => (f.tagIds || []).includes(id))) return false;
       
       // 12. フーディストノート掲載可否
       if (selectedNoteFeaturedPermissions.length > 0 && !selectedNoteFeaturedPermissions.includes(f.noteFeaturedPermission || '未設定')) return false;
@@ -423,6 +423,82 @@ function App() {
     console.info('[App] 動画関連タグの統合（v4）が完了しました');
   }, [loading, foodists, batchReplaceTags]);
   */
+
+  // ---- データ移行: 不要タグの整理 (v5) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v5';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    // 先に完了フラグを立ててループを防止
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_d030 (電子レンジ), tag_d031 (オーブン対応), tag_d032 (無水調理)
+    const deletedTagIds = ['tag_d030', 'tag_d031', 'tag_d032'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v5）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
+  // ---- データ移行: 不要タグの整理 (v6: 資格・専門) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v6';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_q014 (スイーツコンシェルジュ), tag_q016 (マクロビオティック関連資格), tag_q017 (キャンプインストラクター)
+    const deletedTagIds = ['tag_q014', 'tag_q016', 'tag_q017'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v6）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
+  // ---- データ移行: 不要タグの整理 (v7: 料理研究家・料理家) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v7';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_q003 (料理研究家), tag_q004 (料理家)
+    const deletedTagIds = ['tag_q003', 'tag_q004'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v7）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
+  // ---- データ移行: 不要タグの整理 (v8: パン講師・製菓講師) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v8';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_q006 (パン講師), tag_q007 (製菓講師)
+    const deletedTagIds = ['tag_q006', 'tag_q007'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v8）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
+  // ---- データ移行: 不要タグの整理 (v9: 対応可能業務) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v9';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_w006 (動画出演), tag_w014 (オンライン出演), tag_w016 (出張)
+    const deletedTagIds = ['tag_w006', 'tag_w014', 'tag_w016'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v9）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
 
   // ---- URLベースのディープリンク ----
   // フーディストがロードされたらURLパラメータをチェックし、对象のモーダルを自動で開く
@@ -596,7 +672,7 @@ function App() {
                     <div className="foodist-grid">
                       {sortedFoodists.map(foodist => {
                         // 表示するタグ（最大8件、active=true 優先）
-                        const cardTags = foodist.tagIds
+                        const cardTags = (foodist.tagIds || [])
                           .map(id => tagMap.get(id))
                           .filter((t): t is NonNullable<typeof t> => t != null)
                           .slice(0, 8);
@@ -742,7 +818,7 @@ function App() {
                 // 不要な内部項目（email等）を除去
                 if ((foodistData as any).email) delete (foodistData as any).email;
                 
-                setEditingFoodist(foodistData as Foodist);
+                setEditingFoodist({ ...foodistData, _isApplication: true } as any);
                 setIsEditModalOpen(true);
               }}
             />
@@ -797,14 +873,17 @@ function App() {
             onClose={() => { setIsEditModalOpen(false); setEditingFoodist(null); }}
             onSave={async (data) => {
               if ('id' in data) {
-                const isApplication = !data.id.startsWith('foodist-');
+                const isApplication = (data as any)._isApplication;
                 
                 if (isApplication) {
                   // 審査画面からの承認フロー
                   const now = new Date().toISOString();
                   const newId = `foodist-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+                  
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  const { _isApplication: _, ...rest } = data as any;
                   const foodist: Foodist = {
-                    ...data,
+                    ...rest,
                     id: newId,
                     createdAt: now,
                     updatedAt: now,
