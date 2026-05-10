@@ -153,6 +153,7 @@ export interface Foodist {
     ageGroup?: AgeGroup;         // 年代（固定選択肢）
     gender?: string;
     faceVisibility: '可' | '条件付き可' | '不可' | '未設定';
+    faceVisibilityMemo?: string;
     hasChildren: 'あり' | 'なし' | '非公開' | '未確認';
     childrenCount?: string;      // '0'/'1'/'2'/'3'/'4人以上'/'非公開'/'未確認'
     childStage: string[];        // 子育てステージ（複数選択可）
