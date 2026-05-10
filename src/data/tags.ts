@@ -48,13 +48,10 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_w003', name: '監修', category: '対応可能業務', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w004', name: 'SNS投稿', category: '対応可能業務', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w005', name: '写真撮影', category: '対応可能業務', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w006', name: '動画出演', category: '対応可能業務', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w009', name: '動画制作', category: '対応可能業務', sortOrder: 7, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w011', name: 'ライブ配信', category: '対応可能業務', sortOrder: 11, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w012', name: 'イベント登壇', category: '対応可能業務', sortOrder: 12, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w013', name: 'インタビュー対応', category: '対応可能業務', sortOrder: 13, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w014', name: 'オンライン出演', category: '対応可能業務', sortOrder: 14, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_w016', name: '出張', category: '対応可能業務', sortOrder: 16, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_w019', name: 'フードスタイリング', category: '対応可能業務', sortOrder: 19, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
