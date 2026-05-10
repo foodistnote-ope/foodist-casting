@@ -34,6 +34,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     ageGroup: undefined,
     gender: '',
     faceVisibility: '未設定',
+    faceVisibilityMemo: '',
     hasChildren: '未確認',
     childrenCount: undefined,
     childStage: [],
@@ -44,7 +45,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     tagIds: [],
     mediaAccounts: [],
     aliases: [],
-    noteFeaturedPermission: '未設定',
+    noteFeaturedPermission: undefined,
     noteFeaturedMemo: '',
     cookingClassStatus: '未確認',
     createdAt: '',
@@ -78,6 +79,17 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                 ? prev.childStage.filter(s => s !== stage)
                 : [...prev.childStage, stage],
         }));
+    };
+
+    const handleAlcoholTagChange = (tagId: string) => {
+        const alcoholTagIds = ['tag_al01', 'tag_al02', 'tag_al03'];
+        setForm(prev => {
+            const otherTags = prev.tagIds.filter(id => !alcoholTagIds.includes(id));
+            return {
+                ...prev,
+                tagIds: [...otherTags, tagId]
+            };
+        });
     };
 
     const addMedia = () => {
@@ -204,8 +216,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                 <div className="header-inner">
                     <h1 className="form-title">【ご協力のお願い】料理の活動に関するアンケート</h1>
                     <p className="form-subtitle">
-                        本アンケートは、料理家・フーディストのみなさまの活動状況やご希望をお伺いし、今後の企画やお仕事依頼の参考にさせていただくことを目的としております。所要時間は5～10分程度です。<br />
-                        お忙しいところ恐れ入りますが、ぜひご協力をお願いいたします。
+                        本アンケートは、みなさまの活動状況やご希望をお伺いし、今後の企画やお仕事依頼の参考にさせていただくことを目的としております。所要時間は5〜10分程度です。ぜひご協力をお願いいたします。
                     </p>
                 </div>
             </header>
@@ -272,15 +283,15 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         {form.avatarUrl && (
                                             <button 
                                                 type="button" 
-                                                className="btn-text-danger" 
+                                                className="btn-text-danger ml-12" 
                                                 onClick={() => setForm(prev => ({ ...prev, avatarUrl: '' }))}
-                                                style={{ marginLeft: '12px', fontSize: '0.9rem' }}
+                                                style={{ fontSize: '0.9rem' }}
                                             >
                                                 削除する
                                             </button>
                                         )}
                                     </div>
-                                    <p className="form-hint">高解像度の画像を推奨します（横幅1200px以上推奨、最小640px）。</p>
+                                    <p className="form-hint mt-12">高解像度の画像を推奨します（横幅1200px以上推奨、最小640px）。</p>
                                 </div>
                             </div>
                         </div>
@@ -309,7 +320,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
                         </div>
 
-                        <div className="form-group" style={{ marginBottom: '24px' }}>
+                        <div className="form-group">
                             <label className="form-label required">PR企画でのお顔出しは可能ですか？</label>
                             <div className="radio-group-horizontal">
                                 {['可', '条件付き可', '不可'].map(opt => (
@@ -326,9 +337,22 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     </label>
                                 ))}
                             </div>
+
+                            {form.faceVisibility === '条件付き可' && (
+                                <div className="mt-12 animate-fade-in">
+                                    <textarea 
+                                        name="faceVisibilityMemo" 
+                                        className="form-textarea" 
+                                        value={form.faceVisibilityMemo} 
+                                        onChange={handleChange} 
+                                        rows={2}
+                                        placeholder="どのような条件であれば可能か具体的に入力してください（例：お面や被り物をしての出演、目元を隠せば可、料理の手元のみ、など）"
+                                    />
+                                </div>
+                            )}
                         </div>
 
-                        <div className="form-group" style={{ marginBottom: '24px' }}>
+                        <div className="form-group">
                             <label className="form-label required">個人で料理教室を運営されていますか？（リアル・オンライン問わず）</label>
                             <div className="radio-group vertical">
                                 {[
@@ -348,6 +372,29 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         <span className="radio-text">{opt}</span>
                                     </label>
                                 ))}
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label required">飲酒について</label>
+                            <div className="radio-group vertical">
+                                {allTags
+                                    .filter(t => t.category === '飲酒について' && t.active)
+                                    .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999))
+                                    .map(t => (
+                                        <label key={t.id} className={`radio-option ${form.tagIds.includes(t.id) ? 'selected' : ''}`}>
+                                            <input 
+                                                type="radio" 
+                                                name="alcoholStatus" 
+                                                value={t.id} 
+                                                checked={form.tagIds.includes(t.id)} 
+                                                onChange={() => handleAlcoholTagChange(t.id)}
+                                                required
+                                            />
+                                            <span className="radio-text">{t.name}</span>
+                                        </label>
+                                    ))
+                                }
                             </div>
                         </div>
 
@@ -402,7 +449,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="form-group">
                             <label className="form-label required">お子さまの有無</label>
                             <div className="radio-group-horizontal">
-                                {['なし', 'あり', '非公開'].map(opt => (
+                                {['あり', 'なし', '非公開'].map(opt => (
                                     <label key={opt} className={`radio-option ${form.hasChildren === opt ? 'selected' : ''}`}>
                                         <input 
                                             type="radio" 
@@ -419,7 +466,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         </div>
 
                         {form.hasChildren === 'あり' && (
-                            <div className="form-child-details animate-fade-in" style={{ marginBottom: '24px' }}>
+                            <div className="form-child-details animate-fade-in">
                                 <div className="form-group">
                                     <label className="form-label">お子さまの人数</label>
                                     <select name="childrenCount" className="form-select" value={form.childrenCount || ''} onChange={handleChange}>
@@ -433,7 +480,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">子育てステージ（複数選択可）</label>
-                                    <div className="tag-grid" style={{ padding: '8px 0' }}>
+                                    <div className="tag-grid">
                                         {CHILD_STAGES.filter(s => s !== '未確認' && s !== '非公開').map(stage => (
                                             <label key={stage} className={`tag-pill ${form.childStage.includes(stage) ? 'active' : ''}`}>
                                                 <input type="checkbox" checked={form.childStage.includes(stage)} onChange={() => toggleChildStage(stage)} />
@@ -456,7 +503,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     {/* ===== SNS情報 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">SNS・媒体情報</h2>
-                        <p className="form-hint mb-16">活動しているSNSやブログを登録してください。</p>
+                        <p className="form-hint mb-16">ご自身が運営するSNSや媒体を登録してください。</p>
                         
                         {form.mediaAccounts.map((acc, idx) => (
                             <div key={acc.id} className="media-acc-card">
@@ -482,7 +529,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     </div>
                                 </div>
                                 {acc.mediaType === 'Instagram' && (
-                                    <div className="form-group" style={{ marginBottom: '12px' }}>
+                                    <div className="form-group">
                                         <label className="form-label">リール動画の投稿頻度</label>
                                         <select className="form-select" value={acc.reelsFrequency || ''} onChange={e => updateMedia(acc.id, { reelsFrequency: e.target.value })}>
                                             <option value="">選択してください</option>
@@ -502,14 +549,14 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
                         ))}
 
-                        <button type="button" className="btn-secondary btn-full" onClick={addMedia}>＋ SNS・媒体を追加する</button>
+                        <button type="button" className="btn-secondary btn-full" onClick={addMedia}>＋ SNS・媒体を追加</button>
                     </section>
 
                     {/* ===== スキル・属性 ===== */}
                     <section className="form-section">
-                        <h2 className="section-title">専門・得意ジャンル</h2>
+                        <h2 className="section-title">活動実績・スキル・資格</h2>
                         <p className="form-hint mb-16">※該当する項目がない場合は、下記の自己紹介欄にご入力ください</p>
-                        {TAG_CATEGORIES.filter(cat => cat !== 'NG・留意事項').map(cat => {
+                        {TAG_CATEGORIES.filter(cat => cat !== 'NG・留意事項' && cat !== '飲酒について').map(cat => {
                             const tags = allTags
                                 .filter(t => t.category === cat && t.active)
                                 .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
@@ -577,7 +624,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 ))}
                             </div>
 
-                        <div className="form-group" style={{ marginTop: '20px' }}>
+                        <div className="form-group mt-20">
                             <label className="form-label">特記事項・理由（任意）</label>
                             <p className="form-hint mb-8">掲載不可の理由や、アカウントによって掲載可否が異なる場合など、補足事項があればご記入ください。</p>
                             <textarea 

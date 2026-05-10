@@ -65,7 +65,89 @@
     border-bottom: 2px solid #fff7ed;
 }
 
+.form-group {
+    margin-bottom: 28px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 10px;
+}
+
+.form-label.required::after {
+    content: " *";
+    color: #ef4444;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #1e293b;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.upload-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upload-buttons-row {
+    display: flex;
+    align-items: center;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #e65100;
+    box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.1);
+}
+
+.form-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.form-hint {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-top: -6px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.mt-20 { margin-top: 20px; }
+.mt-12 { margin-top: 12px; }
+.mt-8 { margin-top: 8px; }
+.ml-12 { margin-left: 12px; }
 .mb-16 { margin-bottom: 16px; }
+.mb-8 { margin-bottom: 8px; }
 
 .media-acc-card {
     background: #fdfaf8;
