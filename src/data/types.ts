@@ -176,6 +176,8 @@ export interface Foodist {
     noteFeaturedMemo?: string;
     /** 料理教室の運営状況 */
     cookingClassStatus?: CookingClassStatus;
+    email?: string;
+    phoneNumber?: string;
     createdAt: string;
     updatedAt: string;
 }
