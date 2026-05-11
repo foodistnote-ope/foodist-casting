@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Foodist, Tag, MediaAccount, FoodieNote, TagCategory, MediaType, MetricType } from '../data/types';
 import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, NOTE_TYPES, AGE_GROUPS, CHILD_STAGES, FOLLOWER_CONTRIBUTING_MEDIA, calcTotalFollowers } from '../data/types';
+import { calculateAge, calculateAgeGroup } from '../utils/dateUtils';
 import './FoodistEditModal.css';
 
 interface FoodistEditModalProps {
@@ -112,7 +113,19 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+        setForm(prev => {
+            const next = { ...prev, [name]: value };
+            
+            // 生年月日が変更された場合、年齢と年代を自動計算
+            if (name === 'birthDate' && value) {
+                const age = calculateAge(value);
+                const ageGroup = calculateAgeGroup(value);
+                if (age !== undefined) next.age = age;
+                if (ageGroup) next.ageGroup = ageGroup;
+            }
+            
+            return next;
+        });
     };
 
     // --- タグID ---
