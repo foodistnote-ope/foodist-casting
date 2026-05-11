@@ -249,31 +249,6 @@ export const FilterSidebar = ({
 
     const filterContents = (
         <>
-            {/* キーワード検索 */}
-            <div className="filter-section open">
-                <div className="filter-section-body" style={{ paddingTop: 0 }}>
-                    <div className="search-input-wrapper">
-                        <input
-                            type="text"
-                            className="search-input"
-                            placeholder="活動名・肩書き・アカウント・メモで検索..."
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                        />
-                        {searchQuery && (
-                            <button
-                                className="search-clear-btn"
-                                onClick={() => setSearchQuery('')}
-                                aria-label="検索をクリア"
-                                type="button"
-                            >
-                                ✕
-                            </button>
-                        )}
-                    </div>
-                </div>
-            </div>
-
             {/* 居住地 */}
             <FilterSection title="居住地" badge={selectedAreas.length}>
                 <div className="filter-options scrollable-options">
@@ -464,6 +439,27 @@ export const FilterSidebar = ({
                                 <button className="btn-reset" onClick={() => setIsMobileOpen(false)} aria-label="閉じる" style={{ color: '#475569', borderColor: '#94a3b8' }}>✕ 閉じる</button>
                             </div>
                         </div>
+                        <div className="search-sticky-wrapper">
+                            <div className="search-input-wrapper">
+                                <input
+                                    type="text"
+                                    className="search-input"
+                                    placeholder="活動名・肩書き・アカウント・メモで検索..."
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
+                                />
+                                {searchQuery && (
+                                    <button
+                                        className="search-clear-btn"
+                                        onClick={() => setSearchQuery('')}
+                                        aria-label="検索をクリア"
+                                        type="button"
+                                    >
+                                        ✕
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                         <div className="filter-drawer-body">
                             {filterContents}
                         </div>
@@ -473,13 +469,38 @@ export const FilterSidebar = ({
 
             {/* ===== デスクトップ: 通常のサイドバー ===== */}
             <aside className="filter-sidebar desktop-filter-sidebar">
-                <div className="filter-header">
-                    <h2>絞り込み条件
-                        {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
-                    </h2>
-                    <button className="btn-reset" onClick={handleReset} aria-label="条件をリセット">リセット</button>
+                <div className="sticky-container">
+                    <div className="filter-header">
+                        <h2>絞り込み条件
+                            {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
+                        </h2>
+                        <button className="btn-reset" onClick={handleReset} aria-label="条件をリセット">リセット</button>
+                    </div>
+                    <div className="search-sticky-wrapper">
+                        <div className="search-input-wrapper">
+                            <input
+                                type="text"
+                                className="search-input"
+                                placeholder="活動名・肩書き・アカウント・メモで検索..."
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                            {searchQuery && (
+                                <button
+                                    className="search-clear-btn"
+                                    onClick={() => setSearchQuery('')}
+                                    aria-label="検索をクリア"
+                                    type="button"
+                                >
+                                    ✕
+                                </button>
+                            )}
+                        </div>
+                    </div>
                 </div>
-                {filterContents}
+                <div className="filter-scroll-area">
+                    {filterContents}
+                </div>
             </aside>
         </>
     );

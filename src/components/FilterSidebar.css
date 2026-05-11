@@ -4,23 +4,21 @@
     background: #ffffff;
     border-right: 1px solid #e2e8f0;
     padding: 0;
-    overflow-y: auto;
     height: calc(100vh - 56px);
     position: sticky;
-    top: 0;
+    top: 56px;
+    overflow-y: auto;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .filter-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid #e2e8f0;
-    position: sticky;
-    top: 0;
+    padding: 14px 16px 10px;
     background: #ffffff;
-    z-index: 2;
 }
 
 .filter-header h2 {
@@ -212,6 +210,37 @@
 
 .search-input::placeholder {
     color: #94a3b8;
+}
+
+.sticky-container {
+    position: sticky;
+    top: 0;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    z-index: 20;
+}
+
+.search-sticky-wrapper {
+    padding: 0 16px 12px;
+}
+
+.filter-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 40px;
+}
+
+.mobile-drawer .search-sticky-wrapper {
+    top: 56px; /* モバイルヘッダーの分 */
+}
+
+/* モバイルドロワー内のヘッダーも固定 */
+.mobile-drawer .filter-header {
+    position: sticky;
+    top: 0;
+    z-index: 11;
 }
 
 /* 検索インプットラッパー（クリアボタン用） */
