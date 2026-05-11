@@ -85,7 +85,9 @@ const FOLLOWER_OPTIONS = [
 ];
 const PLATFORM_OPTIONS = ['ブログ', 'Instagram', 'X', 'TikTok', 'YouTube', '公式ホームページ', 'その他'];
 const NOTE_FEATURED_OPTIONS = [
+    '掲載可（事前確認は不要、掲載後に案内があればOK）',
     '掲載可（事前確認が必要）',
+    '掲載不可',
     '未設定'
 ];
 const COOKING_CLASS_OPTIONS = [
