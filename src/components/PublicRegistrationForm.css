@@ -88,6 +88,55 @@
 
 .form-input,
 .form-select,
+.input-with-prefix {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-with-prefix:focus-within {
+    border-color: #e65100;
+    box-shadow: 0 0 0 4px rgba(230, 81, 0, 0.1);
+    background: white;
+}
+
+.prefix-text {
+    padding: 0 12px;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    user-select: none;
+    border-right: 1px solid #e2e8f0;
+    background: #f1f5f9;
+    height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.prefix-input {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    height: 48px;
+    padding-left: 12px !important;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background: #f8fafc;
+}
+
+.form-select,
 .form-textarea {
     width: 100%;
     padding: 12px 16px;

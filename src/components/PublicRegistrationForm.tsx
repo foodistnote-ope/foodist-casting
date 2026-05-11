@@ -20,6 +20,23 @@ const AREA_LIST = [
     '海外', 'その他',
 ];
 
+const extractIdFromUrl = (url: string | undefined, type: MediaType) => {
+    if (!url) return '';
+    try {
+        // すでにURL形式の場合
+        if (url.startsWith('http') || url.includes('.com/')) {
+            const u = new URL(url.startsWith('http') ? url : `https://${url}`);
+            const path = u.pathname.replace(/\/$/, '');
+            if (type === 'TikTok') return path.split('@').pop() || '';
+            return path.split('/').pop() || '';
+        }
+        // 単なるIDの場合
+        return url.replace(/^@/, '');
+    } catch {
+        return url.replace(/^@/, '').split('/').pop() || '';
+    }
+};
+
 const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     email: '',
     displayName: '',
@@ -572,10 +589,38 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         </select>
                                     </div>
                                 )}
-                                <div className="form-group">
-                                    <label className="form-label">URL</label>
-                                    <input className="form-input" value={acc.url} onChange={e => updateMedia(acc.id, { url: e.target.value })} placeholder="https://..." />
-                                </div>
+                                {['Instagram', 'X', 'TikTok'].includes(acc.mediaType) ? (
+                                    <div className="form-group">
+                                        <label className="form-label">
+                                            {acc.mediaType} ID
+                                        </label>
+                                        <div className="input-with-prefix">
+                                            <span className="prefix-text">
+                                                {acc.mediaType === 'Instagram' ? 'instagram.com/' : acc.mediaType === 'X' ? 'x.com/' : 'tiktok.com/@'}
+                                            </span>
+                                            <input 
+                                                className="form-input prefix-input" 
+                                                value={extractIdFromUrl(acc.url, acc.mediaType)} 
+                                                onChange={e => {
+                                                    let val = e.target.value.trim();
+                                                    // URLがペーストされた場合の自動抽出
+                                                    if (val.includes('.com/')) {
+                                                        val = extractIdFromUrl(val, acc.mediaType);
+                                                    }
+                                                    const id = val.replace(/^@/, '');
+                                                    const baseUrl = acc.mediaType === 'Instagram' ? 'https://www.instagram.com/' : acc.mediaType === 'X' ? 'https://x.com/' : 'https://www.tiktok.com/@';
+                                                    updateMedia(acc.id, { url: id ? `${baseUrl}${id}/` : '' });
+                                                }} 
+                                                placeholder="IDを入力" 
+                                            />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="form-group">
+                                        <label className="form-label">URL</label>
+                                        <input className="form-input" value={acc.url} onChange={e => updateMedia(acc.id, { url: e.target.value })} placeholder="https://..." />
+                                    </div>
+                                )}
                             </div>
                         ))}
 
