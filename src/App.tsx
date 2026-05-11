@@ -13,6 +13,7 @@ import { ImportResultModal } from './components/ImportResultModal';
 import { PublicRegistrationForm } from './components/PublicRegistrationForm';
 import { ApplicationReviewView } from './components/ApplicationReviewView';
 import { updateApplicationStatus } from './lib/supabaseDb';
+import { calculateAge, calculateAgeGroup } from './utils/dateUtils';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -811,6 +812,14 @@ function App() {
                 
                 // 不要な内部項目（email等）を除去
                 // if ((foodistData as any).email) delete (foodistData as any).email;
+                
+                // 生年月日から年齢・年代を補完（あれば）
+                if (foodistData.birthDate) {
+                  const age = calculateAge(foodistData.birthDate);
+                  const ageGroup = calculateAgeGroup(foodistData.birthDate);
+                  if (age !== undefined) foodistData.age = age;
+                  if (ageGroup) foodistData.ageGroup = ageGroup;
+                }
                 
                 setEditingFoodist({ ...foodistData, _isApplication: true } as any);
                 setIsEditModalOpen(true);
