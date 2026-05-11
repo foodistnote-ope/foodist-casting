@@ -29,7 +29,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     maritalStatus: undefined,
     area: '',
     birthplace: '',
-    birthDate: '',
+    birthDate: '1990-01-01',
     age: undefined,
     ageGroup: undefined,
     gender: '',
