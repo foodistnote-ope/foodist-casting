@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { FilterSidebar } from './components/FilterSidebar';
 import { ProfileModal } from './components/ProfileModal';
-import { TagSettingsModal } from './components/TagSettingsModal';
 import { DatabaseView } from './components/DatabaseView';
 import { FoodistEditModal } from './components/FoodistEditModal';
 import type { Foodist, MediaType } from './data/types';
@@ -70,7 +69,6 @@ function App() {
 
   // ---- モーダル状態 ----
   const [selectedFoodist, setSelectedFoodist] = useState<Foodist | null>(null);
-  const [isTagSettingsOpen, setIsTagSettingsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingFoodist, setEditingFoodist] = useState<Foodist | null>(null);
   const [importResult, setImportResult] = useState<{
@@ -81,7 +79,7 @@ function App() {
 
   // ---- データ ----
   const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, removeTagsFromAll, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
-  const { tags, tagsLoading, addTag, removeTag, toggleTagActive, deactivateTag, getSearchableTags } = useTags();
+  const { tags, tagsLoading, getSearchableTags } = useTags();
 
   // 各カテゴリの検索可能タグ（active=true & searchVisible=true）
   const qualificationTags = getSearchableTags('資格・専門');
@@ -619,10 +617,6 @@ function App() {
                     復元
                     <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleJsonImport} />
                   </label>
-                  <button className="btn-secondary" onClick={() => setIsTagSettingsOpen(true)}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                    タグの管理
-                  </button>
                 </div>
               </header>
 
@@ -849,21 +843,6 @@ function App() {
           />
         )}
 
-        {/* タグ管理モーダル */}
-        {isTagSettingsOpen && (
-          <TagSettingsModal
-            tags={tags}
-            addTag={addTag}
-            removeTag={removeTag}
-            toggleTagActive={toggleTagActive}
-            deactivateTag={deactivateTag}
-            onMerge={(sourceId, targetId) => {
-              deactivateTag(sourceId);
-              replaceTagInAll(sourceId, targetId);
-            }}
-            onClose={() => setIsTagSettingsOpen(false)}
-          />
-        )}
 
         {/* 編集モーダル */}
         {isEditModalOpen && (
