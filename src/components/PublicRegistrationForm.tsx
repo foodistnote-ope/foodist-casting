@@ -647,7 +647,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                             value={option === '回答しない' ? '未設定' : option} 
                                             checked={(option === '回答しない' ? '未設定' : option) === form.noteFeaturedPermission}
                                             onChange={handleChange}
-                                            required
                                         />
                                         <span className="radio-text">{option}</span>
                                     </label>
