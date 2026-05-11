@@ -36,7 +36,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     faceVisibility: '未設定',
     faceVisibilityMemo: '',
     hasChildren: '未確認',
-    childrenCount: undefined,
+    childrenCount: '',
     childStage: [],
     listIntro: '',
     profileText: '',
@@ -501,9 +501,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <label className="form-label">お子さまの人数</label>
                                     <select name="childrenCount" className="form-select" value={form.childrenCount || ''} onChange={handleChange}>
                                         <option value="">選択してください</option>
-                                        <option value="1人">1人</option>
-                                        <option value="2人">2人</option>
-                                        <option value="3人">3人</option>
+                                        <option value="1">1人</option>
+                                        <option value="2">2人</option>
+                                        <option value="3">3人</option>
                                         <option value="4人以上">4人以上</option>
                                         <option value="非公開">非公開</option>
                                     </select>

@@ -102,6 +102,9 @@ export const ApplicationReviewView = ({ allTags, onEdit }: ApplicationReviewView
                                         <span>📧 {app.data.email}</span>
                                         {app.data.phoneNumber && <span>📞 {app.data.phoneNumber}</span>}
                                         <span>📊 フォロワー: {app.data.totalFollowers?.toLocaleString() ?? 0}</span>
+                                        {app.data.hasChildren === 'あり' && (
+                                            <span>👶 子: {app.data.childrenCount === '4人以上' || app.data.childrenCount === '非公開' ? app.data.childrenCount : `${app.data.childrenCount}人`}</span>
+                                        )}
                                     </div>
                                 </div>
                             </div>

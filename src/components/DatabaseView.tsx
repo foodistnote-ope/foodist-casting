@@ -93,8 +93,21 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'hasChildren',
         label: '子ども',
         defaultVisible: false,
-        render: (f) => f.hasChildren || '-',
+        render: (f) => {
+            if (f.hasChildren === 'あり' && f.childrenCount) {
+                const countStr = f.childrenCount === '4人以上' || f.childrenCount === '非公開' ? f.childrenCount : `${f.childrenCount}人`;
+                return `あり (${countStr})`;
+            }
+            return f.hasChildren || '-';
+        },
         sortValue: (f) => f.hasChildren || '',
+    },
+    {
+        id: 'childrenCount',
+        label: '子どもの数',
+        defaultVisible: false,
+        render: (f) => f.childrenCount || '-',
+        sortValue: (f) => f.childrenCount || '',
     },
     {
         id: 'maritalStatus',

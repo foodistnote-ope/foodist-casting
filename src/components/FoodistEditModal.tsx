@@ -35,7 +35,7 @@ const emptyFoodist: Omit<Foodist, 'id'> = {
     faceVisibility: '未設定',
     faceVisibilityMemo: '',
     hasChildren: '未確認',
-    childrenCount: undefined,
+    childrenCount: '',
     childStage: [],
     listIntro: '',
     profileText: '',
