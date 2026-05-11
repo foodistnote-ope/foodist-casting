@@ -816,7 +816,7 @@ function App() {
                 };
                 
                 // 不要な内部項目（email等）を除去
-                if ((foodistData as any).email) delete (foodistData as any).email;
+                // if ((foodistData as any).email) delete (foodistData as any).email;
                 
                 setEditingFoodist({ ...foodistData, _isApplication: true } as any);
                 setIsEditModalOpen(true);
