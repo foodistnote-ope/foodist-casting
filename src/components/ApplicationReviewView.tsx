@@ -100,6 +100,7 @@ export const ApplicationReviewView = ({ allTags, onEdit }: ApplicationReviewView
                                     <div className="app-meta">
                                         <span>📍 {app.data.area || '地域未設定'}</span>
                                         <span>📧 {app.data.email}</span>
+                                        {app.data.phoneNumber && <span>📞 {app.data.phoneNumber}</span>}
                                         <span>📊 フォロワー: {app.data.totalFollowers?.toLocaleString() ?? 0}</span>
                                     </div>
                                 </div>

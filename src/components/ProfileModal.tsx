@@ -138,6 +138,8 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">婚姻状況</span><span className="demo-value">{val(foodist.maritalStatus)}</span></div>
                             <div className="demo-item"><span className="demo-label">居住地</span><span className="demo-value">{val(foodist.area)}</span></div>
                             <div className="demo-item"><span className="demo-label">出身地</span><span className="demo-value">{val(foodist.birthplace)}</span></div>
+                            <div className="demo-item"><span className="demo-label">メールアドレス</span><span className="demo-value">{val(foodist.email)}</span></div>
+                            <div className="demo-item"><span className="demo-label">電話番号</span><span className="demo-value">{val(foodist.phoneNumber)}</span></div>
                             <div className="demo-item"><span className="demo-label">生年月日</span><span className="demo-value">{val(foodist.birthDate)}</span></div>
                             <div className="demo-item"><span className="demo-label">年齢</span><span className="demo-value">{foodist.age != null ? `${foodist.age}歳` : '未設定'}</span></div>
                             <div className="demo-item"><span className="demo-label">年代</span><span className="demo-value">{val(foodist.ageGroup)}</span></div>

@@ -48,6 +48,8 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     noteFeaturedPermission: undefined,
     noteFeaturedMemo: '',
     cookingClassStatus: '未確認',
+    email: '',
+    phoneNumber: '',
     createdAt: '',
     updatedAt: '',
 };
@@ -226,17 +228,30 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     {/* ===== 通知用連絡先 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">ご連絡先</h2>
-                        <div className="form-group">
-                            <label className="form-label required">メールアドレス</label>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                className="form-input" 
-                                value={form.email} 
-                                onChange={handleChange} 
-                                placeholder="example@gmail.com" 
-                                required 
-                            />
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label required">メールアドレス</label>
+                                <input 
+                                    type="email" 
+                                    name="email" 
+                                    className="form-input" 
+                                    value={form.email} 
+                                    onChange={handleChange} 
+                                    placeholder="example@gmail.com" 
+                                    required 
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">電話番号（任意）</label>
+                                <input 
+                                    type="tel" 
+                                    name="phoneNumber" 
+                                    className="form-input" 
+                                    value={form.phoneNumber} 
+                                    onChange={handleChange} 
+                                    placeholder="090-1234-5678" 
+                                />
+                            </div>
                         </div>
                     </section>
 

@@ -47,6 +47,8 @@ const emptyFoodist: Omit<Foodist, 'id'> = {
     aliases: [],
     noteFeaturedPermission: '未設定',
     noteFeaturedMemo: '',
+    email: '',
+    phoneNumber: '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
 };
@@ -273,6 +275,17 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             <div className="form-group">
                                 <label className="form-label">本名</label>
                                 <input className="form-input" name="realName" value={form.realName || ''} onChange={handleChange} />
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">メールアドレス</label>
+                                <input className="form-input" name="email" value={form.email || ''} onChange={handleChange} placeholder="example@gmail.com" />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">電話番号</label>
+                                <input className="form-input" name="phoneNumber" value={form.phoneNumber || ''} onChange={handleChange} placeholder="090-1234-5678" />
                             </div>
                         </div>
 
