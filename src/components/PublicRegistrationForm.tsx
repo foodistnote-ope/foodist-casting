@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import type { Foodist, Tag, MediaAccount, MediaType, MetricType, TagCategory } from '../data/types';
 import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, AGE_GROUPS, CHILD_STAGES, FOLLOWER_CONTRIBUTING_MEDIA, calcTotalFollowers } from '../data/types';
 import { submitApplication } from '../lib/supabaseDb';
@@ -61,6 +61,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES.filter(c => c !== 'NG・留意事項')));
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -169,6 +170,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             setForm(prev => ({ ...prev, avatarUrl: '' })); // 失敗時はリセット
         } finally {
             setUploadingImage(false);
+            // 入力値をリセットして、同じファイルを再度選択可能にする
+            if (e.target) e.target.value = '';
         }
     };
 
@@ -273,38 +276,50 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="form-group">
                             <label className="form-label">プロフィール画像</label>
                             <div className="image-upload-wrapper">
-                                <div className={`avatar-preview ${form.avatarUrl ? 'has-image' : ''} ${uploadingImage ? 'is-uploading' : ''}`}>
-                                    {form.avatarUrl ? (
-                                        <img src={form.avatarUrl} alt="Preview" />
-                                    ) : (
-                                        <div className="no-avatar-hint">
-                                            <svg className="hint-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                                            <span>未選択</span>
-                                        </div>
-                                    )}
-                                    {uploadingImage && <div className="upload-spinner-overlay"><div className="spinner"></div></div>}
+                                <div className="avatar-upload-box">
+                                    <div className={`avatar-preview ${form.avatarUrl ? 'has-image' : ''} ${uploadingImage ? 'is-uploading' : ''}`}>
+                                        {form.avatarUrl ? (
+                                            <img src={form.avatarUrl} alt="Preview" />
+                                        ) : (
+                                            <label 
+                                                htmlFor="avatar-upload-input" 
+                                                className="no-avatar-hint clickable"
+                                                style={{ display: 'flex', width: '100%', height: '100%', cursor: 'pointer', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}
+                                            >
+                                                <svg className="hint-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                                <span style={{ pointerEvents: 'none' }}>未選択</span>
+                                            </label>
+                                        )}
+                                        {uploadingImage && <div className="upload-spinner-overlay"><div className="spinner"></div></div>}
+                                    </div>
                                     {form.avatarUrl && !uploadingImage && (
-                                        <div className="upload-success-badge">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                                        </div>
+                                        <button 
+                                            type="button"
+                                            className="upload-delete-badge" 
+                                            onClick={() => {
+                                                setForm(prev => ({ ...prev, avatarUrl: '' }));
+                                                if (fileInputRef.current) fileInputRef.current.value = '';
+                                            }}
+                                            title="画像を削除する"
+                                        >
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                        </button>
                                     )}
                                 </div>
                                 <div className="upload-actions">
                                     <div className="upload-buttons-row">
-                                        <label className="btn-secondary upload-label">
+                                        <input 
+                                            id="avatar-upload-input"
+                                            ref={fileInputRef}
+                                            type="file" 
+                                            accept="image/*" 
+                                            style={{ display: 'none' }} 
+                                            onChange={handleImageUpload} 
+                                            disabled={uploadingImage} 
+                                        />
+                                        <label htmlFor="avatar-upload-input" className="btn-secondary upload-label" style={{ cursor: 'pointer' }}>
                                             {form.avatarUrl ? '画像を差し替える' : '画像を選択'}
-                                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageUpload} disabled={uploadingImage} />
                                         </label>
-                                        {form.avatarUrl && (
-                                            <button 
-                                                type="button" 
-                                                className="btn-text-danger ml-12" 
-                                                onClick={() => setForm(prev => ({ ...prev, avatarUrl: '' }))}
-                                                style={{ fontSize: '0.9rem' }}
-                                            >
-                                                削除する
-                                            </button>
-                                        )}
                                     </div>
                                     <p className="form-hint mt-12">高解像度の画像を推奨します（横幅1200px以上推奨、最小640px）。</p>
                                 </div>

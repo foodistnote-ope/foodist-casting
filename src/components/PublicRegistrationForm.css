@@ -181,9 +181,15 @@
     border: 2px dashed #cbd5e1;
 }
 
-.avatar-preview {
+.avatar-upload-box {
+    position: relative;
     width: 120px;
     height: 120px;
+}
+
+.avatar-preview {
+    width: 100%;
+    height: 100%;
     border-radius: 20px;
     overflow: hidden;
     background: #f1f5f9;
@@ -214,6 +220,19 @@
     color: #94a3b8;
 }
 
+.no-avatar-hint.clickable {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.no-avatar-hint.clickable:hover {
+    background: #f1f5f9;
+    color: #e65100;
+}
+
 .hint-icon { font-size: 1.5rem; }
 
 .upload-spinner-overlay {
@@ -237,11 +256,11 @@
 
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-.upload-success-badge {
+.upload-delete-badge {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #10b981;
+    top: -10px;
+    right: -10px;
+    background: #64748b;
     color: white;
     width: 28px;
     height: 28px;
@@ -250,9 +269,19 @@
     align-items: center;
     justify-content: center;
     font-size: 14px;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     border: 2px solid white;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+    padding: 0;
     animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.upload-delete-badge:hover {
+    background: #ef4444;
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
 }
 
 @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
