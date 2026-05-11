@@ -140,10 +140,10 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
     },
     {
         id: 'blog',
-        label: 'ブログ',
+        label: 'ブログ (月間PV)',
         defaultVisible: false,
-        render: (f) => f.mediaAccounts.some(a => a.mediaType === 'ブログ') ? 'あり' : 'なし',
-        sortValue: (f) => f.mediaAccounts.some(a => a.mediaType === 'ブログ') ? 1 : 0,
+        render: (f, getFollowers) => getFollowers(f, 'ブログ')?.toLocaleString() || '-',
+        sortValue: (f, getFollowers) => getFollowers(f, 'ブログ') || 0,
     },
     {
         id: 'notePermission',
@@ -197,6 +197,13 @@ const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: true,
         render: (f) => f.createdAt ? new Date(f.createdAt).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.createdAt || '',
+    },
+    {
+        id: 'faceVisibilityMemo',
+        label: '顔出し詳細',
+        defaultVisible: false,
+        render: (f) => f.faceVisibilityMemo || '-',
+        sortValue: (f) => f.faceVisibilityMemo || '',
     },
 ];
 
@@ -276,6 +283,8 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
               (acc.accountName || '').toLowerCase().includes(q) || 
               (acc.url || '').toLowerCase().includes(q)
             ) ||
+            (f.faceVisibilityMemo || '').toLowerCase().includes(q) ||
+            normalizeString(f.faceVisibilityMemo || '').includes(nq) ||
             f.notes.some(n => n.content.toLowerCase().includes(q) || normalizeString(n.content).includes(nq));
         });
 

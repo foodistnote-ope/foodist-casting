@@ -33,6 +33,7 @@ const emptyFoodist: Omit<Foodist, 'id'> = {
     ageGroup: undefined,
     gender: '',
     faceVisibility: '未設定',
+    faceVisibilityMemo: '',
     hasChildren: '未確認',
     childrenCount: undefined,
     childStage: [],
@@ -455,6 +456,17 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     <option value="条件付き可">条件付き可</option>
                                     <option value="不可">不可</option>
                                 </select>
+                                {form.faceVisibility === '条件付き可' && (
+                                    <textarea 
+                                        className="form-textarea" 
+                                        name="faceVisibilityMemo" 
+                                        value={form.faceVisibilityMemo || ''} 
+                                        onChange={handleChange} 
+                                        rows={2} 
+                                        style={{ marginTop: 8 }}
+                                        placeholder="条件詳細（例：お面着用なら可、など）" 
+                                    />
+                                )}
                             </div>
                         </div>
 

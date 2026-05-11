@@ -142,7 +142,17 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">年齢</span><span className="demo-value">{foodist.age != null ? `${foodist.age}歳` : '未設定'}</span></div>
                             <div className="demo-item"><span className="demo-label">年代</span><span className="demo-value">{val(foodist.ageGroup)}</span></div>
                             <div className="demo-item"><span className="demo-label">性別</span><span className="demo-value">{val(foodist.gender)}</span></div>
-                            <div className="demo-item"><span className="demo-label">顔出し可否</span><span className="demo-value">{val(foodist.faceVisibility)}</span></div>
+                            <div className="demo-item demo-item-full">
+                                <span className="demo-label">顔出し可否</span>
+                                <span className="demo-value">
+                                    {val(foodist.faceVisibility)}
+                                    {foodist.faceVisibility === '条件付き可' && foodist.faceVisibilityMemo && (
+                                        <span style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginTop: 4, padding: '4px 8px', background: '#f8fafc', borderRadius: '4px', borderLeft: '3px solid #cbd5e1' }}>
+                                            条件: {foodist.faceVisibilityMemo}
+                                        </span>
+                                    )}
+                                </span>
+                            </div>
                             <div className="demo-item"><span className="demo-label">子どもの有無</span><span className="demo-value">{val(foodist.hasChildren)}</span></div>
                             <div className="demo-item"><span className="demo-label">子どもの数</span><span className="demo-value">{foodist.childrenCount ? `${foodist.childrenCount}人` : '未設定'}</span></div>
                             <div className="demo-item"><span className="demo-label">料理教室の運営</span><span className="demo-value">{val(foodist.cookingClassStatus)}</span></div>
