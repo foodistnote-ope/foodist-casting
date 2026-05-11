@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { FilterSidebar } from './components/FilterSidebar';
 import { ProfileModal } from './components/ProfileModal';
-import { TagSettingsModal } from './components/TagSettingsModal';
 import { DatabaseView } from './components/DatabaseView';
 import { FoodistEditModal } from './components/FoodistEditModal';
 import type { Foodist, MediaType } from './data/types';
@@ -14,6 +13,7 @@ import { ImportResultModal } from './components/ImportResultModal';
 import { PublicRegistrationForm } from './components/PublicRegistrationForm';
 import { ApplicationReviewView } from './components/ApplicationReviewView';
 import { updateApplicationStatus } from './lib/supabaseDb';
+import { calculateAge, calculateAgeGroup } from './utils/dateUtils';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -70,7 +70,6 @@ function App() {
 
   // ---- モーダル状態 ----
   const [selectedFoodist, setSelectedFoodist] = useState<Foodist | null>(null);
-  const [isTagSettingsOpen, setIsTagSettingsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingFoodist, setEditingFoodist] = useState<Foodist | null>(null);
   const [importResult, setImportResult] = useState<{
@@ -81,7 +80,7 @@ function App() {
 
   // ---- データ ----
   const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, removeTagsFromAll, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
-  const { tags, tagsLoading, addTag, removeTag, toggleTagActive, deactivateTag, getSearchableTags } = useTags();
+  const { tags, tagsLoading, getSearchableTags } = useTags();
 
   // 各カテゴリの検索可能タグ（active=true & searchVisible=true）
   const qualificationTags = getSearchableTags('資格・専門');
@@ -485,6 +484,21 @@ function App() {
     console.info('[App] タグの整理（v8）が完了しました');
   }, [loading, foodists, removeTagsFromAll]);
 
+  // ---- データ移行: 不要タグの整理 (v9: 対応可能業務) ----
+  useEffect(() => {
+    if (loading || foodists.length === 0) return;
+    const MIGRATION_KEY = 'foodist_tag_cleanup_v9';
+    if (localStorage.getItem(MIGRATION_KEY)) return;
+
+    localStorage.setItem(MIGRATION_KEY, 'done');
+
+    // 削除対象: tag_w006 (動画出演), tag_w014 (オンライン出演), tag_w016 (出張)
+    const deletedTagIds = ['tag_w006', 'tag_w014', 'tag_w016'];
+    removeTagsFromAll(deletedTagIds);
+    
+    console.info('[App] タグの整理（v9）が完了しました');
+  }, [loading, foodists, removeTagsFromAll]);
+
   // ---- URLベースのディープリンク ----
   // フーディストがロードされたらURLパラメータをチェックし、对象のモーダルを自動で開く
   useEffect(() => {
@@ -604,14 +618,10 @@ function App() {
                     復元
                     <input type="file" accept=".json" style={{ display: 'none' }} onChange={handleJsonImport} />
                   </label>
-                  <button className="btn-secondary" onClick={() => setIsTagSettingsOpen(true)}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-                    タグの管理
-                  </button>
                 </div>
               </header>
 
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
                 <FilterSidebar
                   searchQuery={searchQuery} setSearchQuery={setSearchQuery}
                   selectedAreas={selectedAreas} setSelectedAreas={setSelectedAreas}
@@ -801,7 +811,15 @@ function App() {
                 };
                 
                 // 不要な内部項目（email等）を除去
-                if ((foodistData as any).email) delete (foodistData as any).email;
+                // if ((foodistData as any).email) delete (foodistData as any).email;
+                
+                // 生年月日から年齢・年代を補完（あれば）
+                if (foodistData.birthDate) {
+                  const age = calculateAge(foodistData.birthDate);
+                  const ageGroup = calculateAgeGroup(foodistData.birthDate);
+                  if (age !== undefined) foodistData.age = age;
+                  if (ageGroup) foodistData.ageGroup = ageGroup;
+                }
                 
                 setEditingFoodist({ ...foodistData, _isApplication: true } as any);
                 setIsEditModalOpen(true);
@@ -834,21 +852,6 @@ function App() {
           />
         )}
 
-        {/* タグ管理モーダル */}
-        {isTagSettingsOpen && (
-          <TagSettingsModal
-            tags={tags}
-            addTag={addTag}
-            removeTag={removeTag}
-            toggleTagActive={toggleTagActive}
-            deactivateTag={deactivateTag}
-            onMerge={(sourceId, targetId) => {
-              deactivateTag(sourceId);
-              replaceTagInAll(sourceId, targetId);
-            }}
-            onClose={() => setIsTagSettingsOpen(false)}
-          />
-        )}
 
         {/* 編集モーダル */}
         {isEditModalOpen && (
