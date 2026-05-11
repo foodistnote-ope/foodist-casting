@@ -580,8 +580,8 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         })}
 
 
-                        {/* ===== 評価・メモ ===== */}
-                        <h3 className="form-section-title">評価・メモ</h3>
+                        {/* ===== メモ（提案時メモ・その他） ===== */}
+                        <h3 className="form-section-title">メモ（提案時メモ・その他）</h3>
 
                         {form.notes.map((note, idx) => (
                             <div key={note.id} className="note-edit-row">

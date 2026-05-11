@@ -214,10 +214,10 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         </div>
                     )}
 
-                    {/* 評価・メモ */}
+                    {/* メモ（提案時メモ・その他） */}
                     {foodist.notes.length > 0 && (
                         <div className="modal-section">
-                            <h3 className="section-title">評価・メモ</h3>
+                            <h3 className="section-title">メモ（提案時メモ・その他）</h3>
                             {NOTE_ORDER.filter(type => notesByType[type]?.length > 0).map(type => (
                                 <div key={type} className="note-group">
                                     <p className="note-type-label">{type}</p>
