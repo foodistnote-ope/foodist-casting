@@ -248,8 +248,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     {/* ===== 通知用連絡先 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">ご連絡先</h2>
-                        <div className="form-row">
-                            <div className="form-group">
+                        <div className="form-row" style={{ marginBottom: '20px' }}>
+                            <div className="form-group" style={{ marginBottom: 0 }}>
                                 <label className="form-label required">メールアドレス</label>
                                 <input 
                                     type="email" 
@@ -261,7 +261,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     required 
                                 />
                             </div>
-                            <div className="form-group">
+                            <div className="form-group" style={{ marginBottom: 0 }}>
                                 <label className="form-label">電話番号（任意）</label>
                                 <input 
                                     type="tel" 
@@ -273,6 +273,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 />
                             </div>
                         </div>
+                        <p className="form-hint" style={{ whiteSpace: 'nowrap', marginBottom: 0 }}>
+                            フーディスト会員への無料登録がまだの方は、ぜひこの機会に<a href="https://foodist-service.jp/register" target="_blank" rel="noreferrer" style={{ color: '#888888', fontWeight: 600, textDecoration: 'underline' }}>ご登録ください</a>。
+                        </p>
                     </section>
 
                     {/* ===== 基本情報 ===== */}
@@ -630,7 +633,10 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     {/* ===== スキル・属性 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">活動実績・スキル・資格</h2>
-                        <p className="form-hint mb-16">※該当する項目がない場合は、下記の自己紹介欄にご入力ください</p>
+                        <div className="form-notice-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '10px', flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span>該当する項目がない場合は、下記の自己紹介欄にご入力ください。</span>
+                        </div>
                         {TAG_CATEGORIES.filter(cat => cat !== 'NG・留意事項' && cat !== '飲酒について').map(cat => {
                             const tags = allTags
                                 .filter(t => t.category === cat && t.active)
