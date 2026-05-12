@@ -7,6 +7,7 @@ export type ColumnDef = {
     excludeFromExport?: boolean;
     render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined, allTags: Tag[]) => React.ReactNode;
     sortValue?: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined, allTags: Tag[]) => string | number | undefined | null;
+    csvValue?: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined, allTags: Tag[]) => string;
 };
 
 export const getMediaFollowers = (f: Foodist, mediaType: string): number | undefined => {
@@ -25,7 +26,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     {
         id: 'realName',
         label: '本名',
-        defaultVisible: true,
+        defaultVisible: false,
         render: (f) => f.realName || '-',
         sortValue: (f) => f.realName || '',
     },
@@ -39,7 +40,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     {
         id: 'gender',
         label: '性別',
-        defaultVisible: false,
+        defaultVisible: true,
         render: (f) => f.gender || '-',
         sortValue: (f) => f.gender || '',
     },
@@ -106,14 +107,14 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     {
         id: 'instagram',
         label: 'Instagram',
-        defaultVisible: true,
+        defaultVisible: false,
         render: (f, getFollowers) => getFollowers(f, 'Instagram')?.toLocaleString() || '-',
         sortValue: (f, getFollowers) => getFollowers(f, 'Instagram') || 0,
     },
     {
         id: 'x',
         label: 'X',
-        defaultVisible: true,
+        defaultVisible: false,
         render: (f, getFollowers) => getFollowers(f, 'X')?.toLocaleString() || '-',
         sortValue: (f, getFollowers) => getFollowers(f, 'X') || 0,
     },
@@ -159,6 +160,13 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
             );
         },
         sortValue: (f) => f.tagIds?.length || 0,
+        csvValue: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '';
+            return f.tagIds
+                .map(id => allTags.find(t => t.id === id)?.name)
+                .filter(Boolean)
+                .join(', ');
+        },
     },
     // ── PR・掲載に関する情報 ──────────────────────
     {
@@ -185,7 +193,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     {
         id: 'notePermission',
         label: 'フーディスト掲載可否',
-        defaultVisible: true,
+        defaultVisible: false,
         render: (f) => {
             const perm = f.noteFeaturedPermission;
             const hasMemo = !!f.noteFeaturedMemo;
@@ -231,6 +239,11 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
             );
         },
         sortValue: (f) => f.noteFeaturedPermission || '',
+        csvValue: (f) => {
+            const perm = f.noteFeaturedPermission || '';
+            const memo = f.noteFeaturedMemo ? `（備考: ${f.noteFeaturedMemo}）` : '';
+            return perm + memo;
+        },
     },
     // ── 連絡先（デフォルト非表示） ─────────────────
     {
