@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type { Foodist, Tag, MediaType } from '../data/types';
 import './ProfileModal.css';
 
@@ -40,6 +41,12 @@ const TAG_CATEGORY_LABELS: { key: string; label: string }[] = [
 ];
 
 export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClick }: ProfileModalProps) => {
+    const contactRef = useRef<HTMLDivElement>(null);
+
+    const handleContactClick = () => {
+        contactRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
     if (!foodist) return null;
 
     const tagMap = new Map(allTags.map(t => [t.id, t]));
@@ -82,11 +89,17 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                     <img src={foodist.avatarUrl || '/no-image.png'} alt={foodist.displayName} className="modal-avatar" />
                     <div className="modal-header-info">
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div>
+                            <div style={{ paddingRight: '200px' }}>
                                 <h2 className="modal-name">{foodist.displayName}</h2>
-                                <span className="modal-title">{val(foodist.title)}</span>
                             </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
+                            <div style={{ display: 'flex', gap: '8px', position: 'absolute', top: '16px', right: '56px' }}>
+                                <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.85rem', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '6px' }} onClick={handleContactClick}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                                    </svg>
+                                    連絡先
+                                </button>
                                 {onEditClick && (
                                     <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.85rem', flexShrink: 0 }} onClick={onEditClick}>
                                         情報を編集する
@@ -127,6 +140,8 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
 
                 <div className="modal-body">
 
+
+
                     {/* ===== 基本マスタ 全項目固定表示 ===== */}
                     <div className="modal-section">
                         <h3 className="section-title">基本情報</h3>
@@ -135,29 +150,15 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">本名</span><span className="demo-value">{val(foodist.realName)}</span></div>
                             <div className="demo-item"><span className="demo-label">肩書き</span><span className="demo-value">{val(foodist.title)}</span></div>
                             <div className="demo-item"><span className="demo-label">会員登録状況</span><span className="demo-value">{val(foodist.membershipStatus)}</span></div>
-                            <div className="demo-item"><span className="demo-label">婚姻状況</span><span className="demo-value">{val(foodist.maritalStatus)}</span></div>
-                            <div className="demo-item"><span className="demo-label">居住地</span><span className="demo-value">{val(foodist.area)}</span></div>
-                            <div className="demo-item"><span className="demo-label">出身地</span><span className="demo-value">{val(foodist.birthplace)}</span></div>
-                            <div className="demo-item"><span className="demo-label">メールアドレス</span><span className="demo-value">{val(foodist.email)}</span></div>
-                            <div className="demo-item"><span className="demo-label">電話番号</span><span className="demo-value">{val(foodist.phoneNumber)}</span></div>
                             <div className="demo-item"><span className="demo-label">生年月日</span><span className="demo-value">{val(foodist.birthDate)}</span></div>
                             <div className="demo-item"><span className="demo-label">年齢</span><span className="demo-value">{foodist.age != null ? `${foodist.age}歳` : '未設定'}</span></div>
                             <div className="demo-item"><span className="demo-label">年代</span><span className="demo-value">{val(foodist.ageGroup)}</span></div>
                             <div className="demo-item"><span className="demo-label">性別</span><span className="demo-value">{val(foodist.gender)}</span></div>
-                            <div className="demo-item demo-item-full">
-                                <span className="demo-label">顔出し可否</span>
-                                <span className="demo-value">
-                                    {val(foodist.faceVisibility)}
-                                    {foodist.faceVisibility === '条件付き可' && foodist.faceVisibilityMemo && (
-                                        <span style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginTop: 4, padding: '4px 8px', background: '#f8fafc', borderRadius: '4px', borderLeft: '3px solid #cbd5e1' }}>
-                                            条件: {foodist.faceVisibilityMemo}
-                                        </span>
-                                    )}
-                                </span>
-                            </div>
+                            <div className="demo-item"><span className="demo-label">居住地</span><span className="demo-value">{val(foodist.area)}</span></div>
+                            <div className="demo-item"><span className="demo-label">出身地</span><span className="demo-value">{val(foodist.birthplace)}</span></div>
+                            <div className="demo-item"><span className="demo-label">婚姻状況</span><span className="demo-value">{val(foodist.maritalStatus)}</span></div>
                             <div className="demo-item"><span className="demo-label">子どもの有無</span><span className="demo-value">{val(foodist.hasChildren)}</span></div>
                             <div className="demo-item"><span className="demo-label">子どもの数</span><span className="demo-value">{foodist.childrenCount ? `${foodist.childrenCount}人` : '未設定'}</span></div>
-                            <div className="demo-item"><span className="demo-label">料理教室の運営</span><span className="demo-value">{val(foodist.cookingClassStatus)}</span></div>
                             <div className="demo-item demo-item-full">
                                 <span className="demo-label">子育てステージ</span>
                                 <span className="demo-value">
@@ -165,12 +166,6 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                                 </span>
                             </div>
                         </div>
-                    </div>
-
-                    {/* プロフィール文 */}
-                    <div className="modal-section">
-                        <h3 className="section-title">詳細プロフィール</h3>
-                        <p className="profile-text">{foodist.profileText || '未設定'}</p>
                     </div>
 
                     {/* アカウント情報（数値） */}
@@ -192,7 +187,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                     {foodist.tagIds.length > 0 && (
                         <div className="modal-section">
                             <h3 className="section-title">属性タグ</h3>
-                            {TAG_CATEGORY_LABELS.filter(c => c.label && tagsByCategory[c.key]?.length > 0).map(({ key, label }) => (
+                            {TAG_CATEGORY_LABELS.filter(c => c.label && tagsByCategory[c.key]?.length > 0 && c.key !== '飲酒について').map(({ key, label }) => (
                                 <div key={key} style={{ marginBottom: 12 }}>
                                     <p className="demo-label" style={{ marginBottom: 6 }}>{label}</p>
                                     <div className="modal-tags">
@@ -214,27 +209,39 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         </div>
                     )}
 
-                    {/* メモ（提案時メモ・その他） */}
-                    {foodist.notes.length > 0 && (
-                        <div className="modal-section">
-                            <h3 className="section-title">メモ（提案時メモ・その他）</h3>
-                            {NOTE_ORDER.filter(type => notesByType[type]?.length > 0).map(type => (
-                                <div key={type} className="note-group">
-                                    <p className="note-type-label">{type}</p>
-                                    {notesByType[type].map(n => (
-                                        <p key={n.id} className="note-content">{n.content}</p>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    {/* プロフィール文 */}
+                    <div className="modal-section">
+                        <h3 className="section-title">詳細プロフィール</h3>
+                        <p className="profile-text">{foodist.profileText || '未設定'}</p>
+                    </div>
 
-                    {/* フーディストノート掲載可否 */}
-                    <div className="modal-section" style={{ backgroundColor: '#fff9f5', borderRadius: '8px', padding: '16px', marginTop: '24px' }}>
-                        <h3 className="section-title" style={{ color: '#d4844a' }}>フーディストノート掲載可否</h3>
+                    {/* PR・掲載に関する情報 */}
+                    <div className="modal-section">
+                        <h3 className="section-title">PR・掲載に関する情報</h3>
                         <div className="demo-grid">
                             <div className="demo-item demo-item-full">
-                                <span className="demo-label">掲載可否状況</span>
+                                <span className="demo-label">顔出し可否</span>
+                                <span className="demo-value">
+                                    {val(foodist.faceVisibility)}
+                                    {foodist.faceVisibility === '条件付き可' && foodist.faceVisibilityMemo && (
+                                        <span style={{ display: 'block', fontSize: '0.85rem', color: '#64748b', marginTop: 4, padding: '4px 8px', background: '#f8fafc', borderRadius: '4px', borderLeft: '3px solid #cbd5e1' }}>
+                                            条件: {foodist.faceVisibilityMemo}
+                                        </span>
+                                    )}
+                                </span>
+                            </div>
+                            <div className="demo-item demo-item-full">
+                                <span className="demo-label">飲酒の有無</span>
+                                <span className="demo-value">
+                                    {tagsByCategory['飲酒について']?.map(t => t.name).join('・') || '未設定'}
+                                </span>
+                            </div>
+                            <div className="demo-item demo-item-full">
+                                <span className="demo-label">料理教室の運営状況</span>
+                                <span className="demo-value">{val(foodist.cookingClassStatus)}</span>
+                            </div>
+                            <div className="demo-item demo-item-full">
+                                <span className="demo-label">フーディストノートへの掲載可否</span>
                                 {(() => {
                                     const perm = foodist.noteFeaturedPermission;
                                     const hasMemo = !!foodist.noteFeaturedMemo;
@@ -278,6 +285,30 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             )}
                         </div>
                     </div>
+
+                    {/* ===== 連絡先 ===== */}
+                    <div className="modal-section" ref={contactRef}>
+                        <h3 className="section-title">連絡先</h3>
+                        <div className="demo-grid">
+                            <div className="demo-item"><span className="demo-label">メールアドレス</span><span className="demo-value" style={{ wordBreak: 'break-all' }}>{val(foodist.email)}</span></div>
+                            <div className="demo-item"><span className="demo-label">電話番号</span><span className="demo-value">{val(foodist.phoneNumber)}</span></div>
+                        </div>
+                    </div>
+
+                    {/* メモ（提案時メモ・その他） */}
+                    {foodist.notes.length > 0 && (
+                        <div className="modal-section">
+                            <h3 className="section-title">メモ（提案時メモ・その他）</h3>
+                            {NOTE_ORDER.filter(type => notesByType[type]?.length > 0).map(type => (
+                                <div key={type} className="note-group">
+                                    <p className="note-type-label">{type}</p>
+                                    {notesByType[type].map(n => (
+                                        <p key={n.id} className="note-content">{n.content}</p>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div className="modal-footer">
