@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { FilterSidebar } from './components/FilterSidebar';
 import { ProfileModal } from './components/ProfileModal';
@@ -14,6 +14,8 @@ import { PublicRegistrationForm } from './components/PublicRegistrationForm';
 import { ApplicationReviewView } from './components/ApplicationReviewView';
 import { updateApplicationStatus } from './lib/supabaseDb';
 import { calculateAge, calculateAgeGroup } from './utils/dateUtils';
+import Papa from 'papaparse';
+import { AVAILABLE_COLUMNS, getMediaFollowers } from './utils/exportColumns';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -41,6 +43,43 @@ function App() {
   useEffect(() => {
     localStorage.setItem('app_current_view', currentView);
   }, [currentView]);
+
+  // ---- CSV Export State for Dashboard ----
+  const EXPORTABLE_COLUMNS = useMemo(() => AVAILABLE_COLUMNS.filter(c => !c.excludeFromExport), []);
+
+  const [exportColumnIds, setExportColumnIds] = useState<string[]>(() => {
+      const saved = localStorage.getItem('dashboard_export_columns_v2');
+      if (saved) {
+          try {
+              return JSON.parse(saved);
+          } catch (e) {}
+      }
+      // デフォルトですべての項目を選択状態にする
+      return EXPORTABLE_COLUMNS.map(c => c.id);
+  });
+  const [isExportColumnDropdownOpen, setIsExportColumnDropdownOpen] = useState(false);
+  const exportColumnDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+      localStorage.setItem('dashboard_export_columns_v2', JSON.stringify(exportColumnIds));
+  }, [exportColumnIds]);
+
+  useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+          if (exportColumnDropdownRef.current && !exportColumnDropdownRef.current.contains(event.target as Node)) {
+              setIsExportColumnDropdownOpen(false);
+          }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleExportColumn = (id: string) => {
+      setExportColumnIds(prev => 
+          prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+      );
+  };
+
 
   // ---- フィルター状態 ----
   const [searchQuery, setSearchQuery] = useState('');
@@ -357,7 +396,17 @@ function App() {
       if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => (f.tagIds || []).includes(id))) return false;
       
       // 12. フーディストノート掲載可否
-      if (selectedNoteFeaturedPermissions.length > 0 && !selectedNoteFeaturedPermissions.includes(f.noteFeaturedPermission || '未設定')) return false;
+      if (selectedNoteFeaturedPermissions.length > 0) {
+        const actualPermission = f.noteFeaturedPermission || '未設定';
+        const matches = selectedNoteFeaturedPermissions.some(selected => {
+          // 短縮表示「掲載可（事前確認は不要）」はDB値「掲載可（事前確認は不要、掲載後に案内があればOK）」にマッチ
+          if (selected === '掲載可（事前確認は不要）') {
+            return actualPermission === '掲載可（事前確認は不要、掲載後に案内があればOK）';
+          }
+          return actualPermission === selected;
+        });
+        if (!matches) return false;
+      }
 
       // 13. 料理教室の運営状況
       if (selectedCookingClassStatuses.length > 0 && !selectedCookingClassStatuses.includes(f.cookingClassStatus || '未確認')) return false;
@@ -559,6 +608,38 @@ function App() {
     });
   }, [filteredFoodists, activeSnsFilter]);
 
+  const handleDashboardExportCsv = () => {
+    if (sortedFoodists.length === 0) {
+        alert('出力するデータがありません。');
+        return;
+    }
+    const visibleColumns = EXPORTABLE_COLUMNS.filter(c => exportColumnIds.includes(c.id));
+    const headers = visibleColumns.map(col => col.label);
+    const data = sortedFoodists.map(f => {
+        return visibleColumns.map(col => {
+            if (col.sortValue) {
+                const val = col.sortValue(f, getMediaFollowers, tags);
+                return val == null ? '' : String(val);
+            }
+            return '';
+        });
+    });
+
+    const csv = Papa.unparse({ fields: headers, data: data });
+    const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    const blob = new Blob([bom, csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    link.setAttribute('download', `foodist_search_${timestamp}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+
   // SNSアイコンの定義（カード表示用）
   const CARD_SNS_ICONS: Record<string, string> = {
     'ブログ': "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23555'/%3E%3Ctext x='50' y='73' font-family='Arial' font-size='65' font-weight='bold' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E",
@@ -603,6 +684,48 @@ function App() {
             <>
               <header className="top-header" style={{ justifyContent: 'flex-end' }}>
                 <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  {/* ダッシュボード検索結果CSVエクスポート */}
+                  <div className="column-dropdown-container" ref={exportColumnDropdownRef}>
+                      <button 
+                          className="btn-secondary" 
+                          onClick={() => setIsExportColumnDropdownOpen(!isExportColumnDropdownOpen)}
+                          title="CSV表示項目の設定"
+                      >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
+                              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                          CSV表示項目
+                      </button>
+                      {isExportColumnDropdownOpen && (
+                          <div className="column-dropdown-menu">
+                              <div className="column-dropdown-header">
+                                  <span>CSV表示項目</span>
+                                  <div style={{ display: 'flex', gap: '4px' }}>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.map(c => c.id))}>すべて</button>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>クリア</button>
+                                  </div>
+                              </div>
+                              <div className="column-dropdown-list">
+                                  {EXPORTABLE_COLUMNS.map(col => (
+                                      <label key={col.id} className="column-dropdown-item">
+                                          <input 
+                                              type="checkbox" 
+                                              checked={exportColumnIds.includes(col.id)}
+                                              onChange={() => toggleExportColumn(col.id)}
+                                          />
+                                          {col.label}
+                                      </label>
+                                  ))}
+                              </div>
+                          </div>
+                      )}
+                  </div>
+                  <button className="btn-secondary" onClick={handleDashboardExportCsv} title="検索結果をCSV形式でダウンロード">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                      CSV出力
+                  </button>
+
                   {/* 新規登録 */}
                   <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
