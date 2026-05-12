@@ -93,6 +93,9 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
             (f.title || '').toLowerCase().includes(q) ||
             normalizeString(f.title).includes(nq) ||
             (f.listIntro || '').toLowerCase().includes(q) ||
+            normalizeString(f.listIntro || '').includes(nq) ||
+            (f.profileText || '').toLowerCase().includes(q) ||
+            normalizeString(f.profileText || '').includes(nq) ||
             (f.aliases ?? []).some(a => a.toLowerCase().includes(q) || normalizeString(a).includes(nq)) ||
             tagNames.includes(q) || nTagNames.includes(nq) ||
             f.mediaAccounts.some(acc => 
@@ -170,7 +173,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                     <div className="db-search-wrapper">
                         <input
                             type="text"
-                            placeholder="名前・肩書き・アカウント・メモで検索..."
+                            placeholder="活動名・肩書き・詳細プロフィール・メモなどで検索..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="db-search"

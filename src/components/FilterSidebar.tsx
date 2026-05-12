@@ -450,7 +450,7 @@ export const FilterSidebar = ({
                                 <input
                                     type="text"
                                     className="search-input"
-                                    placeholder="活動名・肩書き・アカウント・メモで検索..."
+                                    placeholder="活動名・肩書き・詳細プロフィール・メモなどで検索..."
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
                                 />
@@ -487,7 +487,7 @@ export const FilterSidebar = ({
                             <input
                                 type="text"
                                 className="search-input"
-                                placeholder="活動名・肩書き・アカウント・メモで検索..."
+                                placeholder="活動名・肩書き・詳細プロフィール・メモなどで検索..."
                                 value={searchQuery}
                                 onChange={e => setSearchQuery(e.target.value)}
                             />
