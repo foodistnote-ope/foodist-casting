@@ -72,6 +72,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .foodist-name {
@@ -250,4 +252,9 @@
   .search-overview p {
     font-size: 0.85rem;
   }
+}
+
+.main-content {
+  flex: 1;
+  background: var(--color-bg-base);
 }
