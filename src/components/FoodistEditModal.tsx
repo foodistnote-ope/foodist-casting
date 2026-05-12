@@ -274,9 +274,9 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                     <p className="modal-unsaved-hint">※ 「保存する」を押すまで内容は保存されません</p>
                 </div>
 
+                
                 <div className="modal-body edit-body">
                     <form className="edit-form" onSubmit={e => e.preventDefault()}>
-
                         {/* ===== 基本情報 ===== */}
                         <h3 className="form-section-title">基本情報</h3>
 
@@ -288,17 +288,6 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             <div className="form-group">
                                 <label className="form-label">本名</label>
                                 <input className="form-input" name="realName" value={form.realName || ''} onChange={handleChange} />
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">メールアドレス</label>
-                                <input className="form-input" name="email" value={form.email || ''} onChange={handleChange} placeholder="example@gmail.com" />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">電話番号</label>
-                                <input className="form-input" name="phoneNumber" value={form.phoneNumber || ''} onChange={handleChange} placeholder="090-1234-5678" />
                             </div>
                         </div>
 
@@ -345,6 +334,99 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         <div className="form-group">
                             <label className="form-label">プロフィール画像URL</label>
                             <input className="form-input" name="avatarUrl" value={form.avatarUrl || ''} onChange={handleChange} placeholder="https://..." />
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">生年月日</label>
+                                <input type="date" className="form-input" name="birthDate" value={form.birthDate || ''} onChange={handleChange} />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">年齢</label>
+                                <input type="number" className="form-input" name="age" value={form.age ?? ''} min={0} max={120}
+                                    onChange={e => set('age', e.target.value ? parseInt(e.target.value) : undefined)} />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">年代</label>
+                                <select className="form-select" name="ageGroup" value={form.ageGroup || ''} onChange={handleChange}>
+                                    <option value="">-- 未設定 --</option>
+                                    {AGE_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">性別</label>
+                                <select className="form-select" name="gender" value={form.gender || ''} onChange={handleChange}>
+                                    <option value="">-- 未設定 --</option>
+                                    <option value="女性">女性</option>
+                                    <option value="男性">男性</option>
+                                    <option value="その他">その他</option>
+                                    <option value="非公開">非公開</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">居住地（都道府県）</label>
+                                <select className="form-select" name="area" value={form.area || ''} onChange={handleChange}>
+                                    <option value="">-- 未設定 --</option>
+                                    {AREA_LIST.map(p => <option key={p} value={p}>{p}</option>)}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">出身地（都道府県）</label>
+                                <select className="form-select" name="birthplace" value={form.birthplace || ''} onChange={handleChange}>
+                                    <option value="">-- 未設定 --</option>
+                                    {AREA_LIST.map(p => <option key={p} value={p}>{p}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">婚姻状況</label>
+                                <select className="form-select" name="maritalStatus" value={form.maritalStatus || ''} onChange={handleChange}>
+                                    <option value="">-- 未設定 --</option>
+                                    <option value="未婚">未婚</option>
+                                    <option value="既婚">既婚</option>
+                                    <option value="非公開">非公開</option>
+                                    <option value="未確認">未確認</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">子どもの有無</label>
+                                <select className="form-select" name="hasChildren" value={form.hasChildren} onChange={handleChange}>
+                                    <option value="あり">あり</option>
+                                    <option value="なし">なし</option>
+                                    <option value="非公開">非公開</option>
+                                    <option value="未確認">未確認</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">子どもの数</label>
+                                <select className="form-select" name="childrenCount" value={form.childrenCount || ''} onChange={handleChange}>
+                                    <option value="">-- 未設定 --</option>
+                                    <option value="0">0人</option>
+                                    <option value="1">1人</option>
+                                    <option value="2">2人</option>
+                                    <option value="3">3人</option>
+                                    <option value="4人以上">4人以上</option>
+                                    <option value="非公開">非公開</option>
+                                    <option value="未確認">未確認</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">子育てステージ（複数選択可）</label>
+                            <div className="tags-checkbox-group">
+                                {CHILD_STAGES.map(stage => (
+                                    <label key={stage} className={`tag-checkbox-label ${form.childStage.includes(stage) ? 'selected' : ''}`}>
+                                        <input type="checkbox" style={{ display: 'none' }} checked={form.childStage.includes(stage)} onChange={() => toggleChildStage(stage)} />
+                                        {stage}
+                                    </label>
+                                ))}
+                            </div>
                         </div>
 
                         {/* ===== SNS・媒体情報 ===== */}
@@ -414,158 +496,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             ＋ 媒体を追加する
                         </button>
 
-                        {/* ===== 属性・デモグラフィ ===== */}
-                        <h3 className="form-section-title">属性情報</h3>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">居住地（都道府県）</label>
-                                <select className="form-select" name="area" value={form.area || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    {AREA_LIST.map(p => <option key={p} value={p}>{p}</option>)}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">出身地（都道府県）</label>
-                                <select className="form-select" name="birthplace" value={form.birthplace || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    {AREA_LIST.map(p => <option key={p} value={p}>{p}</option>)}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">生年月日</label>
-                                <input type="date" className="form-input" name="birthDate" value={form.birthDate || ''} onChange={handleChange} />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">年齢</label>
-                                <input type="number" className="form-input" name="age" value={form.age ?? ''} min={0} max={120}
-                                    onChange={e => set('age', e.target.value ? parseInt(e.target.value) : undefined)} />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">年代</label>
-                                <select className="form-select" name="ageGroup" value={form.ageGroup || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    {AGE_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">性別</label>
-                                <select className="form-select" name="gender" value={form.gender || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    <option value="女性">女性</option>
-                                    <option value="男性">男性</option>
-                                    <option value="その他">その他</option>
-                                    <option value="非公開">非公開</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">婚姻状況</label>
-                                <select className="form-select" name="maritalStatus" value={form.maritalStatus || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    <option value="未婚">未婚</option>
-                                    <option value="既婚">既婚</option>
-                                    <option value="非公開">非公開</option>
-                                    <option value="未確認">未確認</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">顔出し可否</label>
-                                <select className="form-select" name="faceVisibility" value={form.faceVisibility} onChange={handleChange}>
-                                    <option value="未設定">-- 未設定 --</option>
-                                    <option value="可">可</option>
-                                    <option value="条件付き可">条件付き可</option>
-                                    <option value="不可">不可</option>
-                                </select>
-                                {form.faceVisibility === '条件付き可' && (
-                                    <textarea 
-                                        className="form-textarea" 
-                                        name="faceVisibilityMemo" 
-                                        value={form.faceVisibilityMemo || ''} 
-                                        onChange={handleChange} 
-                                        rows={2} 
-                                        style={{ marginTop: 8 }}
-                                        placeholder="条件詳細（例：お面着用なら可、など）" 
-                                    />
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">料理教室の運営</label>
-                                <select className="form-select" name="cookingClassStatus" value={form.cookingClassStatus || '未確認'} onChange={handleChange}>
-                                    <option value="未確認">-- 未確認 --</option>
-                                    <option value="現在運営している">現在運営している</option>
-                                    <option value="過去運営していたことがある">過去運営していたことがある</option>
-                                    <option value="運営したことがない">運営したことがない</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">子どもの有無</label>
-                                <select className="form-select" name="hasChildren" value={form.hasChildren} onChange={handleChange}>
-                                    <option value="あり">あり</option>
-                                    <option value="なし">なし</option>
-                                    <option value="非公開">非公開</option>
-                                    <option value="未確認">未確認</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">子どもの数</label>
-                                <select className="form-select" name="childrenCount" value={form.childrenCount || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    <option value="0">0人</option>
-                                    <option value="1">1人</option>
-                                    <option value="2">2人</option>
-                                    <option value="3">3人</option>
-                                    <option value="4人以上">4人以上</option>
-                                    <option value="非公開">非公開</option>
-                                    <option value="未確認">未確認</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label">子育てステージ（複数選択可）</label>
-                            <div className="tags-checkbox-group">
-                                {CHILD_STAGES.map(stage => (
-                                    <label key={stage} className={`tag-checkbox-label ${form.childStage.includes(stage) ? 'selected' : ''}`}>
-                                        <input type="checkbox" style={{ display: 'none' }} checked={form.childStage.includes(stage)} onChange={() => toggleChildStage(stage)} />
-                                        {stage}
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* ===== プロフィール文 ===== */}
-                        <h3 className="form-section-title">プロフィール文</h3>
-
-                        <div className="form-group">
-                            <label className="form-label">一覧用紹介文 <span className="form-hint">（カード表示用の短文）</span></label>
-                            <textarea className="form-textarea" name="listIntro" value={form.listIntro || ''} onChange={handleChange} rows={2} placeholder="一覧カードに表示される短い紹介文" />
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label">詳細プロフィール <span className="form-hint">（詳細画面用の長文）</span></label>
-                            <textarea className="form-textarea" name="profileText" value={form.profileText || ''} onChange={handleChange} rows={5} />
-                        </div>
-
-
-
                         {/* ===== 属性タグ ===== */}
                         <h3 className="form-section-title">属性タグ</h3>
 
-                        {TAG_CATEGORIES.map(cat => {
+                        {TAG_CATEGORIES.filter(c => c !== '飲酒について').map(cat => {
                             const catTags = tagsByCategory[cat];
-                            const visibleTags = catTags.filter(t => t.active !== false); // hide inactive tags
+                            const visibleTags = catTags.filter(t => t.active !== false);
                             const selected = catTags.filter(t => form.tagIds.includes(t.id));
                             const isOpen = expandedTagCategories.has(cat);
                             return (
@@ -592,6 +528,109 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             );
                         })}
 
+                        {/* ===== プロフィール文 ===== */}
+                        <h3 className="form-section-title">プロフィール文</h3>
+
+                        <div className="form-group">
+                            <label className="form-label">一覧用紹介文 <span className="form-hint">（カード表示用の短文）</span></label>
+                            <textarea className="form-textarea" name="listIntro" value={form.listIntro || ''} onChange={handleChange} rows={2} placeholder="一覧カードに表示される短い紹介文" />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">詳細プロフィール <span className="form-hint">（詳細画面用の長文）</span></label>
+                            <textarea className="form-textarea" name="profileText" value={form.profileText || ''} onChange={handleChange} rows={5} />
+                        </div>
+
+                        {/* ===== PR・掲載に関する情報 ===== */}
+                        <h3 className="form-section-title">PR・掲載に関する情報</h3>
+
+                        <div className="form-group">
+                            <label className="form-label">顔出し可否</label>
+                            <select className="form-select" name="faceVisibility" value={form.faceVisibility} onChange={handleChange}>
+                                <option value="未設定">-- 未設定 --</option>
+                                <option value="可">可</option>
+                                <option value="条件付き可">条件付き可</option>
+                                <option value="不可">不可</option>
+                            </select>
+                            {form.faceVisibility === '条件付き可' && (
+                                <textarea 
+                                    className="form-textarea" 
+                                    name="faceVisibilityMemo" 
+                                    value={form.faceVisibilityMemo || ''} 
+                                    onChange={handleChange} 
+                                    rows={2} 
+                                    style={{ marginTop: 8 }}
+                                    placeholder="条件詳細（例：お面着用なら可、など）" 
+                                />
+                            )}
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">飲酒の有無</label>
+                            <div className="tags-checkbox-group">
+                                {(() => {
+                                    const catTags = tagsByCategory['飲酒について'] || [];
+                                    const visibleTags = catTags.filter(t => t.active !== false);
+                                    return visibleTags.map(tag => (
+                                        <label key={tag.id} className={`tag-checkbox-label ${form.tagIds.includes(tag.id) ? 'selected' : ''}`}>
+                                            <input type="checkbox" style={{ display: 'none' }} checked={form.tagIds.includes(tag.id)} onChange={() => toggleTagId(tag.id)} />
+                                            {tag.name}
+                                        </label>
+                                    ));
+                                })()}
+                            </div>
+                        </div>
+
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">料理教室の運営</label>
+                                <select className="form-select" name="cookingClassStatus" value={form.cookingClassStatus || '未確認'} onChange={handleChange}>
+                                    <option value="未確認">-- 未確認 --</option>
+                                    <option value="現在運営している">現在運営している</option>
+                                    <option value="過去運営していたことがある">過去運営していたことがある</option>
+                                    <option value="運営したことがない">運営したことがない</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">フーディストノート掲載可否</label>
+                            <select 
+                                className="form-select" 
+                                name="noteFeaturedPermission" 
+                                value={form.noteFeaturedPermission || '未設定'} 
+                                onChange={handleChange}
+                            >
+                                <option value="未設定">-- 未設定 --</option>
+                                <option value="掲載可（事前確認が必要）">掲載可（事前確認が必要）</option>
+                                <option value="掲載可（事前確認は不要、掲載後に案内があればOK）">掲載可（事前確認は不要、掲載後に案内があればOK）</option>
+                                <option value="掲載不可">掲載不可</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">特記事項・理由</label>
+                            <textarea 
+                                className="form-textarea" 
+                                name="noteFeaturedMemo" 
+                                value={form.noteFeaturedMemo || ''} 
+                                onChange={handleChange} 
+                                rows={2} 
+                                placeholder="掲載不可の理由や、媒体ごとの可否詳細など" 
+                            />
+                        </div>
+
+                        {/* ===== 連絡先 ===== */}
+                        <h3 className="form-section-title">連絡先</h3>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">メールアドレス</label>
+                                <input className="form-input" name="email" value={form.email || ''} onChange={handleChange} placeholder="example@gmail.com" />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">電話番号</label>
+                                <input className="form-input" name="phoneNumber" value={form.phoneNumber || ''} onChange={handleChange} placeholder="090-1234-5678" />
+                            </div>
+                        </div>
 
                         {/* ===== メモ（提案時メモ・その他） ===== */}
                         <h3 className="form-section-title">メモ（提案時メモ・その他）</h3>
@@ -618,39 +657,9 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         <button type="button" className="btn-secondary btn-add-media" onClick={addNote}>
                             ＋ メモを追加する
                         </button>
-
-                        {/* ===== フーディストノート掲載可否 ===== */}
-                        <h3 className="form-section-title">フーディストノート掲載可否</h3>
-                        <div className="form-group">
-                            <label className="form-label">掲載可否</label>
-                            <select 
-                                className="form-select" 
-                                name="noteFeaturedPermission" 
-                                value={form.noteFeaturedPermission || '未設定'} 
-                                onChange={handleChange}
-                            >
-                                <option value="未設定">-- 未設定 --</option>
-                                <option value="掲載可（事前確認が必要）">掲載可（事前確認が必要）</option>
-                                <option value="掲載可（事前確認は不要、掲載後に案内があればOK）">掲載可（事前確認は不要、掲載後に案内があればOK）</option>
-                                <option value="掲載不可">掲載不可</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label">特記事項・理由</label>
-                            <textarea 
-                                className="form-textarea" 
-                                name="noteFeaturedMemo" 
-                                value={form.noteFeaturedMemo || ''} 
-                                onChange={handleChange} 
-                                rows={2} 
-                                placeholder="掲載不可の理由や、媒体ごとの可否詳細など" 
-                            />
-                        </div>
-
                     </form>
                 </div>
-
-                <div className="modal-footer">
+<div className="modal-footer">
                     <button className="btn-secondary" onClick={handleClose}>キャンセル</button>
                     <button className="btn-primary" onClick={handleSave}>保存する</button>
                 </div>

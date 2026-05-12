@@ -19,7 +19,7 @@
     background: var(--color-bg-surface);
     border-radius: var(--radius-xl);
     width: 100%;
-    max-width: 650px;
+    max-width: 1100px;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
@@ -114,6 +114,7 @@
     font-weight: 600;
     transition: all var(--transition-fast);
     text-decoration: none;
+    word-break: break-all;
 }
 
 .modal-sns-link:hover {
