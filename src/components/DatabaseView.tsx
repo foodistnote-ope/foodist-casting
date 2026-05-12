@@ -26,7 +26,12 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
         const saved = localStorage.getItem('db_visible_columns');
         if (saved) {
             try {
-                return JSON.parse(saved);
+                const savedIds: string[] = JSON.parse(saved);
+                // 保存済みリストにない新しい列は defaultVisible に従って補完する
+                const newDefaultIds = AVAILABLE_COLUMNS
+                    .filter(c => !savedIds.includes(c.id) && c.defaultVisible)
+                    .map(c => c.id);
+                return [...savedIds.filter(id => AVAILABLE_COLUMNS.some(c => c.id === id)), ...newDefaultIds];
             } catch (e) {
                 // ignore
             }
