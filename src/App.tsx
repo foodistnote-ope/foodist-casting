@@ -620,6 +620,9 @@ function App() {
     const headers = visibleColumns.map(col => col.label);
     const data = sortedFoodists.map(f => {
         return visibleColumns.map(col => {
+            if (col.csvValue) {
+                return col.csvValue(f, getMediaFollowers, tags);
+            }
             if (col.sortValue) {
                 const val = col.sortValue(f, getMediaFollowers, tags);
                 return val == null ? '' : String(val);
@@ -705,8 +708,9 @@ function App() {
                               <div className="column-dropdown-header">
                                   <span>CSV表示項目</span>
                                   <div style={{ display: 'flex', gap: '4px' }}>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.map(c => c.id))}>すべて</button>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>クリア</button>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.map(c => c.id))}>すべて選択</button>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期項目</button>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>選択解除</button>
                                   </div>
                               </div>
                               <div className="column-dropdown-list">
