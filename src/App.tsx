@@ -270,6 +270,9 @@ function App() {
         !(f.title || '').toLowerCase().includes(q) &&
         !normalizeString(f.title).includes(nq) &&
         !(f.listIntro || '').toLowerCase().includes(q) &&
+        !normalizeString(f.listIntro || '').includes(nq) &&
+        !(f.profileText || '').toLowerCase().includes(q) &&
+        !normalizeString(f.profileText || '').includes(nq) &&
         !(f.realName || '').toLowerCase().includes(q) &&
         !normalizeString(f.realName).includes(nq) &&
         !(f.aliases ?? []).some(a => a.toLowerCase().includes(q) || normalizeString(a).includes(nq)) &&
