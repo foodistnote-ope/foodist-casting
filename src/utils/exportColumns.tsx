@@ -14,6 +14,7 @@ export const getMediaFollowers = (f: Foodist, mediaType: string): number | undef
 };
 
 export const AVAILABLE_COLUMNS: ColumnDef[] = [
+    // ── 基本情報 ──────────────────────────────────
     {
         id: 'name',
         label: '活動名',
@@ -64,19 +65,15 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.birthplace || '',
     },
     {
-        id: 'membership',
-        label: '会員',
-        defaultVisible: true,
-        render: (f) => (
-            <span className={`membership-badge membership-${f.membershipStatus}`}>
-                {f.membershipStatus}
-            </span>
-        ),
-        sortValue: (f) => f.membershipStatus,
+        id: 'maritalStatus',
+        label: '婚姻状況',
+        defaultVisible: false,
+        render: (f) => f.maritalStatus || '-',
+        sortValue: (f) => f.maritalStatus || '',
     },
     {
         id: 'hasChildren',
-        label: '子ども',
+        label: '子どもの有無',
         defaultVisible: false,
         render: (f) => {
             if (f.hasChildren === 'あり' && f.childrenCount) {
@@ -88,19 +85,17 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.hasChildren || '',
     },
     {
-        id: 'childrenCount',
-        label: '子どもの数',
-        defaultVisible: false,
-        render: (f) => f.childrenCount || '-',
-        sortValue: (f) => f.childrenCount || '',
+        id: 'membership',
+        label: '会員登録状況',
+        defaultVisible: true,
+        render: (f) => (
+            <span className={`membership-badge membership-${f.membershipStatus}`}>
+                {f.membershipStatus}
+            </span>
+        ),
+        sortValue: (f) => f.membershipStatus,
     },
-    {
-        id: 'maritalStatus',
-        label: '婚姻状況',
-        defaultVisible: false,
-        render: (f) => f.maritalStatus || '-',
-        sortValue: (f) => f.maritalStatus || '',
-    },
+    // ── SNS・媒体情報 ─────────────────────────────
     {
         id: 'totalFollowers',
         label: '総フォロワー',
@@ -143,9 +138,53 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f, getFollowers) => getFollowers(f, 'ブログ')?.toLocaleString() || '-',
         sortValue: (f, getFollowers) => getFollowers(f, 'ブログ') || 0,
     },
+    // ── スキル・タグ ──────────────────────────────
+    {
+        id: 'tags',
+        label: 'スキル・タグ',
+        defaultVisible: false,
+        render: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '-';
+            const names = f.tagIds
+                .map(id => allTags.find(t => t.id === id)?.name)
+                .filter(Boolean);
+            return (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px', maxWidth: '200px' }}>
+                    {names.map((name, i) => (
+                        <span key={i} style={{ fontSize: '0.65rem', background: '#f0f0f0', borderRadius: '3px', padding: '1px 4px' }}>
+                            {name}
+                        </span>
+                    ))}
+                </div>
+            );
+        },
+        sortValue: (f) => f.tagIds?.length || 0,
+    },
+    // ── PR・掲載に関する情報 ──────────────────────
+    {
+        id: 'faceVisibility',
+        label: '顔出し可否',
+        defaultVisible: false,
+        render: (f) => f.faceVisibility || '-',
+        sortValue: (f) => f.faceVisibility || '',
+    },
+    {
+        id: 'faceVisibilityMemo',
+        label: '顔出し詳細',
+        defaultVisible: false,
+        render: (f) => f.faceVisibilityMemo || '-',
+        sortValue: (f) => f.faceVisibilityMemo || '',
+    },
+    {
+        id: 'cookingClassStatus',
+        label: '料理教室の運営状況',
+        defaultVisible: false,
+        render: (f) => f.cookingClassStatus || '-',
+        sortValue: (f) => f.cookingClassStatus || '',
+    },
     {
         id: 'notePermission',
-        label: 'ノート掲載',
+        label: 'フーディスト掲載可否',
         defaultVisible: true,
         render: (f) => {
             const perm = f.noteFeaturedPermission;
@@ -158,9 +197,13 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
                 : isOk && !hasMemo ? '#27ae60'
                 : isOk && hasMemo ? '#b7791f'
                 : 'inherit';
+            const shortLabel = isOk ? '掲載可（確認不要）'
+                : isOkWithConfirm ? '掲載可（要確認）'
+                : isNg ? '掲載不可'
+                : perm || '-';
             return (
                 <div style={{ fontSize: '0.75rem', lineHeight: 1.4 }}>
-                    <div style={{ 
+                    <div style={{
                         color: permColor,
                         fontWeight: (perm && perm !== '未設定') ? 'bold' : 'normal',
                         display: 'flex',
@@ -168,7 +211,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
                         gap: '4px',
                         flexWrap: 'wrap',
                     }}>
-                        {perm || '-'}
+                        {shortLabel}
                         {hasMemo && (
                             <span style={{
                                 fontSize: '0.65rem',
@@ -189,19 +232,19 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         },
         sortValue: (f) => f.noteFeaturedPermission || '',
     },
+    // ── 連絡先（デフォルト非表示） ─────────────────
     {
-        id: 'createdAt',
-        label: '登録日',
-        defaultVisible: true,
-        excludeFromExport: true,
-        render: (f) => f.createdAt ? new Date(f.createdAt).toLocaleDateString('ja-JP') : '-',
-        sortValue: (f) => f.createdAt || '',
+        id: 'email',
+        label: 'メールアドレス',
+        defaultVisible: false,
+        render: (f) => f.email || '-',
+        sortValue: (f) => f.email || '',
     },
     {
-        id: 'faceVisibilityMemo',
-        label: '顔出し詳細',
+        id: 'phoneNumber',
+        label: '電話番号',
         defaultVisible: false,
-        render: (f) => f.faceVisibilityMemo || '-',
-        sortValue: (f) => f.faceVisibilityMemo || '',
+        render: (f) => f.phoneNumber || '-',
+        sortValue: (f) => f.phoneNumber || '',
     },
 ];
