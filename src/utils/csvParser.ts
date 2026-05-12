@@ -115,6 +115,19 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
                         if (hasHeader('詳細プロフィール') && row[getRealHeader('詳細プロフィール')!] !== '') patch.profileText = row[getRealHeader('詳細プロフィール')!] || undefined;
                         if (hasHeader('プロフィール画像URL') && row[getRealHeader('プロフィール画像URL')!] !== '') patch.avatarUrl = row[getRealHeader('プロフィール画像URL')!] || undefined;
                         
+                        if (hasHeader('メールアドレス') && row[getRealHeader('メールアドレス')!] !== '') patch.email = row[getRealHeader('メールアドレス')!] || undefined;
+                        if (hasHeader('電話番号') && row[getRealHeader('電話番号')!] !== '') patch.phoneNumber = row[getRealHeader('電話番号')!] || undefined;
+                        
+                        const fvMemoKey = getRealHeader('顔出し詳細') || getRealHeader('顔出しメモ');
+                        if (fvMemoKey && row[fvMemoKey] !== '') patch.faceVisibilityMemo = row[fvMemoKey] || undefined;
+
+                        if (hasHeader('料理教室の運営状況') && row[getRealHeader('料理教室の運営状況')!] !== '') {
+                            const v = row[getRealHeader('料理教室の運営状況')!];
+                            if (['現在運営している', '過去運営していたことがある', '運営したことがない', '未確認'].includes(v)) {
+                                patch.cookingClassStatus = v as any;
+                            }
+                        }
+                        
                         // --- フーディストノート掲載可否 ---
                         const notePermKey = getRealHeader('掲載可否') || getRealHeader('フーディストノート掲載可否');
                         if (notePermKey && row[notePermKey] !== '') {
@@ -252,6 +265,7 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                     const parsed: Foodist[] = results.data
                         .filter(row => row && Object.values(row).some(v => v !== ''))
                         .map((row, index: number) => {
+                        const headers = results.meta.fields ?? [];
                         const headerMap = getHeaderMap(headers);
                         const getRealHeader = (target: string) => headerMap.get(normalizeHeader(target));
 
@@ -387,6 +401,10 @@ export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> 
                             tagIds: mapTagNamesToIds(tagsKey ? row[tagsKey] : undefined, allTags),
                             mediaAccounts,
                             notes,
+                            email: (getRealHeader('メールアドレス') || getRealHeader('email')) ? row[(getRealHeader('メールアドレス') || getRealHeader('email'))!] : undefined,
+                            phoneNumber: (getRealHeader('電話番号') || getRealHeader('phoneNumber')) ? row[(getRealHeader('電話番号') || getRealHeader('phoneNumber'))!] : undefined,
+                            faceVisibilityMemo: (getRealHeader('顔出し詳細') || getRealHeader('faceVisibilityMemo')) ? row[(getRealHeader('顔出し詳細') || getRealHeader('faceVisibilityMemo'))!] : undefined,
+                            cookingClassStatus: (getRealHeader('料理教室の運営状況') || getRealHeader('cookingClassStatus')) ? row[(getRealHeader('料理教室の運営状況') || getRealHeader('cookingClassStatus'))!] as any : '未確認',
                             createdAt: now,
                             updatedAt: now,
                         };
