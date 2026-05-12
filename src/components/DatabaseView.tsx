@@ -140,6 +140,9 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
         const headers = exportColumns.map(col => col.label);
         const data = filteredFoodists.map(f => {
             return exportColumns.map(col => {
+                if (col.csvValue) {
+                    return col.csvValue(f, getMediaFollowers, allTags);
+                }
                 if (col.sortValue) {
                     const val = col.sortValue(f, getMediaFollowers, allTags);
                     return val == null ? '' : String(val);
