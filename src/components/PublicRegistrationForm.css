@@ -617,3 +617,55 @@
     line-height: 1.5;
     font-weight: 500;
 }
+
+/* 生年月日入力用（結合スタイル） */
+.birthdate-input-combined {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0 16px;
+    height: 48px;
+    width: fit-content;
+    transition: all 0.2s;
+}
+
+.birthdate-input-combined:focus-within {
+    border-color: #e65100;
+    box-shadow: 0 0 0 3px rgba(230, 81, 0, 0.1);
+    background: white;
+}
+
+.birth-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: 100% !important;
+    font-size: 1rem !important;
+    text-align: center !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #1e293b;
+}
+
+.birth-year { width: 55px !important; }
+.birth-month, .birth-day { width: 40px !important; }
+
+/* Chrome, Safari, Edge, Opera: Hide number input arrows */
+.birth-input::-webkit-outer-spin-button,
+.birth-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.birth-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.birth-divider {
+    color: #94a3b8;
+    margin: 0 8px;
+    font-size: 1rem;
+    font-weight: 500;
+}

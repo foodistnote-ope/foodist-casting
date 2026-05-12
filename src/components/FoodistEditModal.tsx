@@ -113,19 +113,49 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setForm(prev => {
-            const next = { ...prev, [name]: value };
-            
-            // 生年月日が変更された場合、年齢と年代を自動計算
-            if (name === 'birthDate' && value) {
-                const age = calculateAge(value);
-                const ageGroup = calculateAgeGroup(value);
+        setForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    // 生年月日の分割入力用
+    const [birthYear, setBirthYear] = useState('');
+    const [birthMonth, setBirthMonth] = useState('');
+    const [birthDay, setBirthDay] = useState('');
+
+    useEffect(() => {
+        if (form.birthDate && form.birthDate.includes('-')) {
+            const [y, m, d] = form.birthDate.split('-');
+            setBirthYear(y || '');
+            setBirthMonth(m ? parseInt(m, 10).toString() : '');
+            setBirthDay(d ? parseInt(d, 10).toString() : '');
+        } else {
+            setBirthYear('');
+            setBirthMonth('');
+            setBirthDay('');
+        }
+    }, [foodist]); // 初期表示時のみ同期
+
+    const handleBirthPartChange = (part: 'y' | 'm' | 'd', val: string) => {
+        let y = birthYear;
+        let m = birthMonth;
+        let d = birthDay;
+
+        if (part === 'y') { y = val; setBirthYear(val); }
+        if (part === 'm') { m = val; setBirthMonth(val); }
+        if (part === 'd') { d = val; setBirthDay(val); }
+
+        if (y && m && d && y.length === 4) {
+            const dateStr = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+            setForm(prev => {
+                const next = { ...prev, birthDate: dateStr };
+                const age = calculateAge(dateStr);
+                const ageGroup = calculateAgeGroup(dateStr);
                 if (age !== undefined) next.age = age;
                 if (ageGroup) next.ageGroup = ageGroup;
-            }
-            
-            return next;
-        });
+                return next;
+            });
+        } else if (!y && !m && !d) {
+            setForm(prev => ({ ...prev, birthDate: '' }));
+        }
     };
 
     // --- タグID ---
@@ -339,7 +369,13 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         <div className="form-row">
                             <div className="form-group">
                                 <label className="form-label">生年月日</label>
-                                <input type="date" className="form-input" name="birthDate" value={form.birthDate || ''} onChange={handleChange} />
+                                <div className="birthdate-input-combined">
+                                    <input type="number" className="birth-input birth-year" placeholder="YYYY" value={birthYear} onChange={e => handleBirthPartChange('y', e.target.value)} />
+                                    <span className="birth-divider">/</span>
+                                    <input type="number" className="birth-input birth-month" placeholder="MM" min={1} max={12} value={birthMonth} onChange={e => handleBirthPartChange('m', e.target.value)} />
+                                    <span className="birth-divider">/</span>
+                                    <input type="number" className="birth-input birth-day" placeholder="DD" min={1} max={31} value={birthDay} onChange={e => handleBirthPartChange('d', e.target.value)} />
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label className="form-label">年齢</label>
@@ -659,7 +695,8 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </button>
                     </form>
                 </div>
-<div className="modal-footer">
+
+                <div className="modal-footer">
                     <button className="btn-secondary" onClick={handleClose}>キャンセル</button>
                     <button className="btn-primary" onClick={handleSave}>保存する</button>
                 </div>

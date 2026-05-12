@@ -80,6 +80,26 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // 生年月日の分割入力用
+    const [birthYear, setBirthYear] = useState('1990');
+    const [birthMonth, setBirthMonth] = useState('1');
+    const [birthDay, setBirthDay] = useState('1');
+
+    const handleBirthPartChange = (part: 'y' | 'm' | 'd', val: string) => {
+        let y = birthYear;
+        let m = birthMonth;
+        let d = birthDay;
+
+        if (part === 'y') { y = val; setBirthYear(val); }
+        if (part === 'm') { m = val; setBirthMonth(val); }
+        if (part === 'd') { d = val; setBirthDay(val); }
+
+        if (y && m && d && y.length === 4) {
+            const dateStr = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+            setForm(prev => ({ ...prev, birthDate: dateStr }));
+        }
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
@@ -354,7 +374,13 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="form-row">
                             <div className="form-group">
                                 <label className="form-label">生年月日</label>
-                                <input type="date" name="birthDate" className="form-input" value={form.birthDate} onChange={handleChange} />
+                                <div className="birthdate-input-combined">
+                                    <input type="number" className="birth-input birth-year" placeholder="YYYY" value={birthYear} onChange={e => handleBirthPartChange('y', e.target.value)} />
+                                    <span className="birth-divider">/</span>
+                                    <input type="number" className="birth-input birth-month" placeholder="MM" min={1} max={12} value={birthMonth} onChange={e => handleBirthPartChange('m', e.target.value)} />
+                                    <span className="birth-divider">/</span>
+                                    <input type="number" className="birth-input birth-day" placeholder="DD" min={1} max={31} value={birthDay} onChange={e => handleBirthPartChange('d', e.target.value)} />
+                                </div>
                             </div>
                         </div>
 
