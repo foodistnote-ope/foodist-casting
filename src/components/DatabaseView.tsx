@@ -208,8 +208,8 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                 <div className="column-dropdown-header">
                                     <span>表示項目</span>
                                     <div style={{ display: 'flex', gap: '4px' }}>
-                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.map(c => c.id))}>すべて</button>
-                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(['name'])}>クリア</button>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.map(c => c.id))}>すべて表示</button>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期設定に戻す</button>
                                     </div>
                                 </div>
                                 <div className="column-dropdown-list">
@@ -293,7 +293,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                             </span>
                                         )}
                                         {sortConfig?.key !== col.id && col.sortValue && (
-                                            <span className="sort-icon sort-icon-idle">▲</span>
+                                            <span className="sort-icon sort-icon-idle">▼</span>
                                         )}
                                     </div>
                                 </th>

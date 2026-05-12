@@ -240,15 +240,18 @@
 }
 
 .sort-icon {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--primary-color);
+    font-weight: bold;
 }
 
 .sort-icon-idle {
-    color: transparent;
-    transition: color 0.2s;
+    color: #94a3b8;
+    opacity: 0.5;
+    transition: all 0.2s;
 }
 
 .sortable-header:hover .sort-icon-idle {
-    color: #cbd5e1;
-}
+    opacity: 1;
+    color: var(--primary-color);
+}
