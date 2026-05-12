@@ -396,7 +396,17 @@ function App() {
       if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => (f.tagIds || []).includes(id))) return false;
       
       // 12. フーディストノート掲載可否
-      if (selectedNoteFeaturedPermissions.length > 0 && !selectedNoteFeaturedPermissions.includes(f.noteFeaturedPermission || '未設定')) return false;
+      if (selectedNoteFeaturedPermissions.length > 0) {
+        const actualPermission = f.noteFeaturedPermission || '未設定';
+        const matches = selectedNoteFeaturedPermissions.some(selected => {
+          // 短縮表示「掲載可（事前確認は不要）」はDB値「掲載可（事前確認は不要、掲載後に案内があればOK）」にマッチ
+          if (selected === '掲載可（事前確認は不要）') {
+            return actualPermission === '掲載可（事前確認は不要、掲載後に案内があればOK）';
+          }
+          return actualPermission === selected;
+        });
+        if (!matches) return false;
+      }
 
       // 13. 料理教室の運営状況
       if (selectedCookingClassStatuses.length > 0 && !selectedCookingClassStatuses.includes(f.cookingClassStatus || '未確認')) return false;
