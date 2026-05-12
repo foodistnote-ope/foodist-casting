@@ -351,6 +351,13 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             <input name="title" className="form-input" value={form.title} onChange={handleChange} placeholder="例: 料理研究家、料理家、パン講師" />
                         </div>
 
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label className="form-label">生年月日</label>
+                                <input type="date" name="birthDate" className="form-input" value={form.birthDate} onChange={handleChange} />
+                            </div>
+                        </div>
+
                         <div className="form-group">
                             <label className="form-label required">性別</label>
                             <div className="radio-group-horizontal">
@@ -367,84 +374,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         <span className="radio-text">{opt}</span>
                                     </label>
                                 ))}
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label required">PR企画でのお顔出しは可能ですか？</label>
-                            <div className="radio-group-horizontal">
-                                {['可', '条件付き可', '不可'].map(opt => (
-                                    <label key={opt} className={`radio-option ${form.faceVisibility === opt ? 'selected' : ''}`}>
-                                        <input 
-                                            type="radio" 
-                                            name="faceVisibility" 
-                                            value={opt} 
-                                            checked={form.faceVisibility === opt} 
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                        <span className="radio-text">{opt}</span>
-                                    </label>
-                                ))}
-                            </div>
-
-                            {form.faceVisibility === '条件付き可' && (
-                                <div className="mt-12 animate-fade-in">
-                                    <textarea 
-                                        name="faceVisibilityMemo" 
-                                        className="form-textarea" 
-                                        value={form.faceVisibilityMemo} 
-                                        onChange={handleChange} 
-                                        rows={2}
-                                        placeholder="どのような条件であれば可能か具体的に入力してください（例：お面や被り物をしての出演、目元を隠せば可、料理の手元のみ、など）"
-                                    />
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label required">個人で料理教室を運営されていますか？（リアル・オンライン問わず）</label>
-                            <div className="radio-group vertical">
-                                {[
-                                    '現在運営している',
-                                    '過去運営していたことがある',
-                                    '運営したことがない'
-                                ].map(opt => (
-                                    <label key={opt} className={`radio-option ${form.cookingClassStatus === opt ? 'selected' : ''}`}>
-                                        <input 
-                                            type="radio" 
-                                            name="cookingClassStatus" 
-                                            value={opt} 
-                                            checked={form.cookingClassStatus === opt} 
-                                            onChange={handleChange}
-                                            required
-                                        />
-                                        <span className="radio-text">{opt}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label required">飲酒について</label>
-                            <div className="radio-group vertical">
-                                {allTags
-                                    .filter(t => t.category === '飲酒について' && t.active)
-                                    .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999))
-                                    .map(t => (
-                                        <label key={t.id} className={`radio-option ${form.tagIds.includes(t.id) ? 'selected' : ''}`}>
-                                            <input 
-                                                type="radio" 
-                                                name="alcoholStatus" 
-                                                value={t.id} 
-                                                checked={form.tagIds.includes(t.id)} 
-                                                onChange={() => handleAlcoholTagChange(t.id)}
-                                                required
-                                            />
-                                            <span className="radio-text">{t.name}</span>
-                                        </label>
-                                    ))
-                                }
                             </div>
                         </div>
 
@@ -542,12 +471,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
                         )}
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">生年月日</label>
-                                <input type="date" name="birthDate" className="form-input" value={form.birthDate} onChange={handleChange} />
-                            </div>
-                        </div>
+
                     </section>
 
                     {/* ===== SNS情報 ===== */}
@@ -665,26 +589,107 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         </div>
                     </section>
 
-                    {/* ===== フーディストノート掲載について ===== */}
+                    {/* ===== PR・掲載に関する情報 ===== */}
                     <section className="form-section">
-                        <h2 className="section-title">フーディストノートでのコンテンツご紹介について</h2>
-                        <div className="form-info-box">
-                            <p>フーディストノートでは料理レシピやフォトを多くの読者に発信しています。コンテンツのご紹介可否について、ご回答をお願いいたします。</p>
-                            <ul className="form-info-list">
-                                <li>※PR投稿は対象外となります</li>
-                                <li>※SNS公式の埋め込みタグや指定テンプレートを用いて、みなさまのご投稿もしくはブログ記事へリンクする形でご紹介します</li>
-                                <li>※ご紹介したレシピは「フーディストノート」公式SNSアカウント、提携メディア（SmartNews、Gunosy等）にてご紹介させていただく可能性がございます</li>
-                                <li>※記事公開後は、記事のURLをメールにてお知らせいたします</li>
-                            </ul>
-                            <div className="form-reference-links">
-                                <a href="https://foodistnote.recipe-blog.jp/article/224136/" target="_blank" rel="noreferrer">参考記事1</a>
-                                <a href="https://foodistnote.recipe-blog.jp/article/207374/" target="_blank" rel="noreferrer">参考記事2</a>
-                                <a href="https://foodistnote.recipe-blog.jp/article/127146/" target="_blank" rel="noreferrer">参考記事3</a>
-                                <a href="https://foodistnote.recipe-blog.jp/article/228414/" target="_blank" rel="noreferrer">参考記事4</a>
+                        <h2 className="section-title">PR・掲載に関する情報</h2>
+                        
+                        <div className="form-group">
+                            <label className="form-label required">PR企画でのお顔出しについて</label>
+                            <div className="radio-group-horizontal">
+                                {['可', '条件付き可', '不可'].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.faceVisibility === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="faceVisibility" 
+                                            value={opt} 
+                                            checked={form.faceVisibility === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
+                            </div>
+
+                            {form.faceVisibility === '条件付き可' && (
+                                <div className="mt-12 animate-fade-in">
+                                    <textarea 
+                                        name="faceVisibilityMemo" 
+                                        className="form-textarea" 
+                                        value={form.faceVisibilityMemo} 
+                                        onChange={handleChange} 
+                                        rows={2}
+                                        placeholder="どのような条件であれば可能か具体的に入力してください（例：お面や被り物をしての出演、目元を隠せば可、料理の手元のみ、など）"
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label required">飲酒について</label>
+                            <div className="radio-group vertical">
+                                {allTags
+                                    .filter(t => t.category === '飲酒について' && t.active)
+                                    .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999))
+                                    .map(t => (
+                                        <label key={t.id} className={`radio-option ${form.tagIds.includes(t.id) ? 'selected' : ''}`}>
+                                            <input 
+                                                type="radio" 
+                                                name="alcoholStatus" 
+                                                value={t.id} 
+                                                checked={form.tagIds.includes(t.id)} 
+                                                onChange={() => handleAlcoholTagChange(t.id)}
+                                                required
+                                            />
+                                            <span className="radio-text">{t.name}</span>
+                                        </label>
+                                    ))
+                                }
                             </div>
                         </div>
 
-                        <div className="radio-group vertical">
+                        <div className="form-group">
+                            <label className="form-label required">料理教室の運営について</label>
+                            <div className="radio-group vertical">
+                                {[
+                                    '現在運営している',
+                                    '過去運営していたことがある',
+                                    '運営したことがない'
+                                ].map(opt => (
+                                    <label key={opt} className={`radio-option ${form.cookingClassStatus === opt ? 'selected' : ''}`}>
+                                        <input 
+                                            type="radio" 
+                                            name="cookingClassStatus" 
+                                            value={opt} 
+                                            checked={form.cookingClassStatus === opt} 
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <span className="radio-text">{opt}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label required">フーディストノートへの掲載について</label>
+                            <div className="form-info-box mb-16">
+                                <p>フーディストノートでは料理レシピやフォトを多くの読者に発信しています。コンテンツのご紹介可否について、ご回答をお願いいたします。</p>
+                                <ul className="form-info-list">
+                                    <li>※PR投稿は対象外となります</li>
+                                    <li>※SNS公式の埋め込みタグや指定テンプレートを用いて、みなさまのご投稿もしくはブログ記事へリンクする形でご紹介します</li>
+                                    <li>※ご紹介したレシピは「フーディストノート」公式SNSアカウント、提携メディア（SmartNews、Gunosy等）にてご紹介させていただく可能性がございます</li>
+                                    <li>※記事公開後は、記事のURLをメールにてお知らせいたします</li>
+                                </ul>
+                                <div className="form-reference-links">
+                                    <a href="https://foodistnote.recipe-blog.jp/article/224136/" target="_blank" rel="noreferrer">参考記事1</a>
+                                    <a href="https://foodistnote.recipe-blog.jp/article/207374/" target="_blank" rel="noreferrer">参考記事2</a>
+                                    <a href="https://foodistnote.recipe-blog.jp/article/127146/" target="_blank" rel="noreferrer">参考記事3</a>
+                                    <a href="https://foodistnote.recipe-blog.jp/article/228414/" target="_blank" rel="noreferrer">参考記事4</a>
+                                </div>
+                            </div>
+
+                            <div className="radio-group vertical">
                                 {[
                                     '掲載可（事前確認は不要、掲載後に案内があればOK）',
                                     '掲載可（事前確認が必要）',
@@ -704,17 +709,18 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 ))}
                             </div>
 
-                        <div className="form-group mt-20">
-                            <label className="form-label">特記事項・理由（任意）</label>
-                            <p className="form-hint mb-8">掲載不可の理由や、アカウントによって掲載可否が異なる場合など、補足事項があればご記入ください。</p>
-                            <textarea 
-                                name="noteFeaturedMemo" 
-                                className="form-textarea" 
-                                value={form.noteFeaturedMemo} 
-                                onChange={handleChange} 
-                                rows={3}
-                                placeholder="例：Instagramは掲載可能だが、ブログ記事は不可、など"
-                            />
+                            <div className="form-group mt-16" style={{ marginBottom: 0 }}>
+                                <label className="form-label">特記事項・理由（任意）</label>
+                                <p className="form-hint mb-8">掲載不可の理由や、アカウントによって掲載可否が異なる場合など、補足事項があればご記入ください。</p>
+                                <textarea 
+                                    name="noteFeaturedMemo" 
+                                    className="form-textarea" 
+                                    value={form.noteFeaturedMemo} 
+                                    onChange={handleChange} 
+                                    rows={3}
+                                    placeholder="例：Instagramは掲載可能だが、ブログ記事は不可、など"
+                                />
+                            </div>
                         </div>
                     </section>
 

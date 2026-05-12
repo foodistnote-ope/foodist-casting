@@ -74,7 +74,7 @@ const AREA_GROUPS: Record<string, string[]> = {
 const AGE_OPTIONS = ['10代以下', '20代', '30代', '40代', '50代以上'];
 const MEMBERSHIP_OPTIONS = ['あり', 'なし', '要確認'];
 const MARITAL_STATUS_OPTIONS = ['未婚', '既婚', '非公開', '未確認'];
-const FACE_OPTIONS = ['可', '条件付き可', '不可'];
+const FACE_OPTIONS = ['可', '条件付き可', '不可', '未設定'];
 const HAS_CHILDREN_OPTIONS = ['あり', 'なし', '非公開', '未確認'];
 const CHILDREN_COUNT_OPTIONS = ['1', '2', '3', '4人以上'];
 const CHILD_STAGE_OPTIONS = ['乳幼児あり', '未就学児あり', '小学生の子あり', '中高生の子あり', '成人した子あり'];
@@ -85,7 +85,7 @@ const FOLLOWER_OPTIONS = [
 ];
 const PLATFORM_OPTIONS = ['ブログ', 'Instagram', 'X', 'TikTok', 'YouTube', '公式ホームページ', 'その他'];
 const NOTE_FEATURED_OPTIONS = [
-    '掲載可（事前確認は不要、掲載後に案内があればOK）',
+    '掲載可（事前確認は不要）',
     '掲載可（事前確認が必要）',
     '掲載不可',
     '未設定'
@@ -294,7 +294,7 @@ export const FilterSidebar = ({
             </FilterSection>
 
             {/* フーディスト会員登録状況 */}
-            <FilterSection title="フーディスト会員登録" badge={selectedMemberships.length}>
+            <FilterSection title="フーディスト会員登録状況" badge={selectedMemberships.length}>
                 <CheckList items={MEMBERSHIP_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedMemberships} onToggle={v => toggle(v, selectedMemberships, setSelectedMemberships)} />
             </FilterSection>
 
@@ -303,12 +303,8 @@ export const FilterSidebar = ({
                 <CheckList items={MARITAL_STATUS_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedMaritalStatus} onToggle={v => toggle(v, selectedMaritalStatus, setSelectedMaritalStatus)} />
             </FilterSection>
 
-            {/* 顔出し可否 */}
-            <FilterSection title="顔出し可否" badge={selectedFaceVisibility.length}>
-                <CheckList items={FACE_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedFaceVisibility} onToggle={v => toggle(v, selectedFaceVisibility, setSelectedFaceVisibility)} />
-            </FilterSection>
 
-            {/* 子ども関連 */}
+            {/* 子ども・子育て */}
             <FilterSection title="子ども・子育て" badge={selectedHasChildren.length + selectedChildrenCount.length + selectedChildStages.length}>
                 <p className="filter-sub-label">子どもの有無</p>
                 <CheckList items={HAS_CHILDREN_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedHasChildren} onToggle={v => toggle(v, selectedHasChildren, setSelectedHasChildren)} />
@@ -348,15 +344,6 @@ export const FilterSidebar = ({
                 <CheckList items={FOLLOWER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedYouTubeFollowers} onToggle={v => toggle(v, selectedYouTubeFollowers, setSelectedYouTubeFollowers)} />
             </FilterSection>
 
-            {/* 飲酒について */}
-            <FilterSection title="飲酒について" badge={selectedAlcoholTagIds.length}>
-                <CheckList
-                    items={alcoholTags.map(t => ({ value: t.id, label: t.name }))}
-                    selected={selectedAlcoholTagIds}
-                    onToggle={v => toggle(v, selectedAlcoholTagIds, setSelectedAlcoholTagIds)}
-                />
-            </FilterSection>
-
             {/* 保有資格・専門 */}
             <FilterSection title="保有資格・専門" badge={selectedQualificationTagIds.length}>
                 <CheckList
@@ -387,8 +374,8 @@ export const FilterSidebar = ({
                 />
             </FilterSection>
 
-            {/* 特徴・タグ */}
-            <FilterSection title="特徴・タグ" badge={selectedFeatureTagIds.length}>
+            {/* 得意な料理ジャンル */}
+            <FilterSection title="得意な料理ジャンル" badge={selectedFeatureTagIds.length}>
                 <CheckList
                     items={featureTags.map(t => ({ value: t.id, label: t.name }))}
                     selected={selectedFeatureTagIds}
@@ -397,15 +384,34 @@ export const FilterSidebar = ({
                 />
             </FilterSection>
 
+            {/* 顔出し可否 */}
+            <FilterSection title="顔出し可否" badge={selectedFaceVisibility.length}>
+                <CheckList items={FACE_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedFaceVisibility} onToggle={v => toggle(v, selectedFaceVisibility, setSelectedFaceVisibility)} />
+            </FilterSection>
+
+            {/* 飲酒の有無 */}
+            <FilterSection title="飲酒の有無" badge={selectedAlcoholTagIds.length}>
+                <CheckList
+                    items={alcoholTags.map(t => ({ value: t.id, label: t.name }))}
+                    selected={selectedAlcoholTagIds}
+                    onToggle={v => toggle(v, selectedAlcoholTagIds, setSelectedAlcoholTagIds)}
+                />
+            </FilterSection>
+
             {/* 料理教室の運営状況 */}
             <FilterSection title="料理教室の運営状況" badge={selectedCookingClassStatuses.length}>
                 <CheckList items={COOKING_CLASS_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedCookingClassStatuses} onToggle={v => toggle(v, selectedCookingClassStatuses, setSelectedCookingClassStatuses)} />
             </FilterSection>
 
-            {/* フーディストノート掲載可否 */}
-            <FilterSection title="フーディストノート掲載可否" badge={selectedNoteFeaturedPermissions.length}>
-                <CheckList items={NOTE_FEATURED_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedNoteFeaturedPermissions} onToggle={v => toggle(v, selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions)} />
+            {/* フーディスト掲載可否 */}
+            <FilterSection title="フーディスト掲載可否" badge={selectedNoteFeaturedPermissions.length}>
+                <CheckList
+                    items={NOTE_FEATURED_OPTIONS.map(v => ({ value: v, label: v }))}
+                    selected={selectedNoteFeaturedPermissions}
+                    onToggle={v => toggle(v, selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions)}
+                />
             </FilterSection>
+
         </>
     );
 
