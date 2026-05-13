@@ -260,4 +260,11 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f) => f.phoneNumber || '-',
         sortValue: (f) => f.phoneNumber || '',
     },
+    {
+        id: 'createdAt',
+        label: '登録日',
+        defaultVisible: false,
+        render: (f) => f.createdAt ? f.createdAt.slice(0, 10) : '-',
+        sortValue: (f) => f.createdAt,
+    },
 ];
