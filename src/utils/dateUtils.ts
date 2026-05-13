@@ -20,7 +20,7 @@ export const calculateAge = (birthDate: string): number | undefined => {
  */
 export const getAgeGroupFromAge = (age: number | undefined): string | undefined => {
     if (age === undefined) return undefined;
-    if (age < 20) return 'その他';
+    if (age < 20) return '10代以下';
     if (age < 30) return '20代';
     if (age < 40) return '30代';
     if (age < 50) return '40代';
