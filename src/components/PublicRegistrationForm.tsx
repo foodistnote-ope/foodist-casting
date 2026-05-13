@@ -66,7 +66,6 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     noteFeaturedPermission: undefined,
     noteFeaturedMemo: '',
     cookingClassStatus: '未確認',
-    email: '',
     phoneNumber: '',
     createdAt: '',
     updatedAt: '',
