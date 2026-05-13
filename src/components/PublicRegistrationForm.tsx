@@ -4,6 +4,7 @@ import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, AGE_GROUPS, CHILD_STAGES, FO
 import { submitApplication } from '../lib/supabaseDb';
 import { supabase } from '../lib/supabaseClient';
 import { notifySlack } from '../utils/notifications';
+import { calculateAgeGroup } from '../utils/dateUtils';
 import './PublicRegistrationForm.css';
 
 interface PublicRegistrationFormProps {
@@ -78,6 +79,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
+    const [ageGroupOnly, setAgeGroupOnly] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 生年月日の分割入力用
@@ -96,7 +98,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
         if (y && m && d && y.length === 4) {
             const dateStr = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
-            setForm(prev => ({ ...prev, birthDate: dateStr }));
+            const ageGroup = calculateAgeGroup(dateStr) as any;
+            setForm(prev => ({ ...prev, birthDate: dateStr, ageGroup }));
         }
     };
 
@@ -222,6 +225,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             const now = new Date().toISOString();
             const applicationData = {
                 ...form,
+                birthDate: ageGroupOnly ? undefined : form.birthDate,
                 createdAt: now,
                 updatedAt: now,
             };
@@ -371,16 +375,53 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             <input name="title" className="form-input" value={form.title} onChange={handleChange} placeholder="例: 料理研究家、料理家、パン講師" />
                         </div>
 
-                        <div className="form-row">
-                            <div className="form-group">
-                                <label className="form-label">生年月日</label>
-                                <div className="birthdate-input-combined">
+                        <div className="form-group">
+                            <label className="form-label">生年月日</label>
+                            
+                            {!ageGroupOnly ? (
+                                <div className="birthdate-input-combined animate-fade-in">
                                     <input type="number" className="birth-input birth-year" placeholder="YYYY" value={birthYear} onChange={e => handleBirthPartChange('y', e.target.value)} />
                                     <span className="birth-divider">/</span>
                                     <input type="number" className="birth-input birth-month" placeholder="MM" min={1} max={12} value={birthMonth} onChange={e => handleBirthPartChange('m', e.target.value)} />
                                     <span className="birth-divider">/</span>
                                     <input type="number" className="birth-input birth-day" placeholder="DD" min={1} max={31} value={birthDay} onChange={e => handleBirthPartChange('d', e.target.value)} />
                                 </div>
+                            ) : (
+                                <div className="radio-group-horizontal animate-fade-in">
+                                    {AGE_GROUPS.map(ag => (
+                                        <label key={ag} className={`radio-option ${form.ageGroup === ag ? 'selected' : ''}`}>
+                                            <input 
+                                                type="radio" 
+                                                name="ageGroup" 
+                                                value={ag} 
+                                                checked={form.ageGroup === ag} 
+                                                onChange={handleChange}
+                                            />
+                                            <span className="radio-text">{ag}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div style={{ marginTop: '12px' }}>
+                                <label className="checkbox-option-inline" style={{ fontSize: '0.85rem', color: '#666', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={ageGroupOnly} 
+                                        onChange={(e) => {
+                                            setAgeGroupOnly(e.target.checked);
+                                            if (e.target.checked) {
+                                                // 年代のみ回答に切り替えた際、もし既に生年月日があるならその年代を初期値にする
+                                                if (form.birthDate) {
+                                                    const ag = calculateAgeGroup(form.birthDate) as any;
+                                                    if (ag) setForm(prev => ({ ...prev, ageGroup: ag }));
+                                                }
+                                            }
+                                        }} 
+                                        style={{ marginRight: '6px' }}
+                                    />
+                                    <span>生年月日は入力せず、年代のみで回答する</span>
+                                </label>
                             </div>
                         </div>
 
