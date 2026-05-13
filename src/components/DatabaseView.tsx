@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import Papa from 'papaparse';
 import type { Foodist, Tag } from '../data/types';
 import { normalizeString } from '../hooks/useFoodists';
+import { downloadCsvAsShiftJis } from '../utils/csvExport';
 import './DatabaseView.css';
 
 interface DatabaseViewProps {
@@ -169,19 +170,12 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
         const csv = Papa.unparse({
             fields: headers,
             data: data
+        }, {
+            newline: '\r\n'
         });
 
-        const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-        const blob = new Blob([bom, csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-        link.setAttribute('download', `foodist_export_${timestamp}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        downloadCsvAsShiftJis(csv, `foodist_export_${timestamp}.csv`);
     };
 
     return (
