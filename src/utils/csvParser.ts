@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import Encoding from 'encoding-japanese';
 import type { Foodist, Tag, MediaAccount, FoodieNote, MediaType, MetricType } from '../data/types';
 import { calcTotalFollowers } from '../data/types';
 
@@ -44,158 +45,196 @@ const getHeaderMap = (headers: string[]) => {
 };
 
 /**
+ * ファイルを文字列として読み込み、エンコーディングを自動検知してUNICODEに変換する
+ */
+const readFileWithEncoding = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const codes = new Uint8Array(e.target?.result as ArrayBuffer);
+            
+            // 1. まずは自動検知を試みる
+            let encoding = Encoding.detect(codes);
+            
+            // 2. もし検知失敗、あるいは BINARY と判定された場合は、
+            //    日本の Windows 環境で最も多い Shift-JIS を優先的に試みる
+            if (!encoding || encoding === 'BINARY' || encoding === 'ASCII') {
+                encoding = 'SJIS';
+            }
+
+            let unicodeString = Encoding.convert(codes, {
+                to: 'UNICODE',
+                from: encoding,
+                type: 'string',
+            });
+
+            // 3. 変換後の文字列に「活動名」が含まれているかチェック。
+            //    もし含まれていなければ、もう一方の主要な文字コード（UTF-8/SJIS）で再試行する
+            if (!unicodeString.includes('活動名')) {
+                const fallbackEncoding = encoding === 'SJIS' ? 'UTF8' : 'SJIS';
+                unicodeString = Encoding.convert(codes, {
+                    to: 'UNICODE',
+                    from: fallbackEncoding,
+                    type: 'string',
+                });
+            }
+
+            resolve(unicodeString);
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+    });
+};
+
+/**
  * 部分更新CSVのパース。
  * - ヘッダーに "id" または "活動名" が必要（どちらか一方でも可）。
- * - CSVに存在する列だけをパッチとして返す（存在しない列は undefined のまま）。
- * - タグ列（タグ）が含まれる場合はタグ名→ID変換を行う。
- * - 戻り値は { _matchId, _matchName, ...変更フィールド } の配列。
  */
-export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[]> => {
+export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<FoodistPatch[]> => {
+    const csvString = await readFileWithEncoding(file);
     return new Promise((resolve, reject) => {
-        Papa.parse<Record<string, string>>(file, {
-            header: true,
+        // ヘッダー判定を確実にするため、一旦 header: false で読み込む
+        Papa.parse<string[]>(csvString, {
+            header: false,
             skipEmptyLines: 'greedy',
-            transformHeader: (header) => header.replace(/^\ufeff/, '').trim(),
-            delimiter: '',
             complete: (results) => {
                 try {
-                    const headers = results.meta.fields ?? [];
-                    console.info('[csvParser] Parsed headers:', headers);
-                    
-                    const headerMap = getHeaderMap(headers);
-                    const getRealHeader = (target: string) => headerMap.get(normalizeHeader(target));
-                    const hasHeader = (name: string) => headerMap.has(normalizeHeader(name));
+                    const data = results.data;
+                    if (data.length < 1) {
+                        resolve([]);
+                        return;
+                    }
 
-                    const patches: FoodistPatch[] = results.data
-                        .filter(row => row && Object.values(row).some(v => v !== ''))
+                    // 1行目をヘッダーとして取得（前後の不要な文字やBOMを除去）
+                    const rawHeaders = data[0].map(h => (h || '').replace(/[\ufeff\u200b\u200c\u200d\u200e\u200f]/g, '').trim());
+                    const headerMap = getHeaderMap(rawHeaders);
+                    
+                    const getIdx = (name: string) => {
+                        const originalHeader = headerMap.get(normalizeHeader(name));
+                        if (!originalHeader) return -1;
+                        return rawHeaders.indexOf(originalHeader);
+                    };
+
+                    const idIdx = getIdx('id');
+                    const nameIdx = getIdx('活動名');
+
+                    if (idIdx === -1 && nameIdx === -1) {
+                        const detected = rawHeaders.filter(h => h).join(', ');
+                        throw new Error(`「活動名」または「id」の列が見つかりません。(検出された項目名: ${detected || 'なし'})`);
+                    }
+
+                    const patches: FoodistPatch[] = data.slice(1) // 2行目以降がデータ
+                        .filter(row => row && row.some(v => v !== ''))
                         .map((row, index) => {
-                        const idKey = getRealHeader('id');
-                        const nameKey = getRealHeader('活動名');
                         const patch: FoodistPatch = {
-                            _matchId: idKey ? row[idKey] : undefined,
-                            _matchName: nameKey ? row[nameKey] : undefined,
+                            _matchId: idIdx !== -1 ? row[idIdx] : undefined,
+                            _matchName: nameIdx !== -1 ? row[nameIdx] : undefined,
                         };
 
-                        // --- スカラーフィールド ---
-                        if (hasHeader('本名') && row[getRealHeader('本名')!] !== '') patch.realName = row[getRealHeader('本名')!] || undefined;
-                        if (hasHeader('肩書き') && row[getRealHeader('肩書き')!] !== '') patch.title = row[getRealHeader('肩書き')!] || undefined;
-                        if (hasHeader('会員登録状況') && row[getRealHeader('会員登録状況')!] !== '') {
-                            const v = row[getRealHeader('会員登録状況')!];
-                            if (['あり', 'なし', '要確認'].includes(v)) patch.membershipStatus = v as Foodist['membershipStatus'];
-                        }
-                        if (hasHeader('婚姻状況') && row[getRealHeader('婚姻状況')!] !== '') {
-                            const v = row[getRealHeader('婚姻状況')!];
-                            if (['未婚', '既婚', '非公開', '未確認'].includes(v)) patch.maritalStatus = v as Foodist['maritalStatus'];
-                        }
-                        if (hasHeader('居住地') && row[getRealHeader('居住地')!] !== '') patch.area = row[getRealHeader('居住地')!] || undefined;
-                        if (hasHeader('出身地') && row[getRealHeader('出身地')!] !== '') patch.birthplace = row[getRealHeader('出身地')!] || undefined;
-                        if (hasHeader('生年月日') && row[getRealHeader('生年月日')!] !== '') patch.birthDate = row[getRealHeader('生年月日')!] || undefined;
-                        if (hasHeader('年齢') && row[getRealHeader('年齢')!] !== '') {
-                            const n = parseInt(row[getRealHeader('年齢')!], 10);
+                        const getVal = (target: string) => {
+                            const idx = getIdx(target);
+                            return idx !== -1 ? row[idx] : undefined;
+                        };
+
+                        // --- フィールド設定 ---
+                        const realName = getVal('本名');
+                        if (realName !== undefined && realName !== '') patch.realName = realName;
+                        
+                        const title = getVal('肩書き');
+                        if (title !== undefined && title !== '') patch.title = title;
+
+                        const membership = getVal('会員登録状況');
+                        if (membership && ['あり', 'なし', '要確認'].includes(membership)) patch.membershipStatus = membership as any;
+
+                        const marital = getVal('婚姻状況');
+                        if (marital && ['未婚', '既婚', '非公開', '未確認'].includes(marital)) patch.maritalStatus = marital as any;
+
+                        const area = getVal('居住地');
+                        if (area !== undefined && area !== '') patch.area = area;
+
+                        const birthplace = getVal('出身地');
+                        if (birthplace !== undefined && birthplace !== '') patch.birthplace = birthplace;
+
+                        const birthDate = getVal('生年月日');
+                        if (birthDate !== undefined && birthDate !== '') patch.birthDate = birthDate;
+
+                        const age = getVal('年齢');
+                        if (age !== undefined && age !== '') {
+                            const n = parseInt(age, 10);
                             if (!isNaN(n)) patch.age = n;
                         }
-                        if (hasHeader('年代') && row[getRealHeader('年代')!] !== '') patch.ageGroup = row[getRealHeader('年代')!] as Foodist['ageGroup'] || undefined;
-                        if (hasHeader('性別') && row[getRealHeader('性別')!] !== '') patch.gender = row[getRealHeader('性別')!] || undefined;
-                        if (hasHeader('顔出し可否') && row[getRealHeader('顔出し可否')!] !== '') {
-                            const v = row[getRealHeader('顔出し可否')!];
-                            if (['可', '条件付き可', '不可', '未設定'].includes(v)) patch.faceVisibility = v as Foodist['faceVisibility'];
-                        }
-                        if (hasHeader('子どもの有無') && row[getRealHeader('子どもの有無')!] !== '') {
-                            const v = row[getRealHeader('子どもの有無')!].toLowerCase();
+
+                        const ageGroup = getVal('年代');
+                        if (ageGroup !== undefined && ageGroup !== '') patch.ageGroup = ageGroup as any;
+
+                        const gender = getVal('性別');
+                        if (gender !== undefined && gender !== '') patch.gender = gender;
+
+                        const faceVis = getVal('顔出し可否');
+                        if (faceVis && ['可', '条件付き可', '不可', '未設定'].includes(faceVis)) patch.faceVisibility = faceVis as any;
+
+                        const hasChild = getVal('子どもの有無');
+                        if (hasChild) {
+                            const v = hasChild.toLowerCase();
                             if (['あり', 'true', '1', 'yes'].includes(v)) patch.hasChildren = 'あり';
                             else if (['なし', 'false', '0', 'no'].includes(v)) patch.hasChildren = 'なし';
-                            else if (v === '非公開') patch.hasChildren = '非公開';
-                            else if (v === '未確認') patch.hasChildren = '未確認';
                         }
-                        if (hasHeader('子どもの数') && row[getRealHeader('子どもの数')!] !== '') patch.childrenCount = row[getRealHeader('子どもの数')!] || undefined;
-                        if (hasHeader('子育てステージ') && row[getRealHeader('子育てステージ')!] !== '') {
-                            patch.childStage = row[getRealHeader('子育てステージ')!].split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
-                        }
-                        if (hasHeader('一覧用紹介文') && row[getRealHeader('一覧用紹介文')!] !== '') patch.listIntro = row[getRealHeader('一覧用紹介文')!] || undefined;
-                        if (hasHeader('詳細プロフィール') && row[getRealHeader('詳細プロフィール')!] !== '') patch.profileText = row[getRealHeader('詳細プロフィール')!] || undefined;
-                        if (hasHeader('プロフィール画像URL') && row[getRealHeader('プロフィール画像URL')!] !== '') patch.avatarUrl = row[getRealHeader('プロフィール画像URL')!] || undefined;
-                        
-                        if (hasHeader('メールアドレス') && row[getRealHeader('メールアドレス')!] !== '') patch.email = row[getRealHeader('メールアドレス')!] || undefined;
-                        if (hasHeader('電話番号') && row[getRealHeader('電話番号')!] !== '') patch.phoneNumber = row[getRealHeader('電話番号')!] || undefined;
-                        
-                        const fvMemoKey = getRealHeader('顔出し詳細') || getRealHeader('顔出しメモ');
-                        if (fvMemoKey && row[fvMemoKey] !== '') patch.faceVisibilityMemo = row[fvMemoKey] || undefined;
 
-                        if (hasHeader('料理教室の運営状況') && row[getRealHeader('料理教室の運営状況')!] !== '') {
-                            const v = row[getRealHeader('料理教室の運営状況')!];
-                            if (['現在運営している', '過去運営していたことがある', '運営したことがない', '未確認'].includes(v)) {
-                                patch.cookingClassStatus = v as any;
-                            }
+                        const childCount = getVal('子どもの数');
+                        if (childCount !== undefined && childCount !== '') patch.childrenCount = childCount;
+
+                        const childStage = getVal('子育てステージ');
+                        if (childStage !== undefined && childStage !== '') {
+                            patch.childStage = childStage.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
                         }
-                        
-                        // --- フーディストノート掲載可否 ---
-                        const notePermKey = getRealHeader('掲載可否') || getRealHeader('フーディストノート掲載可否');
-                        if (notePermKey && row[notePermKey] !== '') {
-                            const val = parseNoteFeaturedPermission(row[notePermKey]);
+
+                        const listIntro = getVal('一覧用紹介文');
+                        if (listIntro !== undefined && listIntro !== '') patch.listIntro = listIntro;
+
+                        const profile = getVal('詳細プロフィール');
+                        if (profile !== undefined && profile !== '') patch.profileText = profile;
+
+                        const avatar = getVal('プロフィール画像URL');
+                        if (avatar !== undefined && avatar !== '') patch.avatarUrl = avatar;
+
+                        const email = getVal('メールアドレス');
+                        if (email !== undefined && email !== '') patch.email = email;
+
+                        const phone = getVal('電話番号');
+                        if (phone !== undefined && phone !== '') patch.phoneNumber = phone;
+
+                        const notePerm = getVal('掲載可否') || getVal('フーディストノート掲載可否');
+                        if (notePerm) {
+                            const val = parseNoteFeaturedPermission(notePerm);
                             if (val) patch.noteFeaturedPermission = val;
                         }
-                        const noteMemoKey = getRealHeader('掲載メモ') || getRealHeader('掲載不可の理由');
-                        if (noteMemoKey && row[noteMemoKey] !== '') {
-                            patch.noteFeaturedMemo = row[noteMemoKey];
+
+                        const noteMemo = getVal('掲載メモ') || getVal('掲載不可の理由');
+                        if (noteMemo !== undefined && noteMemo !== '') patch.noteFeaturedMemo = noteMemo;
+
+                        const cookingStatus = getVal('料理教室の運営状況');
+                        if (cookingStatus && ['現在運営している', '過去運営していたことがある', '運営したことがない', '未確認'].includes(cookingStatus)) {
+                            patch.cookingClassStatus = cookingStatus as any;
                         }
 
-                        // --- タグ（追加モード: 既存タグは保持し、新しいタグだけ追記） ---
-                        const tagKey = getRealHeader('タグ');
-                        if (tagKey && row[tagKey] !== '') {
-                            const names = row[tagKey].split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
-                            patch.tagIds = names
+                        const tag = getVal('タグ');
+                        const alcoholVal = getVal('飲酒について');
+                        
+                        let tagNames: string[] = [];
+                        if (tag !== undefined && tag !== '') {
+                            tagNames = tag.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
+                        }
+                        if (alcoholVal !== undefined && alcoholVal !== '') {
+                            tagNames.push(alcoholVal.trim());
+                        }
+
+                        if (tagNames.length > 0) {
+                            patch.tagIds = tagNames
                                 .map(name => allTags.find(t => t.name === name)?.id)
                                 .filter((id): id is string => !!id);
                         }
-
-                        // --- メモ（提案時メモ / その他メモ: 既存メモに追記） ---
-                        const newNotes: FoodieNote[] = [];
-                        const now = new Date().toISOString();
-                        const propNoteKey = getRealHeader('提案時メモ');
-                        if (propNoteKey && row[propNoteKey] !== '') {
-                            newNotes.push({ id: `patch_note_${index}_prop`, noteType: '提案時メモ', content: row[propNoteKey], updatedAt: now });
-                        }
-                        const otherNoteKey = getRealHeader('その他メモ');
-                        if (otherNoteKey && row[otherNoteKey] !== '') {
-                            newNotes.push({ id: `patch_note_${index}_other`, noteType: 'その他', content: row[otherNoteKey], updatedAt: now });
-                        }
-                        if (newNotes.length > 0) {
-                            (patch as any)._patchNotes = newNotes;
-                        }
-
-                        // --- SNSフォロワー数（数値のみ上書き） ---
-                        const mediaPatchConfigs: { type: MediaType; followerKey: string; urlKey: string }[] = [
-                            { type: 'Instagram', followerKey: 'Instagram_フォロワー数', urlKey: 'Instagram_URL' },
-                            { type: 'X', followerKey: 'X_フォロワー数', urlKey: 'X_URL' },
-                            { type: 'TikTok', followerKey: 'TikTok_フォロワー数', urlKey: 'TikTok_URL' },
-                            { type: 'YouTube', followerKey: 'YouTube_登録者数', urlKey: 'YouTube_URL' },
-                            { type: 'ブログ', followerKey: 'ブログ_PV', urlKey: 'ブログ_URL' },
-                        ];
-                        const mediaToPatch: { type: MediaType; metricValue?: number; url?: string }[] = [];
-                        mediaPatchConfigs.forEach(({ type, followerKey, urlKey }) => {
-                            const fKey = getRealHeader(followerKey);
-                            const uKey = getRealHeader(urlKey);
-                            const hasFollower = fKey && row[fKey] !== '';
-                            const hasUrl = uKey && row[uKey] !== '';
-                            
-                            if (hasUrl) {
-                                validateUrl(row[uKey!], patch._matchName || patch._matchId || '対象ユーザー', urlKey);
-                            }
-                            if (hasFollower || hasUrl) {
-                                const num = hasFollower ? parseInt(row[fKey!].replace(/,/g, ''), 10) : undefined;
-                                mediaToPatch.push({
-                                    type,
-                                    metricValue: num && !isNaN(num) ? num : undefined,
-                                    url: hasUrl ? row[uKey!].trim() : undefined,
-                                });
-                            }
-                        });
-                        if (mediaToPatch.length > 0) {
-                            (patch as any)._patchMedia = mediaToPatch;
-                        }
-
-                        // --- 有効な更新項目のチェック ---
-                        // id, 活動名, _noUpdateFields 以外のキーが1つでもあれば有効
+                        
+                        // 更新項目があるかチェック
                         const excluded = ['_matchId', '_matchName'];
                         const hasUpdate = Object.keys(patch).some(k => !excluded.includes(k));
                         if (!hasUpdate) {
@@ -210,7 +249,7 @@ export const parsePatchCsv = (file: File, allTags: Tag[]): Promise<FoodistPatch[
                     reject(error);
                 }
             },
-            error: (error) => reject(error),
+            error: reject
         });
     });
 };
@@ -252,12 +291,13 @@ const mapTagNamesToIds = (tagNamesStr: string | undefined, allTags: Tag[]): stri
  * CSV インポート: 最新フォーマットの CSV を読み込み、Foodist 型に変換する。
  * 日本語ヘッダーと英語ヘッダーの両方をサポートする。
  */
-export const parseFoodistCsv = (file: File, allTags: Tag[]): Promise<Foodist[]> => {
+export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodist[]> => {
+    const csvString = await readFileWithEncoding(file);
     return new Promise((resolve, reject) => {
-        Papa.parse<Record<string, string>>(file, {
+        Papa.parse<Record<string, string>>(csvString, {
             header: true,
             skipEmptyLines: 'greedy',
-            transformHeader: (header) => header.replace(/^\ufeff/, '').trim(),
+            transformHeader: (header) => header.replace(/[\ufeff\u200b\u200c\u200d\u200e\u200f]/g, '').trim(),
             delimiter: '',
             complete: (results) => {
                 try {
