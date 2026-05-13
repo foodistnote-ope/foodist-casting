@@ -16,6 +16,7 @@ import { updateApplicationStatus } from './lib/supabaseDb';
 import { calculateAge, calculateAgeGroup } from './utils/dateUtils';
 import Papa from 'papaparse';
 import { AVAILABLE_COLUMNS, getMediaFollowers } from './utils/exportColumns';
+import { downloadCsvAsShiftJis } from './utils/csvExport';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -631,18 +632,9 @@ function App() {
         });
     });
 
-    const csv = Papa.unparse({ fields: headers, data: data });
-    const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-    const blob = new Blob([bom, csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
+    const csv = Papa.unparse({ fields: headers, data: data }, { newline: '\r\n' });
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-    link.setAttribute('download', `foodist_search_${timestamp}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    downloadCsvAsShiftJis(csv, `foodist_search_${timestamp}.csv`);
   };
 
 
