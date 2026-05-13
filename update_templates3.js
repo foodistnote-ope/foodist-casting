@@ -1,0 +1,49 @@
+import fs from 'fs';
+
+const headers = [
+    '活動名', '本名', '肩書き', '会員登録状況', '婚姻状況', '居住地', '出身地',
+    '生年月日', '年齢', '年代', '性別', '顔出し可否', '子どもの有無', '子どもの数',
+    '子育てステージ', '一覧用紹介文', '詳細プロフィール', 'プロフィール画像URL',
+    '掲載可否', '掲載メモ', '飲酒について', '料理教室の運営状況', 'タグ', '提案時メモ', 'その他メモ',
+    'Instagram_URL', 'Instagram_フォロワー数',
+    'X_URL', 'X_フォロワー数',
+    'TikTok_URL', 'TikTok_フォロワー数',
+    'YouTube_URL', 'YouTube_登録者数',
+    'ブログ_URL', 'ブログ_PV'
+].join(',');
+
+const row1 = [
+    'サンプル 花子', '山田 花子', '料理研究家', 'あり', '既婚', '東京都', '神奈川県',
+    '1990/01/01', '36', '30代', '女性', '可', 'あり', '2',
+    '小学生', '「食」で暮らしを豊かに。季節のレシピを発信。', '雑誌やWEBメディアで活躍中の料理研究家。', 'https://example.com/avatar1.jpg',
+    '掲載可（事前確認が必要）', '写真の使用許可は都度確認', 'お酒が好き（日常的に飲む）', '現在運営している', '"和食,スイーツ"', 'タイアップ実績多数あり', '書籍「毎日のおうちごはん」出版',
+    'https://instagram.com/hanako', '92000',
+    'https://x.com/hanako', '15000',
+    '', '',
+    '', '',
+    'https://hanako-blog.example.com', '50000'
+].join(',');
+
+const row2 = [
+    'サンプル 太郎', '鈴木 太郎', 'フードスタイリスト', '要確認', '未婚', '神奈川県', '千葉県',
+    '1995/05/05', '29', '20代', '男性', '条件付き可', 'なし', '',
+    '', '美しい盛り付けとテーブルコーディネート。', 'SNS映えするスタイリングが得意です。', '',
+    '掲載不可', '', '飲まない', '運営したことがない', '"アウトドア,スタイリング"', '動画映えするレシピが得意', 'キャンプ系の案件に向いている',
+    'https://instagram.com/taro', '5000',
+    '', '',
+    'https://tiktok.com/@taro', '120000',
+    'https://youtube.com/@taro', '80000',
+    '', ''
+].join(',');
+
+import iconv from 'iconv-lite';
+
+const csvContent = `${headers}\r\n${row1}\r\n${row2}\r\n`;
+
+// Convert to Shift-JIS (CP932)
+const sjisBuffer = iconv.encode(csvContent, 'Shift_JIS');
+
+fs.writeFileSync('public/foodist_patch_template.csv', sjisBuffer);
+fs.writeFileSync('public/foodist_import_template.csv', sjisBuffer);
+fs.writeFileSync('public/template.csv', sjisBuffer);
+console.log('Templates updated (patch, import, template) with Shift-JIS encoding.');
