@@ -10,7 +10,8 @@ import type { Foodist, RegistrationApplication } from '../data/types';
 export const getAllFoodists = async (): Promise<Foodist[]> => {
     const { data, error } = await supabase
         .from('foodists')
-        .select('data');
+        .select('data')
+        .order('created_at', { ascending: false });
     if (error) throw error;
     return (data ?? []).map(row => row.data as Foodist).filter(f => f != null);
 };
