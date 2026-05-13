@@ -13,6 +13,9 @@ export type FoodistPatch = Partial<Omit<Foodist, 'id' | 'createdAt'>> & {
     _matchName?: string;
     /** 有効な更新項目（ID/活動名以外）が1つも認識できなかった場合に true */
     _noUpdateFields?: boolean;
+    /** 内部用: 追記型フィールドの保持 */
+    _patchNotes?: FoodieNote[];
+    _patchMedia?: { type: MediaType; metricValue?: number; url?: string }[];
 };
 
 /** 掲載可否の文字列を正規化してEnum値に変換する */
@@ -178,6 +181,7 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                             const v = hasChild.toLowerCase();
                             if (['あり', 'true', '1', 'yes'].includes(v)) patch.hasChildren = 'あり';
                             else if (['なし', 'false', '0', 'no'].includes(v)) patch.hasChildren = 'なし';
+                            else if (v === '非公開') patch.hasChildren = '非公開';
                         }
 
                         const childCount = getVal('子どもの数');
@@ -203,6 +207,14 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         const phone = getVal('電話番号');
                         if (phone !== undefined && phone !== '') patch.phoneNumber = phone;
 
+                        const fvMemo = getVal('顔出し詳細') || getVal('顔出しメモ');
+                        if (fvMemo !== undefined && fvMemo !== '') patch.faceVisibilityMemo = fvMemo;
+
+                        const cookingStatus = getVal('料理教室の運営状況');
+                        if (cookingStatus && ['現在運営している', '過去運営していたことがある', '運営したことがない', '未確認'].includes(cookingStatus)) {
+                            patch.cookingClassStatus = cookingStatus as any;
+                        }
+
                         const notePerm = getVal('掲載可否') || getVal('フーディストノート掲載可否');
                         if (notePerm) {
                             const val = parseNoteFeaturedPermission(notePerm);
@@ -212,14 +224,9 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         const noteMemo = getVal('掲載メモ') || getVal('掲載不可の理由');
                         if (noteMemo !== undefined && noteMemo !== '') patch.noteFeaturedMemo = noteMemo;
 
-                        const cookingStatus = getVal('料理教室の運営状況');
-                        if (cookingStatus && ['現在運営している', '過去運営していたことがある', '運営したことがない', '未確認'].includes(cookingStatus)) {
-                            patch.cookingClassStatus = cookingStatus as any;
-                        }
-
+                        // --- タグ ---
                         const tag = getVal('タグ');
                         const alcoholVal = getVal('飲酒について');
-                        
                         let tagNames: string[] = [];
                         if (tag !== undefined && tag !== '') {
                             tagNames = tag.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
@@ -227,16 +234,51 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         if (alcoholVal !== undefined && alcoholVal !== '') {
                             tagNames.push(alcoholVal.trim());
                         }
-
                         if (tagNames.length > 0) {
                             patch.tagIds = tagNames
                                 .map(name => allTags.find(t => t.name === name)?.id)
                                 .filter((id): id is string => !!id);
                         }
+
+                        // --- メモ（追記） ---
+                        const newNotes: FoodieNote[] = [];
+                        const now = new Date().toISOString();
+                        const propNote = getVal('提案時メモ');
+                        if (propNote !== undefined && propNote !== '') {
+                            newNotes.push({ id: `patch_note_${index}_prop`, noteType: '提案時メモ', content: propNote, updatedAt: now });
+                        }
+                        const otherNote = getVal('その他メモ');
+                        if (otherNote !== undefined && otherNote !== '') {
+                            newNotes.push({ id: `patch_note_${index}_other`, noteType: 'その他', content: otherNote, updatedAt: now });
+                        }
+                        if (newNotes.length > 0) patch._patchNotes = newNotes;
+
+                        // --- SNS（数値のみ更新） ---
+                        const mediaPatchConfigs: { type: MediaType; followerKey: string; urlKey: string }[] = [
+                            { type: 'Instagram', followerKey: 'Instagram_フォロワー数', urlKey: 'Instagram_URL' },
+                            { type: 'X', followerKey: 'X_フォロワー数', urlKey: 'X_URL' },
+                            { type: 'TikTok', followerKey: 'TikTok_フォロワー数', urlKey: 'TikTok_URL' },
+                            { type: 'YouTube', followerKey: 'YouTube_登録者数', urlKey: 'YouTube_URL' },
+                            { type: 'ブログ', followerKey: 'ブログ_PV', urlKey: 'ブログ_URL' },
+                        ];
+                        const mediaToPatch: { type: MediaType; metricValue?: number; url?: string }[] = [];
+                        mediaPatchConfigs.forEach(({ type, followerKey, urlKey }) => {
+                            const fVal = getVal(followerKey);
+                            const uVal = getVal(urlKey);
+                            if ((fVal !== undefined && fVal !== '') || (uVal !== undefined && uVal !== '')) {
+                                const num = fVal ? parseInt(fVal.replace(/,/g, ''), 10) : undefined;
+                                mediaToPatch.push({
+                                    type,
+                                    metricValue: num && !isNaN(num) ? num : undefined,
+                                    url: uVal ? uVal.trim() : undefined,
+                                });
+                            }
+                        });
+                        if (mediaToPatch.length > 0) patch._patchMedia = mediaToPatch;
                         
                         // 更新項目があるかチェック
-                        const excluded = ['_matchId', '_matchName'];
-                        const hasUpdate = Object.keys(patch).some(k => !excluded.includes(k));
+                        const excluded = ['_matchId', '_matchName', '_patchNotes', '_patchMedia'];
+                        const hasUpdate = Object.keys(patch).some(k => !excluded.includes(k)) || (patch._patchNotes && patch._patchNotes.length > 0) || (patch._patchMedia && patch._patchMedia.length > 0);
                         if (!hasUpdate) {
                             patch._noUpdateFields = true;
                         }
@@ -277,19 +319,17 @@ const validateUrl = (url: string | undefined, rowName: string, fieldName: string
 /** カンマ区切りのタグ名をID配列に変換する */
 const mapTagNamesToIds = (tagNamesStr: string | undefined, allTags: Tag[]): string[] => {
     if (!tagNamesStr) return [];
-    // カンマまたは読点で区切る
     const names = tagNamesStr.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
     const result: string[] = [];
     names.forEach(name => {
         const tag = allTags.find(t => t.name === name);
         if (tag) result.push(tag.id);
     });
-    return Array.from(new Set(result)); // 重複除去
+    return Array.from(new Set(result));
 };
 
 /**
- * CSV インポート: 最新フォーマットの CSV を読み込み、Foodist 型に変換する。
- * 日本語ヘッダーと英語ヘッダーの両方をサポートする。
+ * CSV インポート
  */
 export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodist[]> => {
     const csvString = await readFileWithEncoding(file);
@@ -313,22 +353,17 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                         const mediaAccounts: MediaAccount[] = [];
                         let sort = 1;
 
-                        // --- 媒体アカウントの抽出系ヘルパー ---
                         const addMedia = (type: MediaType, urlKey: string, nameKey: string, pvOrFollowerKey: string, metricType: MetricType = 'フォロワー数', reelsKey?: string) => {
                             const uH = getRealHeader(urlKey);
                             const nH = getRealHeader(nameKey);
                             const pH = getRealHeader(pvOrFollowerKey);
                             const rH = reelsKey ? getRealHeader(reelsKey) : undefined;
-
                             const url = uH ? row[uH] : undefined;
                             const name = nH ? row[nH] : undefined;
                             const pvOrFollowers = pH ? row[pH] : undefined;
                             const reels = rH ? row[rH] : undefined;
-
                             if (!url && !name && !pvOrFollowers) return;
-                            if (url) {
-                                validateUrl(url, displayName, urlKey);
-                            }
+                            if (url) validateUrl(url, displayName, urlKey);
                             mediaAccounts.push({
                                 id: `csv_media_${index}_${sort}`,
                                 mediaType: type,
@@ -343,22 +378,14 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             });
                         };
 
-                        // ブログ
                         addMedia('ブログ', 'ブログ_URL', 'ブログ_名称', 'ブログ_PV', 'PV');
-                        // Instagram
                         addMedia('Instagram', 'Instagram_URL', 'Instagram_名称', 'Instagram_フォロワー数', 'フォロワー数', 'Instagram_リール投稿頻度');
-                        // X
                         addMedia('X', 'X_URL', 'X_名称', 'X_フォロワー数', 'フォロワー数');
-                        // TikTok
                         addMedia('TikTok', 'TikTok_URL', 'TikTok_名称', 'TikTok_フォロワー数', 'フォロワー数');
-                        // YouTube
                         addMedia('YouTube', 'YouTube_URL', 'YouTube_名称', 'YouTube_登録者数', 'チャンネル登録者数');
-                        // 公式HP
                         addMedia('公式ホームページ', '公式HP_URL', '公式HP_名称', '公式HP_PV', 'PV');
-                        // その他
                         addMedia('その他', 'その他媒体_URL', 'その他媒体_名称', 'その他媒体_PV', 'なし');
 
-                        // --- メモ ---
                         const notes: FoodieNote[] = [];
                         const propNoteKey = getRealHeader('提案時メモ');
                         if (propNoteKey && row[propNoteKey]) {
@@ -369,7 +396,6 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             notes.push({ id: `csv_note_${index}_other`, noteType: 'その他', content: row[otherNoteKey], updatedAt: now });
                         }
 
-                        // --- 属性の正規化 ---
                         const hasChildKey = getRealHeader('子どもの有無') || getRealHeader('hasChildren');
                         const hasChildRaw = (hasChildKey ? row[hasChildKey] : '').toLowerCase();
                         let hasChildren: Foodist['hasChildren'] = '未確認';
@@ -379,13 +405,10 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
 
                         const faceVisibilityKey = getRealHeader('顔出し可否') || getRealHeader('faceVisibility');
                         const faceVisibilityRaw = (faceVisibilityKey ? row[faceVisibilityKey] : '未設定') as Foodist['faceVisibility'];
-                        
                         const membershipKey = getRealHeader('会員登録状況') || getRealHeader('membershipStatus');
                         const membershipRaw = (membershipKey ? row[membershipKey] : '要確認') as Foodist['membershipStatus'];
-                        
                         const maritalKey = getRealHeader('婚姻状況') || getRealHeader('maritalStatus');
                         const maritalRaw = (maritalKey ? row[maritalKey] : '未確認') as Foodist['maritalStatus'];
-
                         const childStageKey = getRealHeader('子育てステージ');
                         const childStageRaw = childStageKey ? row[childStageKey] : '';
                         const childStage = childStageRaw ? childStageRaw.split(/[,、\n]/).map(s => s.trim()).filter(Boolean) : [];
@@ -408,9 +431,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             displayName,
                             realName: realNameKey ? row[realNameKey] : undefined,
                             title: titleKey ? row[titleKey] : undefined,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             membershipStatus: (['あり', 'なし', '要確認'].includes(membershipRaw as any) ? membershipRaw : '要確認') as any,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             maritalStatus: (['未婚', '既婚', '非公開', '未確認'].includes(maritalRaw as any) ? maritalRaw : '未確認') as any,
                             area: areaKey ? row[areaKey] : undefined,
                             birthplace: birthplaceKey ? row[birthplaceKey] : undefined,
@@ -418,7 +439,6 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             age: ageKey ? parseNumber(row[ageKey]) : undefined,
                             ageGroup: (ageGroupKey ? row[ageGroupKey] : undefined) as Foodist['ageGroup'] || undefined,
                             gender: genderKey ? row[genderKey] : undefined,
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             faceVisibility: (['可', '条件付き可', '不可', '未設定'].includes(faceVisibilityRaw as any) ? faceVisibilityRaw : '未設定') as any,
                             hasChildren,
                             childrenCount: (getRealHeader('子どもの数') || getRealHeader('childrenCount')) ? row[(getRealHeader('子どもの数') || getRealHeader('childrenCount'))!] : undefined,
@@ -426,8 +446,6 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             listIntro: listIntroKey ? row[listIntroKey] : undefined,
                             profileText: profileTextKey ? row[profileTextKey] : undefined,
                             avatarUrl: avatarUrlKey ? row[avatarUrlKey] : undefined,
-                            
-                            // フーディストノート掲載可否
                             noteFeaturedPermission: (() => {
                                 const key = getRealHeader('掲載可否') || getRealHeader('フーディストノート掲載可否');
                                 return (key ? parseNoteFeaturedPermission(row[key]) : undefined) || '未設定';
@@ -436,7 +454,6 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                                 const key = getRealHeader('掲載メモ') || getRealHeader('掲載不可の理由');
                                 return key ? row[key] : undefined;
                             })(),
-
                             totalFollowers: calcTotalFollowers(mediaAccounts),
                             tagIds: mapTagNamesToIds(tagsKey ? row[tagsKey] : undefined, allTags),
                             mediaAccounts,
@@ -455,9 +472,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                     reject(error);
                 }
             },
-            error: (error) => {
-                reject(error);
-            }
+            error: (error) => reject(error)
         });
     });
 };
