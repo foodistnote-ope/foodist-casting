@@ -43,12 +43,27 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
     const columnDropdownRef = useRef<HTMLDivElement>(null);
 
     // Sorting state
-    const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>({ key: 'createdAt', direction: 'desc' });
+    const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(() => {
+        const saved = localStorage.getItem('db_sort_config');
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                // ignore
+            }
+        }
+        return { key: 'createdAt', direction: 'desc' };
+    });
 
     // Save visible columns
     useEffect(() => {
         localStorage.setItem('db_visible_columns', JSON.stringify(visibleColumnIds));
     }, [visibleColumnIds]);
+
+    // Save sort config
+    useEffect(() => {
+        localStorage.setItem('db_sort_config', JSON.stringify(sortConfig));
+    }, [sortConfig]);
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -212,7 +227,10 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                     <span>表示項目</span>
                                     <div style={{ display: 'flex', gap: '4px' }}>
                                         <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.map(c => c.id))}>すべて表示</button>
-                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期設定に戻す</button>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => {
+                                            setVisibleColumnIds(AVAILABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id));
+                                            setSortConfig({ key: 'createdAt', direction: 'desc' });
+                                        }}>初期設定に戻す</button>
                                     </div>
                                 </div>
                                 <div className="column-dropdown-list">
