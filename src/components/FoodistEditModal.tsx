@@ -399,7 +399,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     <option value="女性">女性</option>
                                     <option value="男性">男性</option>
                                     <option value="その他">その他</option>
-                                    <option value="非公開">非公開</option>
+                                    <option value="回答しない">回答しない</option>
                                 </select>
                             </div>
                             <div className="form-group">
@@ -425,7 +425,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     <option value="">-- 未設定 --</option>
                                     <option value="未婚">未婚</option>
                                     <option value="既婚">既婚</option>
-                                    <option value="非公開">非公開</option>
+                                    <option value="回答しない">回答しない</option>
                                     <option value="未確認">未確認</option>
                                 </select>
                             </div>
@@ -434,7 +434,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 <select className="form-select" name="hasChildren" value={form.hasChildren} onChange={handleChange}>
                                     <option value="あり">あり</option>
                                     <option value="なし">なし</option>
-                                    <option value="非公開">非公開</option>
+                                    <option value="回答しない">回答しない</option>
                                     <option value="未確認">未確認</option>
                                 </select>
                             </div>
@@ -447,7 +447,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     <option value="2">2人</option>
                                     <option value="3">3人</option>
                                     <option value="4人以上">4人以上</option>
-                                    <option value="非公開">非公開</option>
+                                    <option value="回答しない">回答しない</option>
                                     <option value="未確認">未確認</option>
                                 </select>
                             </div>

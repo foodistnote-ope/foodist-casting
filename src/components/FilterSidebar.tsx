@@ -73,9 +73,9 @@ const AREA_GROUPS: Record<string, string[]> = {
 
 const AGE_OPTIONS = ['10代以下', '20代', '30代', '40代', '50代以上'];
 const MEMBERSHIP_OPTIONS = ['あり', 'なし', '要確認'];
-const MARITAL_STATUS_OPTIONS = ['未婚', '既婚', '非公開', '未確認'];
+const MARITAL_STATUS_OPTIONS = ['未婚', '既婚', '回答しない', '未確認'];
 const FACE_OPTIONS = ['可', '条件付き可', '不可', '未設定'];
-const HAS_CHILDREN_OPTIONS = ['あり', 'なし', '非公開', '未確認'];
+const HAS_CHILDREN_OPTIONS = ['あり', 'なし', '回答しない', '未確認'];
 const CHILDREN_COUNT_OPTIONS = ['1', '2', '3', '4人以上'];
 const CHILD_STAGE_OPTIONS = ['乳幼児あり', '未就学児あり', '小学生の子あり', '中高生の子あり', '成人した子あり'];
 const FOLLOWER_OPTIONS = [

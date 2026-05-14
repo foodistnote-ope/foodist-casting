@@ -427,7 +427,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="form-group">
                             <label className="form-label required">性別</label>
                             <div className="radio-group-horizontal">
-                                {['女性', '男性', 'その他', '非公開'].map(opt => (
+                                {['女性', '男性', 'その他', '回答しない'].map(opt => (
                                     <label key={opt} className={`radio-option ${form.gender === opt ? 'selected' : ''}`}>
                                         <input 
                                             type="radio" 
@@ -475,7 +475,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="form-group">
                             <label className="form-label required">婚姻状況</label>
                             <div className="radio-group-horizontal">
-                                {['未婚', '既婚', '非公開'].map(opt => (
+                                {['未婚', '既婚', '回答しない'].map(opt => (
                                     <label key={opt} className={`radio-option ${form.maritalStatus === opt ? 'selected' : ''}`}>
                                         <input 
                                             type="radio" 
@@ -494,7 +494,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="form-group">
                             <label className="form-label required">お子さまの有無</label>
                             <div className="radio-group-horizontal">
-                                {['あり', 'なし', '非公開'].map(opt => (
+                                {['あり', 'なし', '回答しない'].map(opt => (
                                     <label key={opt} className={`radio-option ${form.hasChildren === opt ? 'selected' : ''}`}>
                                         <input 
                                             type="radio" 
@@ -520,13 +520,13 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         <option value="2">2人</option>
                                         <option value="3">3人</option>
                                         <option value="4人以上">4人以上</option>
-                                        <option value="非公開">非公開</option>
+                                        <option value="回答しない">回答しない</option>
                                     </select>
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">子育てステージ（複数選択可）</label>
                                     <div className="tag-grid">
-                                        {CHILD_STAGES.filter(s => s !== '未確認' && s !== '非公開').map(stage => (
+                                        {CHILD_STAGES.filter(s => s !== '未確認' && s !== '回答しない').map(stage => (
                                             <label key={stage} className={`tag-pill ${form.childStage.includes(stage) ? 'active' : ''}`}>
                                                 <input type="checkbox" checked={form.childStage.includes(stage)} onChange={() => toggleChildStage(stage)} />
                                                 {stage}
