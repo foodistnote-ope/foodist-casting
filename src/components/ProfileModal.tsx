@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import type { Foodist, Tag, MediaType } from '../data/types';
+import { calculateAge, getEffectiveAgeGroup } from '../utils/dateUtils';
 import './ProfileModal.css';
 
 interface ProfileModalProps {
@@ -150,8 +151,19 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">肩書き</span><span className="demo-value">{val(foodist.title)}</span></div>
                             <div className="demo-item"><span className="demo-label">会員登録状況</span><span className="demo-value">{val(foodist.membershipStatus)}</span></div>
                             <div className="demo-item"><span className="demo-label">生年月日</span><span className="demo-value">{val(foodist.birthDate)}</span></div>
-                            <div className="demo-item"><span className="demo-label">年齢</span><span className="demo-value">{foodist.age != null ? `${foodist.age}歳` : '未設定'}</span></div>
-                            <div className="demo-item"><span className="demo-label">年代</span><span className="demo-value">{val(foodist.ageGroup)}</span></div>
+                            <div className="demo-item">
+                                <span className="demo-label">年齢</span>
+                                <span className="demo-value">
+                                    {(() => {
+                                        const effectiveAge = foodist.birthDate ? calculateAge(foodist.birthDate) : foodist.age;
+                                        return effectiveAge != null ? `${effectiveAge}歳` : '未設定';
+                                    })()}
+                                </span>
+                            </div>
+                            <div className="demo-item">
+                                <span className="demo-label">年代</span>
+                                <span className="demo-value">{val(getEffectiveAgeGroup(foodist))}</span>
+                            </div>
                             <div className="demo-item"><span className="demo-label">性別</span><span className="demo-value">{val(foodist.gender)}</span></div>
                             <div className="demo-item"><span className="demo-label">居住地</span><span className="demo-value">{val(foodist.area)}</span></div>
                             <div className="demo-item"><span className="demo-label">出身地</span><span className="demo-value">{val(foodist.birthplace)}</span></div>
