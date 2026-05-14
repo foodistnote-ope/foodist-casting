@@ -33,6 +33,10 @@
     transition: all var(--transition-fast);
 }
 
+.nav-item + .nav-item {
+    margin-top: 8px;
+}
+
 .nav-item:hover {
     background-color: var(--color-bg-hover);
     color: var(--color-brand-primary);
@@ -42,4 +46,10 @@
     background-color: #fff3e0;
     color: var(--color-brand-primary);
     border-right: 3px solid var(--color-brand-primary);
+}
+
+@media (max-width: 768px) {
+    .nav-review {
+        display: none !important;
+    }
 }
