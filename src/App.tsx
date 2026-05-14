@@ -632,8 +632,15 @@ function App() {
         <main className="main-content">
           {currentView === 'dashboard' ? (
             <>
-              <header className="top-header dashboard-header">
-                <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center', width: '100%' }}>
+              <header className="top-header dashboard-header" style={isMobile ? { padding: '8px 12px', height: 'auto', minHeight: '60px' } : undefined}>
+                <div className="header-actions" style={{ 
+                  display: 'flex', 
+                  gap: isMobile ? '6px' : '8px', 
+                  alignItems: 'center', 
+                  width: '100%',
+                  justifyContent: isMobile ? 'flex-start' : 'flex-end',
+                  flexWrap: 'nowrap'
+                }}>
                   {/* ダッシュボード検索結果CSVエクスポート (PCのみ) */}
                   {!isMobile && (
                     <div className="csv-export-group">
@@ -709,7 +716,13 @@ function App() {
                   )}
 
                   {/* 新規登録 */}
-                  <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
+                  <button className="btn-primary" style={{ 
+                    marginRight: isMobile ? '0' : '8px',
+                    height: '40px',
+                    padding: isMobile ? '0 12px' : '0 16px',
+                    fontSize: isMobile ? '0.8rem' : '0.9rem',
+                    flexShrink: 0
+                  }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     新規登録
                   </button>
@@ -794,11 +807,16 @@ function App() {
                           }}>
                             <div className="card-top-decoration"></div>
                             <div className="card-content">
-                              <div className="card-main-info">
-                                <img src={foodist.avatarUrl || '/no-image.png'} alt={foodist.displayName} className="card-avatar" />
-                                <div className="card-header">
-                                  <h3 className="foodist-name">{foodist.displayName}</h3>
-                                  <span className="foodist-title">{foodist.title || '（肩書き未設定）'}</span>
+                              <div className="card-main-info" style={isMobile ? { display: 'flex', alignItems: 'center', gap: '12px' } : undefined}>
+                                <img 
+                                  src={foodist.avatarUrl || '/no-image.png'} 
+                                  alt={foodist.displayName} 
+                                  className="card-avatar" 
+                                  style={isMobile ? { width: '64px', height: '64px' } : undefined} 
+                                />
+                                <div className="card-header" style={isMobile ? { textAlign: 'left', alignItems: 'flex-start' } : undefined}>
+                                  <h3 className="foodist-name" style={isMobile ? { fontSize: '1.1rem', margin: 0 } : undefined}>{foodist.displayName}</h3>
+                                  <span className="foodist-title" style={isMobile ? { fontSize: '0.75rem' } : undefined}>{foodist.title || '（肩書き未設定）'}</span>
                                 </div>
                               </div>
 
@@ -834,7 +852,11 @@ function App() {
                                           src={CARD_SNS_ICONS[acc.mediaType] || CARD_SNS_ICONS['ブログ']}
                                           alt={acc.mediaType}
                                           className="sns-icon-img"
-                                          style={acc.mediaType === 'X' ? { filter: 'invert(1)' } : undefined}
+                                          style={{
+                                            width: isMobile ? '20px' : '16px',
+                                            height: isMobile ? '20px' : '16px',
+                                            ...(acc.mediaType === 'X' ? { filter: 'invert(1)' } : {})
+                                          }}
                                         />
                                       </a>
                                     ))}
