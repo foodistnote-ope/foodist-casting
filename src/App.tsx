@@ -699,6 +699,7 @@ function App() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="header-search-input"
+                                style={isMobile ? { flex: 1, minWidth: '0' } : undefined}
                             />
                             {searchQuery && (
                                 <button className="search-clear-btn" onClick={() => setSearchQuery('')}>✕</button>
@@ -845,9 +846,9 @@ function App() {
                                 </div>
 
                                 {cardMedia.length > 0 && (
-                                  <div className="card-sns">
+                                  <div className="card-sns" style={isMobile ? { display: 'flex', flexDirection: 'row', gap: '8px', flexWrap: 'wrap', marginTop: '8px' } : undefined}>
                                     {cardMedia.map(acc => (
-                                      <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.mediaType} onClick={e => e.stopPropagation()}>
+                                      <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.mediaType} onClick={e => e.stopPropagation()} style={isMobile ? { display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f1f5f9', padding: '4px', borderRadius: '4px' } : undefined}>
                                         <img
                                           src={CARD_SNS_ICONS[acc.mediaType] || CARD_SNS_ICONS['ブログ']}
                                           alt={acc.mediaType}
@@ -864,31 +865,42 @@ function App() {
                                 )}
 
                                 {cardTags.length > 0 && (
-                                  <div className="card-tags">
-                                    {cardTags.map(tag => (
-                                      <span
-                                        key={tag.id}
-                                        className={`tag ${[...selectedQualificationTagIds, ...selectedAchievementTagIds, ...selectedWorkTagIds, ...selectedFeatureTagIds].includes(tag.id) ? 'tag-selected' : ''}`}
-                                        onClick={e => {
-                                          e.stopPropagation();
-                                          if (tag.category === '資格・専門') {
-                                            setSelectedQualificationTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                          } else if (tag.category === '実績') {
-                                            setSelectedAchievementTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                          } else if (tag.category === '対応可能業務') {
-                                            setSelectedWorkTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                          } else if (tag.category === '飲酒について') {
-                                            setSelectedAlcoholTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                          } else {
-                                            setSelectedFeatureTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
-                                          }
-                                        }}
-                                        style={{ cursor: 'pointer' }}
-                                        title={tag.category}
-                                      >
-                                        {tag.name}
-                                      </span>
-                                    ))}
+                                  <div className="card-tags" style={isMobile ? { display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '12px' } : undefined}>
+                                    {cardTags.map(tag => {
+                                      const isSelected = [...selectedQualificationTagIds, ...selectedAchievementTagIds, ...selectedWorkTagIds, ...selectedFeatureTagIds, ...selectedAlcoholTagIds].includes(tag.id);
+                                      return (
+                                        <span
+                                          key={tag.id}
+                                          className={`tag ${isSelected ? 'tag-selected' : ''}`}
+                                          onClick={e => {
+                                            e.stopPropagation();
+                                            if (tag.category === '資格・専門') {
+                                              setSelectedQualificationTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                            } else if (tag.category === '実績') {
+                                              setSelectedAchievementTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                            } else if (tag.category === '対応可能業務') {
+                                              setSelectedWorkTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                            } else if (tag.category === '飲酒について') {
+                                              setSelectedAlcoholTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                            } else {
+                                              setSelectedFeatureTagIds(prev => prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]);
+                                            }
+                                          }}
+                                          style={isMobile ? { 
+                                            fontSize: '10px', 
+                                            padding: '2px 8px', 
+                                            background: isSelected ? 'var(--color-brand-primary)' : '#f1f5f9',
+                                            color: isSelected ? 'white' : 'var(--color-text-secondary)',
+                                            borderRadius: '4px',
+                                            border: '1px solid #e2e8f0',
+                                            display: 'inline-block'
+                                          } : { cursor: 'pointer' }}
+                                          title={tag.category}
+                                        >
+                                          {tag.name}
+                                        </span>
+                                      );
+                                    })}
                                   </div>
                                 )}
                               </div>
