@@ -346,5 +346,25 @@
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
+
+    .mobile-drawer .search-input {
+        height: 40px;
+        font-size: 0.9rem;
+        padding: 8px 32px 8px 12px;
+    }
+
+    .mobile-drawer .btn-reset {
+        height: 36px; /* ヘッダーより僅かに抑えてバランス調整 */
+        padding: 0 12px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-base, 4px);
+    }
+
+    .mobile-drawer .filter-header h2 {
+        font-size: 1rem;
+    }
 }
 
