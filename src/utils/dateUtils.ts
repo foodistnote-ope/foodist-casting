@@ -18,8 +18,8 @@ export const calculateAge = (birthDate: string): number | undefined => {
 /**
  * 年齢から年代ラベル（20代、30代等）を取得する
  */
-export const getAgeGroupFromAge = (age: number | undefined): string | undefined => {
-    if (age === undefined) return undefined;
+export const getAgeGroupFromAge = (age: number | undefined | null): string | undefined => {
+    if (age === undefined || age === null) return undefined;
     if (age < 20) return '10代以下';
     if (age < 30) return '20代';
     if (age < 40) return '30代';
@@ -33,4 +33,15 @@ export const getAgeGroupFromAge = (age: number | undefined): string | undefined 
 export const calculateAgeGroup = (birthDate: string): string | undefined => {
     const age = calculateAge(birthDate);
     return getAgeGroupFromAge(age);
+};
+
+/**
+ * フーディストの情報から最適な年代（年代ラベル）を特定する
+ * 優先順位: 1.明示的な年代、2.生年月日からの計算、3.年齢からの計算
+ */
+export const getEffectiveAgeGroup = (foodist: { ageGroup?: string; birthDate?: string; age?: number }): string | undefined => {
+    if (foodist.ageGroup) return foodist.ageGroup;
+    if (foodist.birthDate) return calculateAgeGroup(foodist.birthDate);
+    if (foodist.age != null) return getAgeGroupFromAge(foodist.age);
+    return undefined;
 };
