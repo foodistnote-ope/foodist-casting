@@ -150,7 +150,8 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         if (membership && ['あり', 'なし', '要確認'].includes(membership)) patch.membershipStatus = membership as any;
 
                         const marital = getVal('婚姻状況');
-                        if (marital && ['未婚', '既婚', '非公開', '未確認'].includes(marital)) patch.maritalStatus = marital as any;
+                        if (marital && ['未婚', '既婚', '回答しない', '未確認'].includes(marital)) patch.maritalStatus = marital as any;
+                        else if (marital === '非公開') patch.maritalStatus = '回答しない';
 
                         const area = getVal('居住地');
                         if (area !== undefined && area !== '') patch.area = area;
@@ -181,11 +182,13 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                             const v = hasChild.toLowerCase();
                             if (['あり', 'true', '1', 'yes'].includes(v)) patch.hasChildren = 'あり';
                             else if (['なし', 'false', '0', 'no'].includes(v)) patch.hasChildren = 'なし';
-                            else if (v === '非公開') patch.hasChildren = '非公開';
+                            else if (v === '非公開' || v === '回答しない') patch.hasChildren = '回答しない';
                         }
 
                         const childCount = getVal('子どもの数');
-                        if (childCount !== undefined && childCount !== '') patch.childrenCount = childCount;
+                        if (childCount !== undefined && childCount !== '') {
+                            patch.childrenCount = childCount === '非公開' ? '回答しない' : childCount;
+                        }
 
                         const childStage = getVal('子育てステージ');
                         if (childStage !== undefined && childStage !== '') {
@@ -401,7 +404,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                         let hasChildren: Foodist['hasChildren'] = '未確認';
                         if (['あり', 'true', '1', 'yes'].includes(hasChildRaw)) hasChildren = 'あり';
                         else if (['なし', 'false', '0', 'no'].includes(hasChildRaw)) hasChildren = 'なし';
-                        else if (hasChildRaw === '非公開') hasChildren = '非公開';
+                        else if (hasChildRaw === '非公開' || hasChildRaw === '回答しない') hasChildren = '回答しない';
 
                         const faceVisibilityKey = getRealHeader('顔出し可否') || getRealHeader('faceVisibility');
                         const faceVisibilityRaw = (faceVisibilityKey ? row[faceVisibilityKey] : '未設定') as Foodist['faceVisibility'];
@@ -432,16 +435,26 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             realName: realNameKey ? row[realNameKey] : undefined,
                             title: titleKey ? row[titleKey] : undefined,
                             membershipStatus: (['あり', 'なし', '要確認'].includes(membershipRaw as any) ? membershipRaw : '要確認') as any,
-                            maritalStatus: (['未婚', '既婚', '非公開', '未確認'].includes(maritalRaw as any) ? maritalRaw : '未確認') as any,
+                            maritalStatus: (() => {
+                                const val = maritalRaw === '非公開' ? '回答しない' : maritalRaw;
+                                return (['未婚', '既婚', '回答しない', '未確認'].includes(val as any) ? val : '未確認') as any;
+                            })(),
                             area: areaKey ? row[areaKey] : undefined,
                             birthplace: birthplaceKey ? row[birthplaceKey] : undefined,
                             birthDate: birthDateKey ? row[birthDateKey] : undefined,
                             age: ageKey ? parseNumber(row[ageKey]) : undefined,
                             ageGroup: (ageGroupKey ? row[ageGroupKey] : undefined) as Foodist['ageGroup'] || undefined,
-                            gender: genderKey ? row[genderKey] : undefined,
+                            gender: (() => {
+                                const val = genderKey ? row[genderKey] : undefined;
+                                return val === '非公開' ? '回答しない' : val;
+                            })(),
                             faceVisibility: (['可', '条件付き可', '不可', '未設定'].includes(faceVisibilityRaw as any) ? faceVisibilityRaw : '未設定') as any,
                             hasChildren,
-                            childrenCount: (getRealHeader('子どもの数') || getRealHeader('childrenCount')) ? row[(getRealHeader('子どもの数') || getRealHeader('childrenCount'))!] : undefined,
+                            childrenCount: (() => {
+                                const key = getRealHeader('子どもの数') || getRealHeader('childrenCount');
+                                const val = key ? row[key] : undefined;
+                                return val === '非公開' ? '回答しない' : val;
+                            })(),
                             childStage,
                             listIntro: listIntroKey ? row[listIntroKey] : undefined,
                             profileText: profileTextKey ? row[profileTextKey] : undefined,

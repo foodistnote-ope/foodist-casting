@@ -78,7 +78,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f) => {
             if (f.hasChildren === 'あり' && f.childrenCount) {
-                const countStr = f.childrenCount === '4人以上' || f.childrenCount === '非公開' ? f.childrenCount : `${f.childrenCount}人`;
+                const countStr = f.childrenCount === '4人以上' || f.childrenCount === '回答しない' ? f.childrenCount : `${f.childrenCount}人`;
                 return `あり (${countStr})`;
             }
             return f.hasChildren || '-';
