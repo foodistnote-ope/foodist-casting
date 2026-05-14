@@ -212,52 +212,54 @@ export const DatabaseView = ({
                         )}
                     </div>
                     
-                    {/* Column Toggler */}
-                    <div className="column-dropdown-container" ref={columnDropdownRef}>
-                        <button 
-                            className="btn-secondary" 
-                            onClick={() => setIsColumnDropdownOpen(!isColumnDropdownOpen)}
-                            title="表示項目の設定"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            表示項目
-                        </button>
-                        {isColumnDropdownOpen && (
-                            <div className="column-dropdown-menu">
-                                <div className="column-dropdown-header">
-                                    <span>表示項目</span>
-                                    <div style={{ display: 'flex', gap: '4px' }}>
-                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.map(c => c.id))}>すべて表示</button>
-                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(['name'])}>クリア</button>
-                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => {
-                                            setVisibleColumnIds(AVAILABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id));
-                                            setSortConfig({ key: 'createdAt', direction: 'desc' });
-                                        }}>初期設定に戻す</button>
+                    {/* Column Toggler & Export Group */}
+                    <div className="csv-export-group">
+                        <div className="column-dropdown-container" ref={columnDropdownRef}>
+                            <button 
+                                className="btn-text-export-settings" 
+                                onClick={() => setIsColumnDropdownOpen(!isColumnDropdownOpen)}
+                                title="表示項目の設定"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
+                                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                表示項目 <span className="export-count-badge">{visibleColumnIds.length}</span>
+                            </button>
+                            {isColumnDropdownOpen && (
+                                <div className="column-dropdown-menu">
+                                    <div className="column-dropdown-header">
+                                        <span>表示項目の設定</span>
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.map(c => c.id))}>すべて表示</button>
+                                            <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(['name'])}>クリア</button>
+                                            <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => {
+                                                setVisibleColumnIds(AVAILABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id));
+                                                setSortConfig({ key: 'createdAt', direction: 'desc' });
+                                            }}>初期設定に戻す</button>
+                                        </div>
+                                    </div>
+                                    <div className="column-dropdown-list">
+                                        {AVAILABLE_COLUMNS.map(col => (
+                                            <label key={col.id} className="column-dropdown-item">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={visibleColumnIds.includes(col.id)}
+                                                    onChange={() => toggleColumn(col.id)}
+                                                />
+                                                {col.label}
+                                            </label>
+                                        ))}
                                     </div>
                                 </div>
-                                <div className="column-dropdown-list">
-                                    {AVAILABLE_COLUMNS.map(col => (
-                                        <label key={col.id} className="column-dropdown-item">
-                                            <input 
-                                                type="checkbox" 
-                                                checked={visibleColumnIds.includes(col.id)}
-                                                onChange={() => toggleColumn(col.id)}
-                                            />
-                                            {col.label}
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        <div className="export-divider"></div>
+                        <button className="btn-dashboard-export" onClick={handleExportCsv} title="表示中のデータをCSV形式でダウンロード">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            CSV出力
+                        </button>
                     </div>
-
-                    <button className="btn-secondary" onClick={handleExportCsv} title="表示中のデータをCSV形式でダウンロード">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                        CSV出力
-                    </button>
 
                     <button className="btn-primary" onClick={onAdd}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
