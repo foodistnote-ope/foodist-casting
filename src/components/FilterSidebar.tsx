@@ -53,6 +53,9 @@ interface FilterSidebarProps {
     setSelectedFeatureTagIds: (ids: string[]) => void;
     selectedAlcoholTagIds: string[];
     setSelectedAlcoholTagIds: (ids: string[]) => void;
+    // モバイル用表示状態
+    isMobileOpen: boolean;
+    setIsMobileOpen: (open: boolean) => void;
     // 検索可能タグ（active=true & searchVisible=true のみ）
     qualificationTags: Tag[];
     achievementTags: Tag[];
@@ -189,6 +192,7 @@ export const FilterSidebar = ({
     selectedWorkTagIds, setSelectedWorkTagIds,
     selectedFeatureTagIds, setSelectedFeatureTagIds,
     selectedAlcoholTagIds, setSelectedAlcoholTagIds,
+    isMobileOpen, setIsMobileOpen,
     qualificationTags,
     achievementTags,
     workTags,
@@ -196,7 +200,6 @@ export const FilterSidebar = ({
     featureTags
 }: FilterSidebarProps) => {
 
-    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     // モバイルドロワーが開いているときはbodyのスクロールを止める
     useEffect(() => {
