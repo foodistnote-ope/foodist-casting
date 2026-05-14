@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Core brand colors - Premium Foodist theme */
+  --color-brand-primary: #e65100;
+  /* Warm burnt orange */
+  --color-brand-secondary: #ff8a65;
+  --color-brand-accent: #fbc02d;
+  /* Warm yellow */
+
+  /* Neutral palette */
+  --color-bg-base: #f7f9fa;
+  /* Soft off-white for background */
+  --color-bg-surface: #ffffff;
+  /* Clean white for cards */
+  --color-bg-hover: #fff3e0;
+  /* Subtle orange tint for hover */
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5e6b73;
+  --color-text-tertiary: #8f9ea8;
+
+  /* Borders & Dividers */
+  --color-border: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+
+  /* Typography */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+
+  /* Spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+
+  /* Shadows for depth */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-premium: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+
+  /* Radii for modern smooth corners */
+  --radius-sm: 0.375rem;
+  --radius-base: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset & Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--color-brand-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-brand-secondary);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+.btn-primary {
+  background-color: var(--color-brand-primary);
+  color: white;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-base);
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: background-color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-brand-secondary);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-hover);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-base);
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-tertiary);
+}
+
+.btn-secondary.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Utility classes for layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: var(--color-bg-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--color-bg-base);
+}
+
+/* Header with Glassmorphism */
+.top-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-4) var(--spacing-8);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  z-index: 5;
+}
+
+.page-title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text-primary);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ========================================
+   レスポンシブ対応（モバイル ≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+  /* サイドナビをタブバーに切り替え */
+  .sidebar {
+    width: 100% !important;
+    height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    flex-direction: row;
+    z-index: 100;
+    border-right: none;
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+  }
+
+  /* ブランド名を非表示 */
+  .sidebar .sidebar-brand {
+    display: none;
+  }
+
+  /* ナビをhorizontalに */
+  .sidebar .sidebar-nav {
+    padding: 0;
+    width: 100%;
+  }
+
+  .sidebar .sidebar-nav ul {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .sidebar .sidebar-nav ul li {
+    flex: 1;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 4px;
+    font-size: 0.7rem;
+    border-right: none !important;
+    border-top: 3px solid transparent;
+    text-align: center;
+    margin-top: 0 !important; /* スマホでは余白をリセット */
+  }
+
+  .sidebar .sidebar-nav ul li.active {
+    border-top: 3px solid var(--color-brand-primary);
+    border-right: none !important;
+    background-color: #fff3e0;
+  }
+
+  .sidebar .sidebar-nav ul li .nav-icon {
+    font-size: 1.2rem;
+  }
+
+  /* 登録審査メニューをスマホで非表示 */
+  .nav-review {
+    display: none !important;
+  }
+
+  /* メインコンテンツの下にタブバー分の余白 */
+  .main-content {
+    padding-bottom: 60px;
+  }
+
+  /* ヘッダーのパディングを縮小 */
+  .top-header {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  /* カードグリッドをシングルカラムに */
+  .foodist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* content-padのパディングを縮小 */
+  .content-pad {
+    padding: var(--spacing-4);
+  }
+
+  /* app-container全体の幅制限を解除 */
+  .app-container {
+    overflow-x: hidden;
+  }
+}
