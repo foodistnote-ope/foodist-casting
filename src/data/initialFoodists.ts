@@ -115,7 +115,7 @@ export const initialFoodists: Foodist[] = [
     "ageGroup": "30代",
     "gender": "女性",
     "faceVisibility": "可",
-    "hasChildren": "非公開",
+    "hasChildren": "回答しない",
     "childStage": [],
     "listIntro": "簡単・時短・節約をコンセプトに、身近な食材で誰でも失敗なく作れるレシピを発信。",
     "profileText": "和歌山県在住の料理研究家・スイーツコンシェルジュ。“簡単・時短・節約”をコンセプトに、ブログ「Mizukiオフィシャルブログ～奇跡のキッチン」で毎日レシピを紹介し、月間300万PVを誇る。「フーディストアワード2022」では、総合グランプリを受賞。",
@@ -197,7 +197,7 @@ export const initialFoodists: Foodist[] = [
     ],
     "createdAt": "2026-03-18T20:51:35.540Z",
     "updatedAt": "2026-03-25T09:53:15.811Z",
-    "childrenCount": "非公開",
+    "childrenCount": "回答しない",
     "id": "2"
   },
   {
