@@ -119,7 +119,10 @@ function App() {
   } | null>(null);
 
   // ---- データ ----
-  const { foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, replaceTagInAll, removeTagsFromAll, exportToJson, importFromJson, mergeFoodists, patchFoodists } = useFoodists();
+  const { 
+    foodists, loading, error, addFoodist, updateFoodist, deleteFoodist, deleteManyFoodists,
+    replaceTagInAll, removeTagsFromAll, exportToJson, importFromJson, mergeFoodists, patchFoodists 
+  } = useFoodists();
   const { tags, tagsLoading, getSearchableTags } = useTags();
 
   // 各カテゴリの検索可能タグ（active=true & searchVisible=true）
@@ -252,6 +255,7 @@ function App() {
       }
     }
   };
+
 
 
   // タグIDからタグ情報を引きやすくするためのMap
@@ -701,8 +705,8 @@ function App() {
                                   <span>CSV表示項目</span>
                                   <div style={{ display: 'flex', gap: '4px' }}>
                                       <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.map(c => c.id))}>すべて選択</button>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期項目</button>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>選択解除</button>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期設定に戻す</button>
+                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>クリア</button>
                                   </div>
                               </div>
                               <div className="column-dropdown-list">
