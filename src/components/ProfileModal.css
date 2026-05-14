@@ -71,6 +71,36 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-1);
+    flex: 1;
+}
+
+.modal-header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.modal-name-wrapper {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.modal-header-actions {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    top: 16px;
+    right: 56px;
+}
+
+.modal-action-btn {
+    padding: 6px 12px !important;
+    font-size: 0.85rem !important;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .modal-name {
@@ -330,4 +360,91 @@
     line-height: 1.6;
     white-space: pre-wrap;
     margin: 0;
+}
+
+/* ========================================
+   レスポンシブ対応（モバイル ≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: var(--spacing-2);
+    }
+
+    .modal-content {
+        max-height: 95vh;
+        border-radius: var(--radius-lg);
+    }
+
+    .modal-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: var(--spacing-12) var(--spacing-6) var(--spacing-6);
+        gap: var(--spacing-4);
+    }
+
+    .modal-header-main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .modal-name-wrapper {
+        padding-right: 0;
+        margin-bottom: 8px;
+    }
+
+    .modal-header-actions {
+        position: static;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .modal-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .modal-name {
+        font-size: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .modal-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .modal-sns-links {
+        justify-content: center;
+    }
+
+    .modal-body {
+        padding: var(--spacing-6) var(--spacing-4);
+        gap: var(--spacing-6);
+    }
+
+    .demo-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3);
+    }
+
+    .attribute-row {
+        flex-direction: column;
+        gap: 4px;
+        padding-bottom: var(--spacing-3);
+    }
+
+    .attribute-label {
+        width: 100%;
+        font-size: 0.75rem;
+    }
+
+    .attribute-value {
+        font-size: 0.9rem;
+    }
+
+    .bullet-list {
+        grid-template-columns: 1fr;
+    }
 }

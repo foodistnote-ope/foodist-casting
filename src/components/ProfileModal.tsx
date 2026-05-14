@@ -88,12 +88,12 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                 <div className="modal-header">
                     <img src={foodist.avatarUrl || '/no-image.png'} alt={foodist.displayName} className="modal-avatar" />
                     <div className="modal-header-info">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div style={{ paddingRight: '200px' }}>
+                        <div className="modal-header-main">
+                            <div className="modal-name-wrapper">
                                 <h2 className="modal-name">{foodist.displayName}</h2>
                             </div>
-                            <div style={{ display: 'flex', gap: '8px', position: 'absolute', top: '16px', right: '56px' }}>
-                                <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.85rem', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '6px' }} onClick={handleContactClick}>
+                            <div className="modal-header-actions">
+                                <button className="btn-secondary modal-action-btn" onClick={handleContactClick}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                         <rect width="20" height="16" x="2" y="4" rx="2"/>
                                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
@@ -101,7 +101,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                                     連絡先
                                 </button>
                                 {onEditClick && (
-                                    <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.85rem', flexShrink: 0 }} onClick={onEditClick}>
+                                    <button className="btn-secondary modal-action-btn" onClick={onEditClick}>
                                         情報を編集する
                                     </button>
                                 )}

@@ -46,7 +46,7 @@
 }
 
 .form-section-title {
-    margin-top: 14px;
+    margin-top: 12px;
     margin-bottom: 8px;
     font-size: 1.1rem;
     font-weight: 800;
@@ -234,6 +234,8 @@
     align-self: flex-start;
     font-size: 0.85rem;
     padding: 8px 16px;
+    margin-top: 12px;
+    margin-bottom: 20px;
 }
 
 /* 削除ボタン */
@@ -377,4 +379,54 @@
     margin: 0 4px;
     font-size: 0.9rem;
     font-weight: 500;
+
+/* ========================================
+   レスポンシブ対応（モバイル ≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+    .edit-modal-content {
+        max-height: 95vh;
+        width: 100%;
+        border-radius: 0;
+    }
+
+    .edit-body {
+        padding: 12px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .edit-modal-content .modal-header {
+        padding: 16px 40px 12px 16px;
+    }
+
+    .edit-modal-content .modal-name {
+        font-size: 1.1rem;
+    }
+
+    .form-section-title {
+        font-size: 1rem;
+        margin-top: 20px;
+    }
+
+    .edit-modal-content .modal-footer {
+        flex-direction: column-reverse;
+        padding: 12px;
+    }
+
+    .edit-modal-content .modal-footer button {
+        width: 100%;
+    }
+
+    .tag-checkbox-label {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+
+    .media-account-row, .note-edit-row {
+        padding: 12px;
+    }
 }
