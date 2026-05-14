@@ -1,4 +1,5 @@
 import type { Foodist, Tag } from '../data/types';
+import { calculateAge, getEffectiveAgeGroup } from './dateUtils';
 
 export type ColumnDef = {
     id: string;
@@ -45,11 +46,21 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.gender || '',
     },
     {
+        id: 'age',
+        label: '年齢',
+        defaultVisible: false,
+        render: (f) => {
+            const age = f.birthDate ? calculateAge(f.birthDate) : f.age;
+            return age != null ? `${age}歳` : '-';
+        },
+        sortValue: (f) => f.birthDate ? calculateAge(f.birthDate) : f.age,
+    },
+    {
         id: 'ageGroup',
         label: '年代',
         defaultVisible: true,
-        render: (f) => f.ageGroup || '-',
-        sortValue: (f) => f.ageGroup || '',
+        render: (f) => getEffectiveAgeGroup(f) || '-',
+        sortValue: (f) => getEffectiveAgeGroup(f) || '',
     },
     {
         id: 'area',
