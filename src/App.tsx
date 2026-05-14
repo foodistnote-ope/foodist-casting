@@ -13,7 +13,7 @@ import { ImportResultModal } from './components/ImportResultModal';
 import { PublicRegistrationForm } from './components/PublicRegistrationForm';
 import { ApplicationReviewView } from './components/ApplicationReviewView';
 import { updateApplicationStatus } from './lib/supabaseDb';
-import { calculateAge, calculateAgeGroup } from './utils/dateUtils';
+import { calculateAge, calculateAgeGroup, getEffectiveAgeGroup } from './utils/dateUtils';
 import Papa from 'papaparse';
 import { AVAILABLE_COLUMNS, getMediaFollowers } from './utils/exportColumns';
 import { downloadCsvAsShiftJis } from './utils/csvExport';
@@ -294,7 +294,10 @@ function App() {
       if (selectedBirthplaces.length > 0 && !selectedBirthplaces.includes(f.birthplace || '')) return false;
 
       // 4. 年代
-      if (selectedAges.length > 0 && !selectedAges.includes(f.ageGroup || '')) return false;
+      if (selectedAges.length > 0) {
+        const effectiveAgeGroup = getEffectiveAgeGroup(f);
+        if (!selectedAges.includes(effectiveAgeGroup || '')) return false;
+      }
 
       // 4.5 性別
       if (selectedGenders.length > 0 && !selectedGenders.includes(f.gender || '')) return false;
