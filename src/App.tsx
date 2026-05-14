@@ -256,8 +256,6 @@ function App() {
     }
   };
 
-
-
   // タグIDからタグ情報を引きやすくするためのMap
   const tagMap = useMemo(() => new Map(tags.map(t => [t.id, t])), [tags]);
 
@@ -460,104 +458,17 @@ function App() {
     setSelectedCookingClassStatuses([]);
   };
 
-  /*
-  // ---- データ移行: 動画関連タグの統合 ----
-  useEffect(() => {
-    if (loading || foodists.length === 0) return;
-    const MIGRATION_KEY = 'foodist_tag_migration_v4_video';
-    if (localStorage.getItem(MIGRATION_KEY)) return;
-
-    // 統合対象: tag_w007 (動画企画), tag_w008 (動画撮影), tag_w010 (動画台本作成) -> tag_w009 (動画制作)
-    const replacements = [
-      { source: 'tag_w007', target: 'tag_w009' },
-      { source: 'tag_w008', target: 'tag_w009' },
-      { source: 'tag_w010', target: 'tag_w009' },
-    ];
-
-    batchReplaceTags(replacements);
-    localStorage.setItem(MIGRATION_KEY, 'done');
-    console.info('[App] 動画関連タグの統合（v4）が完了しました');
-  }, [loading, foodists, batchReplaceTags]);
-  */
-
   // ---- データ移行: 不要タグの整理 (v5) ----
   useEffect(() => {
     if (loading || foodists.length === 0) return;
     const MIGRATION_KEY = 'foodist_tag_cleanup_v5';
     if (localStorage.getItem(MIGRATION_KEY)) return;
-
-    // 先に完了フラグを立ててループを防止
     localStorage.setItem(MIGRATION_KEY, 'done');
-
-    // 削除対象: tag_d030 (電子レンジ), tag_d031 (オーブン対応), tag_d032 (無水調理)
     const deletedTagIds = ['tag_d030', 'tag_d031', 'tag_d032'];
     removeTagsFromAll(deletedTagIds);
-    
-    console.info('[App] タグの整理（v5）が完了しました');
-  }, [loading, foodists, removeTagsFromAll]);
-
-  // ---- データ移行: 不要タグの整理 (v6: 資格・専門) ----
-  useEffect(() => {
-    if (loading || foodists.length === 0) return;
-    const MIGRATION_KEY = 'foodist_tag_cleanup_v6';
-    if (localStorage.getItem(MIGRATION_KEY)) return;
-
-    localStorage.setItem(MIGRATION_KEY, 'done');
-
-    // 削除対象: tag_q014 (スイーツコンシェルジュ), tag_q016 (マクロビオティック関連資格), tag_q017 (キャンプインストラクター)
-    const deletedTagIds = ['tag_q014', 'tag_q016', 'tag_q017'];
-    removeTagsFromAll(deletedTagIds);
-    
-    console.info('[App] タグの整理（v6）が完了しました');
-  }, [loading, foodists, removeTagsFromAll]);
-
-  // ---- データ移行: 不要タグの整理 (v7: 料理研究家・料理家) ----
-  useEffect(() => {
-    if (loading || foodists.length === 0) return;
-    const MIGRATION_KEY = 'foodist_tag_cleanup_v7';
-    if (localStorage.getItem(MIGRATION_KEY)) return;
-
-    localStorage.setItem(MIGRATION_KEY, 'done');
-
-    // 削除対象: tag_q003 (料理研究家), tag_q004 (料理家)
-    const deletedTagIds = ['tag_q003', 'tag_q004'];
-    removeTagsFromAll(deletedTagIds);
-    
-    console.info('[App] タグの整理（v7）が完了しました');
-  }, [loading, foodists, removeTagsFromAll]);
-
-  // ---- データ移行: 不要タグの整理 (v8: パン講師・製菓講師) ----
-  useEffect(() => {
-    if (loading || foodists.length === 0) return;
-    const MIGRATION_KEY = 'foodist_tag_cleanup_v8';
-    if (localStorage.getItem(MIGRATION_KEY)) return;
-
-    localStorage.setItem(MIGRATION_KEY, 'done');
-
-    // 削除対象: tag_q006 (パン講師), tag_q007 (製菓講師)
-    const deletedTagIds = ['tag_q006', 'tag_q007'];
-    removeTagsFromAll(deletedTagIds);
-    
-    console.info('[App] タグの整理（v8）が完了しました');
-  }, [loading, foodists, removeTagsFromAll]);
-
-  // ---- データ移行: 不要タグの整理 (v9: 対応可能業務) ----
-  useEffect(() => {
-    if (loading || foodists.length === 0) return;
-    const MIGRATION_KEY = 'foodist_tag_cleanup_v9';
-    if (localStorage.getItem(MIGRATION_KEY)) return;
-
-    localStorage.setItem(MIGRATION_KEY, 'done');
-
-    // 削除対象: tag_w006 (動画出演), tag_w014 (オンライン出演), tag_w016 (出張)
-    const deletedTagIds = ['tag_w006', 'tag_w014', 'tag_w016'];
-    removeTagsFromAll(deletedTagIds);
-    
-    console.info('[App] タグの整理（v9）が完了しました');
   }, [loading, foodists, removeTagsFromAll]);
 
   // ---- URLベースのディープリンク ----
-  // フーディストがロードされたらURLパラメータをチェックし、对象のモーダルを自動で開く
   useEffect(() => {
     if (loading || foodists.length === 0) return;
     const params = new URLSearchParams(window.location.search);
@@ -568,7 +479,6 @@ function App() {
     }
   }, [loading, foodists]);
 
-  // モーダルを開くときにURLを更新するヘルパー
   const openFoodistModal = (foodist: Foodist) => {
     setSelectedFoodist(foodist);
     const params = new URLSearchParams(window.location.search);
@@ -576,7 +486,6 @@ function App() {
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   };
 
-  // モーダルを閉じるときにURLをクリーンにするヘルパー
   const closeFoodistModal = () => {
     setSelectedFoodist(null);
     const params = new URLSearchParams(window.location.search);
@@ -596,7 +505,6 @@ function App() {
     selectedCookingClassStatuses,
   ].some(a => a.length > 0);
 
-  // SNSフォロワーフィルターのアクティブなプラットフォームを特定し、そのフォロワー数で降順ソート
   const activeSnsFilter: string | null =
     selectedInstagramFollowers.length > 0 ? 'Instagram' :
     selectedXFollowers.length > 0 ? 'X' :
@@ -641,8 +549,6 @@ function App() {
     downloadCsvAsShiftJis(csv, `foodist_search_${timestamp}.csv`);
   };
 
-
-  // SNSアイコンの定義（カード表示用）
   const CARD_SNS_ICONS: Record<string, string> = {
     'ブログ': "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23555'/%3E%3Ctext x='50' y='73' font-family='Arial' font-size='65' font-weight='bold' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E",
     'Instagram': 'https://foodistnote.recipe-blog.jp/wp-content/themes/foodist_note/assets/img/common/icon_sns_instagram.png',
@@ -651,7 +557,6 @@ function App() {
     'YouTube': 'https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg',
   };
 
-  // ---- ローディング / エラー画面 ----
   if (loading || tagsLoading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: '16px', color: '#888', fontFamily: 'sans-serif' }}>
@@ -687,51 +592,54 @@ function App() {
               <header className="top-header" style={{ justifyContent: 'flex-end' }}>
                 <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   {/* ダッシュボード検索結果CSVエクスポート */}
-                  <div className="column-dropdown-container" ref={exportColumnDropdownRef}>
-                      <button 
-                          className="btn-secondary" 
-                          onClick={() => setIsExportColumnDropdownOpen(!isExportColumnDropdownOpen)}
-                          title="CSV表示項目の設定"
-                      >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
-                              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                              <circle cx="12" cy="12" r="3"></circle>
-                          </svg>
-                          CSV表示項目
-                      </button>
-                      {isExportColumnDropdownOpen && (
-                          <div className="column-dropdown-menu">
-                              <div className="column-dropdown-header">
-                                  <span>CSV表示項目</span>
-                                  <div style={{ display: 'flex', gap: '4px' }}>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.map(c => c.id))}>すべて選択</button>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期設定に戻す</button>
-                                      <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>クリア</button>
-                                  </div>
-                              </div>
-                              <div className="column-dropdown-list">
-                                  {EXPORTABLE_COLUMNS.map(col => (
-                                      <label key={col.id} className="column-dropdown-item">
-                                          <input 
-                                              type="checkbox" 
-                                              checked={exportColumnIds.includes(col.id)}
-                                              onChange={() => toggleExportColumn(col.id)}
-                                          />
-                                          {col.label}
-                                      </label>
-                                  ))}
-                              </div>
-                          </div>
-                      )}
+                  <div className="csv-export-group">
+                    <div className="column-dropdown-container" ref={exportColumnDropdownRef}>
+                        <button 
+                            className="btn-text-export-settings" 
+                            onClick={() => setIsExportColumnDropdownOpen(!isExportColumnDropdownOpen)}
+                            title="出力する項目を選択します"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px' }}>
+                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1-1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            出力項目を選択 <span className="export-count-badge">{exportColumnIds.length}</span>
+                        </button>
+                        {isExportColumnDropdownOpen && (
+                            <div className="column-dropdown-menu">
+                                <div className="column-dropdown-header">
+                                    <span>CSV出力項目の選択</span>
+                                    <div style={{ display: 'flex', gap: '4px' }}>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.map(c => c.id))}>すべて選択</button>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(EXPORTABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id))}>初期設定に戻す</button>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setExportColumnIds(['name'])}>クリア</button>
+                                    </div>
+                                </div>
+                                <div className="column-dropdown-list">
+                                    {EXPORTABLE_COLUMNS.map(col => (
+                                        <label key={col.id} className="column-dropdown-item">
+                                            <input 
+                                                type="checkbox" 
+                                                checked={exportColumnIds.includes(col.id)}
+                                                onChange={() => toggleExportColumn(col.id)}
+                                            />
+                                            {col.label}
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className="export-divider"></div>
+                    <button className="btn-dashboard-export" onClick={handleDashboardExportCsv} title="選択した項目でCSVを出力します">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        CSV出力
+                    </button>
                   </div>
-                  <button className="btn-secondary" onClick={handleDashboardExportCsv} title="検索結果をCSV形式でダウンロード">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                      CSV出力
-                  </button>
 
                   {/* 新規登録 */}
                   <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x1="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
                     新規登録
                   </button>
                   {/* JSONバックアップ */}
@@ -792,13 +700,11 @@ function App() {
                   {sortedFoodists.length > 0 ? (
                     <div className="foodist-grid">
                       {sortedFoodists.map(foodist => {
-                        // 表示するタグ（最大8件、active=true 優先）
                         const cardTags = (foodist.tagIds || [])
                           .map(id => tagMap.get(id))
                           .filter((t): t is NonNullable<typeof t> => t != null)
                           .slice(0, 8);
 
-                        // 媒体リンク（showOnDetail=true、主要SNSのみ）
                         const cardMedia = foodist.mediaAccounts
                           .filter(a => a.url && ['Instagram', 'X', 'YouTube', 'TikTok', 'ブログ'].includes(a.mediaType) && a.showOnDetail)
                           .sort((a, b) => a.sortOrder - b.sortOrder)
@@ -821,8 +727,6 @@ function App() {
                               </div>
 
                               <div className="card-details">
-                                <p className="card-notes">{foodist.listIntro || '（紹介文未設定）'}</p>
-
                                 <div className="card-stats">
                                   {activeSnsFilter && activeSnsFilter !== '__total__' ? (() => {
                                     const acc = foodist.mediaAccounts.find(a => a.mediaType === activeSnsFilter);
@@ -924,29 +828,21 @@ function App() {
               allTags={tags} 
               onEdit={app => {
                 if (!app || !app.data) return;
-                
-                // クラッシュ防止：不足している配列項目を空のリストで補完する
                 const foodistData = {
                   tagIds: [],
                   mediaAccounts: [],
                   notes: [],
                   childStage: [],
                   aliases: [],
-                  ...JSON.parse(JSON.stringify(app.data)), // 申請データをコピー
+                  ...JSON.parse(JSON.stringify(app.data)),
                   id: app.id
                 };
-                
-                // 不要な内部項目（email等）を除去
-                // if ((foodistData as any).email) delete (foodistData as any).email;
-                
-                // 生年月日から年齢・年代を補完（あれば）
                 if (foodistData.birthDate) {
                   const age = calculateAge(foodistData.birthDate);
                   const ageGroup = calculateAgeGroup(foodistData.birthDate);
                   if (age !== undefined) foodistData.age = age;
                   if (ageGroup) foodistData.ageGroup = ageGroup;
                 }
-                
                 setEditingFoodist({ ...foodistData, _isApplication: true } as any);
                 setIsEditModalOpen(true);
               }}
@@ -954,7 +850,6 @@ function App() {
           )}
         </main>
 
-        {/* 詳細モーダル */}
         {selectedFoodist && (
           <ProfileModal
             foodist={selectedFoodist}
@@ -978,8 +873,6 @@ function App() {
           />
         )}
 
-
-        {/* 編集モーダル */}
         {isEditModalOpen && (
           <FoodistEditModal
             foodist={editingFoodist}
@@ -988,13 +881,9 @@ function App() {
             onSave={async (data) => {
               if ('id' in data) {
                 const isApplication = (data as any)._isApplication;
-                
                 if (isApplication) {
-                  // 審査画面からの承認フロー
                   const now = new Date().toISOString();
                   const newId = `foodist-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-                  
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const { _isApplication: _, ...rest } = data as any;
                   const foodist: Foodist = {
                     ...rest,
@@ -1002,7 +891,6 @@ function App() {
                     createdAt: now,
                     updatedAt: now,
                   } as Foodist;
-
                   try {
                     await addFoodist(foodist);
                     await updateApplicationStatus(data.id, 'approved');
@@ -1012,11 +900,9 @@ function App() {
                     alert('承認処理に失敗しました。');
                   }
                 } else {
-                  // 通常のデータ更新
                   updateFoodist(data as Foodist);
                 }
               } else {
-                // 新規追加
                 addFoodist(data);
               }
               setIsEditModalOpen(false);
@@ -1025,7 +911,6 @@ function App() {
           />
         )}
 
-        {/* インポート結果モーダル */}
         {importResult && (
           <ImportResultModal
             title={importResult.title}
