@@ -53,15 +53,14 @@ interface FilterSidebarProps {
     setSelectedFeatureTagIds: (ids: string[]) => void;
     selectedAlcoholTagIds: string[];
     setSelectedAlcoholTagIds: (ids: string[]) => void;
-    // モバイル用表示状態
-    isMobileOpen: boolean;
-    setIsMobileOpen: (open: boolean) => void;
     // 検索可能タグ（active=true & searchVisible=true のみ）
     qualificationTags: Tag[];
     achievementTags: Tag[];
     workTags: Tag[];
     alcoholTags: Tag[];
     featureTags: Tag[];
+    isMobileOpen: boolean;
+    setIsMobileOpen: (v: boolean) => void;
 }
 
 const AREA_GROUPS: Record<string, string[]> = {
@@ -192,14 +191,14 @@ export const FilterSidebar = ({
     selectedWorkTagIds, setSelectedWorkTagIds,
     selectedFeatureTagIds, setSelectedFeatureTagIds,
     selectedAlcoholTagIds, setSelectedAlcoholTagIds,
-    isMobileOpen, setIsMobileOpen,
     qualificationTags,
     achievementTags,
     workTags,
     alcoholTags,
-    featureTags
+    featureTags,
+    isMobileOpen,
+    setIsMobileOpen
 }: FilterSidebarProps) => {
-
 
     // モバイルドロワーが開いているときはbodyのスクロールを止める
     useEffect(() => {
@@ -247,8 +246,6 @@ export const FilterSidebar = ({
         selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
-
-    // 都道府県リスト（居住地・出身地共通）
 
     const filterContents = (
         <>
@@ -514,4 +511,3 @@ export const FilterSidebar = ({
         </>
     );
 };
-
