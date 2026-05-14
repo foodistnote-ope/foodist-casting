@@ -119,13 +119,13 @@ export const CHILD_STAGES = [
     '小学生の子あり',
     '中高生の子あり',
     '成人した子あり',
-    '非公開',
+    '回答しない',
     '未確認',
 ] as const;
 export type ChildStage = typeof CHILD_STAGES[number];
 
 // --- 性別 ---
-export const GENDER_OPTIONS = ['女性', '男性', 'その他', '非公開'];
+export const GENDER_OPTIONS = ['女性', '男性', 'その他', '回答しない'];
 
 // --- 料理教室の運営状況 ---
 export const COOKING_CLASS_STATUS_OPTIONS = [
@@ -143,7 +143,7 @@ export interface Foodist {
     realName?: string;           // 本名
     title?: string;              // 肩書き（表示用。検索はタグ側で）
     membershipStatus: 'あり' | 'なし' | '要確認';  // フーディスト会員登録状況
-    maritalStatus?: '未婚' | '既婚' | '非公開' | '未確認'; // 婚姻状況
+    maritalStatus?: '未婚' | '既婚' | '回答しない' | '未確認'; // 婚姻状況
     area?: string;               // 居住地（都道府県）
     birthplace?: string;         // 出身地（都道府県）
     birthDate?: string;          // 生年月日（YYYY-MM-DD）
@@ -152,8 +152,8 @@ export interface Foodist {
     gender?: string;
     faceVisibility: '可' | '条件付き可' | '不可' | '未設定';
     faceVisibilityMemo?: string;
-    hasChildren: 'あり' | 'なし' | '非公開' | '未確認';
-    childrenCount?: string;      // '0'/'1'/'2'/'3'/'4人以上'/'非公開'/'未確認'
+    hasChildren: 'あり' | 'なし' | '回答しない' | '未確認';
+    childrenCount?: string;      // '0'/'1'/'2'/'3'/'4人以上'/'回答しない'/'未確認'
     childStage: string[];        // 子育てステージ（複数選択可）
     listIntro?: string;          // 一覧用紹介文（カード表示用の短文）
     profileText?: string;        // 詳細プロフィール（詳細画面用の長文）
