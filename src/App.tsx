@@ -167,7 +167,7 @@ function App() {
 
   // 蜷�き繝�ざ繝ｪ縺ｮ讀懃ｴ｢蜿ｯ閭ｽ繧ｿ繧ｰ��ctive=true & searchVisible=true��
   const qualificationTags = getSearchableTags('雉��ｼ繝ｻ蟆る摩');
-  const achievementTags = getSearchableTags('螳溽ｸｾ');
+  const achievementTags = getSearchableTags('実績');
   const workTags = getSearchableTags('蟇ｾ蠢懷庄閭ｽ讌ｭ蜍�');
   const alcoholTags = getSearchableTags('鬟ｲ驟偵↓縺､縺�※');
   const featureTags = useMemo(() => [
@@ -230,7 +230,7 @@ function App() {
       });
     } catch (err) {
       console.error(err);
-      alert(`CSV繧､繝ｳ繝昴�繝医↓螟ｱ謨励＠縺ｾ縺励◆縲�n${err}`);
+      alert(`CSVインポートに失敗しました。\n${err}`);
     } finally {
       setIsImportingCsv(false);
       e.target.value = '';
