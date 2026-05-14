@@ -329,7 +329,8 @@
 
   .header-actions {
     width: 100%;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 8px;
   }
 
   /* ヘッダーアクションのボタンをスマホで非表示 */
@@ -350,7 +351,8 @@
     align-items: center;
     gap: 4px;
     flex: 1;
-    margin-right: 8px;
+    margin-right: 4px;
+    max-width: calc(100% - 100px); /* Leave room for New Registration button */
   }
 
   .header-search-wrapper {
@@ -427,10 +429,11 @@
   /* 新規登録ボタンも高さを合わせる */
   .header-actions .btn-primary {
     margin-right: 0 !important;
-    font-size: 0.8rem;
-    height: 40px;
-    padding: 0 14px;
+    font-size: 0.75rem;
+    height: 36px;
+    padding: 0 10px;
     flex-shrink: 0;
+    white-space: nowrap;
   }
 
   /* CSV出力グループをスマホで非表示 */
@@ -449,5 +452,51 @@
 
   .search-overview p {
     font-size: 0.85rem;
+  }
+
+  /* カードのモバイル調整 */
+  .foodist-card {
+    margin-bottom: 4px;
+  }
+
+  .card-main-info {
+    gap: 12px !important;
+  }
+
+  .card-avatar {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .foodist-name {
+    font-size: 1.05rem !important;
+  }
+
+  .foodist-title {
+    font-size: 0.75rem !important;
+  }
+
+  .card-sns {
+    margin-top: 8px !important;
+    gap: 8px !important;
+  }
+
+  .sns-link {
+    padding: 6px !important;
+  }
+
+  .sns-icon-img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .card-tags {
+    gap: 4px !important;
+    margin-top: 12px !important;
+  }
+
+  .tag {
+    font-size: 0.65rem !important;
+    padding: 2px 8px !important;
   }
 }
