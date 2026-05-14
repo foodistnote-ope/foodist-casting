@@ -61,11 +61,18 @@ function App() {
   const [isExportColumnDropdownOpen, setIsExportColumnDropdownOpen] = useState(false);
   const exportColumnDropdownRef = useRef<HTMLDivElement>(null);
 
-  // モバイル判定用のステートとリスナー
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  // モバイル判定用のステートとリスナー（UA判定も併用して確実性を高める）
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 1024 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  });
+
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+    };
     window.addEventListener('resize', handleResize);
+    handleResize(); // 初期化時にも実行
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
