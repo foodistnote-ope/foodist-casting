@@ -617,7 +617,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
                         ))}
 
-                        <button type="button" className="btn-secondary btn-full" onClick={addMedia}>＋ SNS・媒体を追加</button>
+                        <button type="button" className="btn-secondary btn-full btn-add-media" onClick={addMedia}>＋ SNS・媒体を追加</button>
                     </section>
 
                     {/* ===== スキル・属性 ===== */}

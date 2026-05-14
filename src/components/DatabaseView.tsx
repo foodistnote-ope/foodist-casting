@@ -19,7 +19,17 @@ interface DatabaseViewProps {
 
 import { AVAILABLE_COLUMNS, getMediaFollowers } from '../utils/exportColumns';
 
-export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDelete, isImporting, onPatchImport, isPatchImporting }: DatabaseViewProps) => {
+export const DatabaseView = ({ 
+    foodists, 
+    allTags, 
+    onEdit, 
+    onAdd, 
+    onImport, 
+    onDelete, 
+    isImporting, 
+    onPatchImport, 
+    isPatchImporting
+}: DatabaseViewProps) => {
     const [searchQuery, setSearchQuery] = useState('');
     
     // Column visibility state
@@ -221,6 +231,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                                     <span>表示項目</span>
                                     <div style={{ display: 'flex', gap: '4px' }}>
                                         <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(AVAILABLE_COLUMNS.map(c => c.id))}>すべて表示</button>
+                                        <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => setVisibleColumnIds(['name'])}>クリア</button>
                                         <button className="btn-text" style={{ fontSize: '0.7rem', padding: '2px 4px' }} onClick={() => {
                                             setVisibleColumnIds(AVAILABLE_COLUMNS.filter(c => c.defaultVisible).map(c => c.id));
                                             setSortConfig({ key: 'createdAt', direction: 'desc' });
@@ -278,6 +289,7 @@ export const DatabaseView = ({ foodists, allTags, onEdit, onAdd, onImport, onDel
                         )}
                         <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onPatchImport} disabled={isPatchImporting} />
                     </label>
+
                     <a
                         href="/foodist_patch_template.csv"
                         download="foodist_patch_template.csv"
