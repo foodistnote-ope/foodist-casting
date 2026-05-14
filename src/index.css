@@ -274,6 +274,7 @@ img {
     border-right: none !important;
     border-top: 3px solid transparent;
     text-align: center;
+    margin-top: 0 !important; /* スマホでは余白をリセット */
   }
 
   .sidebar .sidebar-nav ul li.active {
@@ -284,6 +285,11 @@ img {
 
   .sidebar .sidebar-nav ul li .nav-icon {
     font-size: 1.2rem;
+  }
+
+  /* 登録審査メニューをスマホで非表示 */
+  .nav-review {
+    display: none !important;
   }
 
   /* メインコンテンツの下にタブバー分の余白 */
