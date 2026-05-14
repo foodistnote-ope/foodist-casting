@@ -107,6 +107,31 @@ function App() {
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions] = useState<string[]>([]);
   const [selectedCookingClassStatuses, setSelectedCookingClassStatuses] = useState<string[]>([]);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  const totalActiveFilters = useMemo(() => {
+    return [
+        selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
+        selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
+        selectedChildStages, selectedFollowers, selectedInstagramFollowers,
+        selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
+        selectedPlatforms, selectedGenders,
+        selectedNoteFeaturedPermissions,
+        selectedCookingClassStatuses,
+        selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, 
+        selectedFeatureTagIds, selectedAlcoholTagIds
+    ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
+  }, [
+    searchQuery, selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
+    selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
+    selectedChildStages, selectedFollowers, selectedInstagramFollowers,
+    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
+    selectedPlatforms, selectedGenders,
+    selectedNoteFeaturedPermissions,
+    selectedCookingClassStatuses,
+    selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, 
+    selectedFeatureTagIds, selectedAlcoholTagIds
+  ]);
 
   // ---- モーダル状態 ----
   const [selectedFoodist, setSelectedFoodist] = useState<Foodist | null>(null);
@@ -592,7 +617,7 @@ function App() {
         <main className="main-content">
           {currentView === 'dashboard' ? (
             <>
-              <header className="top-header" style={{ justifyContent: 'flex-end' }}>
+              <header className="top-header dashboard-header">
                 <div className="header-actions" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   {/* ダッシュボード検索結果CSVエクスポート */}
                   <div className="csv-export-group">
@@ -640,9 +665,33 @@ function App() {
                     </button>
                   </div>
 
+                  {/* 検索ボックスと絞り込み（モバイル用） */}
+                  <div className="header-search-group">
+                    <div className="header-search-wrapper">
+                        <input
+                            type="text"
+                            placeholder="検索..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="header-search-input"
+                        />
+                        {searchQuery && (
+                            <button className="search-clear-btn" onClick={() => setSearchQuery('')}>✕</button>
+                        )}
+                    </div>
+                    <button className="btn-secondary btn-header-filter" onClick={() => setIsMobileFilterOpen(true)} title="詳細な絞り込み">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="4" y1="6" x2="20" y2="6"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                            <line x1="11" y1="18" x2="13" y2="18"/>
+                        </svg>
+                        {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
+                    </button>
+                  </div>
+
                   {/* 新規登録 */}
                   <button className="btn-primary" style={{ marginRight: '8px' }} onClick={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x1="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     新規登録
                   </button>
                   {/* JSONバックアップ */}
@@ -684,6 +733,7 @@ function App() {
                   selectedGenders={selectedGenders} setSelectedGenders={setSelectedGenders}
                   selectedNoteFeaturedPermissions={selectedNoteFeaturedPermissions} setSelectedNoteFeaturedPermissions={setSelectedNoteFeaturedPermissions}
                   selectedCookingClassStatuses={selectedCookingClassStatuses} setSelectedCookingClassStatuses={setSelectedCookingClassStatuses}
+                  isMobileOpen={isMobileFilterOpen} setIsMobileOpen={setIsMobileFilterOpen}
                   qualificationTags={qualificationTags}
                   achievementTags={achievementTags}
                   workTags={workTags}

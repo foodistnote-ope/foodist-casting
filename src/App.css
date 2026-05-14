@@ -228,32 +228,6 @@
   color: #92400e;
 }
 
-/* ========================================
-   モバイル用スタイル（≤768px）
-   ======================================== */
-@media (max-width: 768px) {
-  /* ヘッダーアクションのボタンをスマホで縮小 */
-  .header-actions .btn-secondary {
-    display: none;
-  }
-
-  /* 新規登録ボタンは残す */
-  .header-actions .btn-primary {
-    margin-right: 0 !important;
-    font-size: 0.8rem;
-    padding: 6px 12px;
-  }
-
-  /* search-overview のモバイル調整 */
-  .search-overview {
-    flex-wrap: wrap;
-  }
-
-  .search-overview p {
-    font-size: 0.85rem;
-  }
-}
-
 .main-content {
   flex: 1;
   background: var(--color-bg-base);
@@ -335,4 +309,134 @@
 
 .btn-dashboard-export:active {
     background: #fff3e0;
+}
+
+.dashboard-header {
+  justify-content: flex-end;
+}
+
+.header-search-group {
+  display: none;
+}
+
+/* ========================================
+   モバイル用スタイル（≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+  .dashboard-header {
+    justify-content: flex-start !important;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* ヘッダーアクションのボタンをスマホで非表示 */
+  .header-actions .btn-secondary:not(.btn-header-filter) {
+    display: none !important;
+  }
+
+  /* 検索ボックスと絞り込みアイコンのグループ */
+  .header-search-group {
+    display: flex !important;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    margin-right: 8px;
+  }
+
+  .header-search-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-search-input {
+    width: 100%;
+    padding: 10px 32px 10px 12px;
+    font-size: 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-base);
+    background: white;
+    outline: none;
+    transition: border-color 0.15s;
+    height: 40px;
+    box-sizing: border-box;
+  }
+
+  .header-search-input:focus {
+    border-color: var(--color-brand-primary);
+  }
+
+  .header-search-wrapper .search-clear-btn {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-header-filter {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    background: white;
+    border-radius: var(--radius-base);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .btn-header-filter .filter-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--color-brand-primary);
+    color: white;
+    font-size: 0.6rem;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 2;
+  }
+
+  /* 新規登録ボタンも高さを合わせる */
+  .header-actions .btn-primary {
+    margin-right: 0 !important;
+    font-size: 0.8rem;
+    height: 40px;
+    padding: 0 14px;
+    flex-shrink: 0;
+  }
+
+  /* CSV出力グループをスマホで非表示 */
+  .csv-export-group {
+    display: none !important;
+  }
+
+  /* search-overview のモバイル調整 */
+  .search-overview {
+    flex-wrap: wrap;
+  }
+
+  .search-overview p {
+    font-size: 0.85rem;
+  }
 }
