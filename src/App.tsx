@@ -626,7 +626,7 @@ function App() {
 
   return (
     <AuthGate>
-      <div className="app-container">
+      <div className={`app-container ${isMobile ? 'is-mobile' : ''}`}>
         <Sidebar currentView={currentView} setCurrentView={setCurrentView} isMobile={isMobile} />
 
         <main className="main-content">

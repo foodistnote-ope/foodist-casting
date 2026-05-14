@@ -337,6 +337,13 @@
     display: none !important;
   }
 
+  /* 強制非表示 (JS判定と連動) */
+  .is-mobile .csv-export-group,
+  .is-mobile .export-divider,
+  .is-mobile .btn-secondary:not(.btn-header-filter) {
+    display: none !important;
+  }
+
   /* 検索ボックスと絞り込みアイコンのグループ */
   .header-search-group {
     display: flex !important;
@@ -428,6 +435,10 @@
 
   /* CSV出力グループをスマホで非表示 */
   .csv-export-group {
+    display: none !important;
+  }
+  
+  .is-mobile .csv-export-group {
     display: none !important;
   }
 
