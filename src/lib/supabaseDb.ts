@@ -78,6 +78,22 @@ export const deleteFoodistById = async (id: string): Promise<void> => {
     if (error) throw error;
 };
 
+/** 複数件を一括削除 */
+export const deleteManyFoodistsByIds = async (ids: string[]): Promise<void> => {
+    if (ids.length === 0) return;
+    
+    // URL長制限やタイムアウトを避けるため、小分けにして実行する
+    const batchSize = 20;
+    for (let i = 0; i < ids.length; i += batchSize) {
+        const batch = ids.slice(i, i + batchSize);
+        const { error } = await supabase
+            .from('foodists')
+            .delete()
+            .in('id', batch);
+        if (error) throw error;
+    }
+};
+
 // --- 申請 (RegistrationApplication) 関連 ---
 
 /** 申請を提出 */

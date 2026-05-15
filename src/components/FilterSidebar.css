@@ -1,99 +1,369 @@
 .filter-sidebar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 320px;
-  height: 100vh;
-  background: white;
-  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-}
-
-.filter-sidebar.open {
-  transform: translateX(0);
+    width: 280px;
+    min-width: 260px;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    padding: 0;
+    height: calc(100vh - 56px);
+    position: sticky;
+    top: 56px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .filter-header {
-  padding: var(--spacing-4);
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    background: #ffffff;
 }
 
-.filter-header h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
+.filter-header h2 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-  padding: 4px;
+.btn-reset {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.15s;
 }
 
-.filter-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--spacing-4);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-6);
+.btn-reset:hover {
+    color: #ef4444;
+    border-color: #fca5a5;
 }
 
-.section-label {
-  display: block;
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  margin-bottom: var(--spacing-2);
-  color: var(--color-text-primary);
+/* アコーディオンセクション */
+.filter-section {
+    border-bottom: 1px solid #f1f5f9;
 }
 
-.filter-input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-base);
-  font-size: var(--font-size-sm);
+.filter-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    color: #334155;
+    text-align: left;
+    transition: background 0.12s;
 }
 
+.filter-section-header:hover {
+    background: #f8fafc;
+}
+
+.filter-heading {
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #334155;
+}
+
+.filter-chevron {
+    font-size: 0.6rem;
+    color: #94a3b8;
+}
+
+.filter-section-body {
+    padding: 4px 16px 12px;
+    background: #fafafa;
+}
+
+.filter-sub-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin: 0 0 5px 0;
+    font-weight: 600;
+}
+
+/* バッジ */
+.filter-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: var(--color-brand-primary, #e65100);
+    color: white;
+    border-radius: 9px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* チェックリスト */
 .filter-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-2);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
-.option-checkbox {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  cursor: pointer;
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s;
 }
 
-.option-checkbox input {
-  cursor: pointer;
+.checkbox-label:hover {
+    background: #f1f5f9;
 }
 
-.filter-footer {
-  padding: var(--spacing-4);
-  border-top: 1px solid var(--color-border);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-3);
-  background: var(--color-bg-base);
+.checkbox-label input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--color-brand-primary, #e65100);
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.checkbox-text {
+    font-size: 0.82rem;
+    color: #334155;
+    line-height: 1.3;
+}
+
+/* エリアグループ */
+.scrollable-options {
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.area-group {
+    margin-bottom: 8px;
+}
+
+.area-group-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 0 2px;
+    margin: 0;
+}
+
+/* もっと見るボタン */
+.show-more-btn {
+    background: none;
+    border: 1px dashed #cbd5e1;
+    border-radius: 4px;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    cursor: pointer;
+    margin-top: 6px;
+    width: 100%;
+    text-align: center;
+    transition: all 0.15s;
+}
+
+.show-more-btn:hover {
+    border-color: var(--color-brand-primary, #e65100);
+    color: var(--color-brand-primary, #e65100);
+}
+
+/* キーワード検索インプット */
+.search-input {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #334155;
+    font-size: 0.85rem;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.search-input:focus {
+    border-color: var(--color-brand-primary, #e65100);
+    box-shadow: 0 0 0 2px rgba(230, 81, 0, 0.1);
+}
+
+.search-input::placeholder {
+    color: #94a3b8;
+}
+
+.sticky-container {
+    position: sticky;
+    top: 0;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    z-index: 20;
+}
+
+.search-sticky-wrapper {
+    padding: 0 16px 12px;
+}
+
+.filter-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 40px;
+}
+
+.mobile-drawer .search-sticky-wrapper {
+    top: 56px; /* モバイルヘッダーの分 */
+}
+
+/* モバイルドロワー内のヘッダーも固定 */
+.mobile-drawer .filter-header {
+    position: sticky;
+    top: 0;
+    z-index: 11;
+}
+
+/* 検索インプットラッパー（クリアボタン用） */
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input-wrapper .search-input {
+    width: 100%;
+    padding-right: 28px; /* ☓ボタン分のスペース確保 */
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+}
+
+.search-clear-btn:hover {
+    color: #ef4444;
+    background: #fee2e2;
+}
+
+/* ========================================
+   モバイル用スタイル（≤768px）
+   ======================================== */
+
+/* モバイルでは絞り込みボタンを表示し、デスクトップサイドバーを非表示 */
+.mobile-filter-toggle {
+    display: none;
+}
+
+/* モバイル用オーバーレイ */
+.mobile-filter-overlay {
+    display: none;
 }
 
 @media (max-width: 768px) {
-  .filter-sidebar {
-    width: 100%;
-  }
+    /* デスクトップ用サイドバーを非表示 */
+    .desktop-filter-sidebar {
+        display: none;
+    }
+
+    /* ヘッダーに移行したため、右下の絞り込みボタンは非表示 */
+    .mobile-filter-toggle {
+        display: none !important;
+    }
+
+    .mobile-filter-toggle:hover {
+        background: #ff8a65;
+        box-shadow: 0 6px 16px rgba(230, 81, 0, 0.5);
+    }
+
+    .mobile-filter-toggle .filter-badge {
+        background: white;
+        color: var(--color-brand-primary, #e65100);
+    }
+
+
+    /* モバイルオーバーレイを表示 */
+    .mobile-filter-overlay {
+        display: flex;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 200;
+        align-items: flex-end;
+    }
+
+    /* ドロワー本体 */
+    .mobile-drawer {
+        width: 100% !important;
+        min-width: unset !important;
+        height: 85vh;
+        border-right: none !important;
+        border-radius: 16px 16px 0 0;
+        position: static !important;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    }
+
+    .mobile-drawer .filter-header {
+        flex-shrink: 0;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .filter-drawer-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .mobile-drawer .search-input {
+        height: 40px;
+        font-size: 0.9rem;
+        padding: 8px 32px 8px 12px;
+    }
+
+    .mobile-drawer .btn-reset {
+        height: 36px; /* ヘッダーより僅かに抑えてバランス調整 */
+        padding: 0 12px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-base, 4px);
+    }
+
+    .mobile-drawer .filter-header h2 {
+        font-size: 1rem;
+    }
 }
