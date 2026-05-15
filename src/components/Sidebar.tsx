@@ -1,51 +1,71 @@
+import React from 'react';
 import './Sidebar.css';
 
 interface SidebarProps {
-    currentView: 'dashboard' | 'database' | 'review';
-    setCurrentView: (view: 'dashboard' | 'database' | 'review') => void;
+  activeMenu: string;
+  setActiveMenu: (menu: string) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-export const Sidebar = ({ currentView, setCurrentView }: SidebarProps) => {
-    return (
-        <aside className="sidebar">
-            <div className="sidebar-brand">
-                <span className="brand-text" style={{ fontSize: 'var(--font-size-lg)', lineHeight: 1.2 }}>フーディストデータベース</span>
-            </div>
+const Sidebar: React.FC<SidebarProps> = ({ activeMenu, setActiveMenu, isOpen, setIsOpen }) => {
+  const menuItems = [
+    { id: 'database', label: 'フーディストDB', icon: '👥' },
+    { id: 'casting', label: 'キャスティング案', icon: '📝' },
+    { id: 'projects', label: '案件管理', icon: '💼' },
+    { id: 'reviews', label: '登録審査', icon: '🔍', desktopOnly: true },
+  ];
 
-            <nav className="sidebar-nav">
-                <ul>
-                    <li
-                        className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`}
-                        onClick={() => setCurrentView('dashboard')}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <span className="nav-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        </span>
-                        フーディスト検索
-                    </li>
-                    <li
-                        className={`nav-item ${currentView === 'database' ? 'active' : ''}`}
-                        onClick={() => setCurrentView('database')}
-                        style={{ cursor: 'pointer', marginTop: '8px' }}
-                    >
-                        <span className="nav-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-                        </span>
-                        データベース管理
-                    </li>
-                    <li
-                        className={`nav-item ${currentView === 'review' ? 'active' : ''}`}
-                        onClick={() => setCurrentView('review')}
-                        style={{ cursor: 'pointer', marginTop: '8px' }}
-                    >
-                        <span className="nav-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        </span>
-                        登録審査
-                    </li>
-                </ul>
-            </nav>
-        </aside >
-    );
+  return (
+    <>
+      {/* モバイル用オーバーレイ */}
+      <div 
+        className={`sidebar-overlay ${isOpen ? 'active' : ''}`} 
+        onClick={() => setIsOpen(false)}
+      />
+      
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <div className="sidebar-logo">
+            <span className="logo-icon">🍳</span>
+            <span className="logo-text">Foodist Casting</span>
+          </div>
+          <button className="sidebar-toggle-mobile" onClick={() => setIsOpen(false)}>
+            ✕
+          </button>
+        </div>
+
+        <nav className="sidebar-nav">
+          {menuItems.map((item) => (
+            // スマホ版では desktopOnly 属性のあるメニューを非表示にする
+            (!item.desktopOnly || window.innerWidth > 768) && (
+              <button
+                key={item.id}
+                className={`nav-item ${activeMenu === item.id ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveMenu(item.id);
+                  if (window.innerWidth <= 768) setIsOpen(false);
+                }}
+              >
+                <span className="nav-icon">{item.icon}</span>
+                <span className="nav-label">{item.label}</span>
+              </button>
+            )
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <div className="user-info">
+            <div className="user-avatar">AD</div>
+            <div className="user-details">
+              <p className="user-name">Admin User</p>
+              <p className="user-role">管理者</p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </>
+  );
 };
+
+export default Sidebar;
