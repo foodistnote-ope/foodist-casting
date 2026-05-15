@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
 import DatabaseView from './components/DatabaseView';
-import AuthGate from './components/AuthGate';
+import { AuthGate } from './components/AuthGate';
 
 function App() {
   const [activeMenu, setActiveMenu] = useState('database');
