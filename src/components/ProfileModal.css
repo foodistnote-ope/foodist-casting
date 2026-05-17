@@ -331,3 +331,119 @@
     white-space: pre-wrap;
     margin: 0;
 }
+
+/* PC Baseline classes extracted from original inline styles */
+.modal-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.modal-name-container {
+    padding-right: 200px;
+}
+
+.modal-action-buttons {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    top: 16px;
+    right: 56px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    /* Narrow overlay padding to maximize modal content width */
+    .modal-overlay {
+        padding: var(--spacing-2);
+    }
+
+    /* Expand height and reduce border radius slightly for comfortable view */
+    .modal-content {
+        max-height: 95vh;
+        border-radius: var(--radius-lg);
+    }
+
+    /* Stack header contents vertically and center them */
+    .modal-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--spacing-4);
+        padding: var(--spacing-6) var(--spacing-4);
+    }
+
+    .modal-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .modal-header-info {
+        width: 100%;
+        align-items: center;
+    }
+
+    /* Stack name and buttons vertically, center-aligned */
+    .modal-header-top {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: var(--spacing-3);
+    }
+
+    /* Clear the absolute paddings/positionings that cause mobile overflow */
+    .modal-name-container {
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .modal-action-buttons {
+        position: static; /* Flow naturally below the name */
+        justify-content: center;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: var(--spacing-2);
+    }
+
+    /* Center stats and social media tags */
+    .modal-stats {
+        justify-content: center;
+        margin-top: var(--spacing-1);
+    }
+
+    .modal-sns-links {
+        justify-content: center;
+        width: 100%;
+        gap: var(--spacing-2);
+    }
+
+    .modal-sns-link {
+        max-width: 100%;
+        box-sizing: border-box;
+        justify-content: center;
+    }
+
+    /* Reduce body padding and layout gaps */
+    .modal-body {
+        padding: var(--spacing-4);
+        gap: var(--spacing-6);
+    }
+
+    /* Convert 2-column demographic grid into 1-column layout to prevent text overflow */
+    .demo-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3);
+    }
+
+    /* Make footer buttons stacked and touch-friendly */
+    .modal-footer {
+        padding: var(--spacing-3) var(--spacing-4);
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+
+    .modal-footer button {
+        width: 100%;
+        justify-content: center;
+    }
+}
