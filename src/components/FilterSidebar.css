@@ -366,4 +366,12 @@
     .mobile-drawer .filter-header h2 {
         font-size: 1rem;
     }
+
+    .mobile-drawer .btn-search-apply {
+        height: 36px;
+        padding: 0 14px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        border-radius: var(--radius-base, 8px);
+    }
 }

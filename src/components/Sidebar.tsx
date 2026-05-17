@@ -35,7 +35,7 @@ export const Sidebar = ({ currentView, setCurrentView }: SidebarProps) => {
                         データベース管理
                     </li>
                     <li
-                        className={`nav-item ${currentView === 'review' ? 'active' : ''}`}
+                        className={`nav-item nav-review ${currentView === 'review' ? 'active' : ''}`}
                         onClick={() => setCurrentView('review')}
                         style={{ cursor: 'pointer', marginTop: '8px' }}
                     >
