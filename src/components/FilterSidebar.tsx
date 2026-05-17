@@ -443,9 +443,9 @@ export const FilterSidebar = ({
                             <h2>絞り込み条件
                                 {totalActiveFilters > 0 && <span className="filter-badge">{totalActiveFilters}</span>}
                             </h2>
-                            <div style={{ display: 'flex', gap: 8 }}>
+                            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                                 <button className="btn-reset" onClick={handleReset} aria-label="条件をリセット">リセット</button>
-                                <button className="btn-reset" onClick={() => setIsMobileOpen(false)} aria-label="閉じる" style={{ color: '#475569', borderColor: '#94a3b8' }}>✕ 閉じる</button>
+                                <button className="btn-primary btn-search-apply" onClick={() => setIsMobileOpen(false)} aria-label="この条件で検索">この条件で検索</button>
                             </div>
                         </div>
                         <div className="search-sticky-wrapper">

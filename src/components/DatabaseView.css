@@ -255,3 +255,21 @@
     opacity: 1;
     color: var(--primary-color);
 }
+
+/* ========================================
+   モバイル用スタイル（≤768px）
+   ======================================== */
+@media (max-width: 768px) {
+    /* CSV関連ボタンを非表示化 */
+    .db-btn-csv-new,
+    .db-btn-csv-patch,
+    .db-btn-template {
+        display: none !important;
+    }
+
+    /* 新規登録ボタンの潰れ防止 */
+    .db-actions .btn-primary {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+}
