@@ -134,7 +134,8 @@
     background: #f1f5f9;
 }
 
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type="checkbox"],
+.checkbox-label input[type="radio"] {
     width: 14px;
     height: 14px;
     accent-color: var(--color-brand-primary, #e65100);

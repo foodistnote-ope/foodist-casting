@@ -53,6 +53,10 @@ interface FilterSidebarProps {
     setSelectedFeatureTagIds: (ids: string[]) => void;
     selectedAlcoholTagIds: string[];
     setSelectedAlcoholTagIds: (ids: string[]) => void;
+    selectedRelationTagIds: string[];
+    setSelectedRelationTagIds: (ids: string[]) => void;
+    relationStatus: 'all' | 'has' | 'none';
+    setRelationStatus: (status: 'all' | 'has' | 'none') => void;
     // モバイル用表示状態
     isMobileOpen: boolean;
     setIsMobileOpen: (open: boolean) => void;
@@ -62,6 +66,7 @@ interface FilterSidebarProps {
     workTags: Tag[];
     alcoholTags: Tag[];
     featureTags: Tag[];
+    relationTags: Tag[];
 }
 
 const AREA_GROUPS: Record<string, string[]> = {
@@ -192,12 +197,15 @@ export const FilterSidebar = ({
     selectedWorkTagIds, setSelectedWorkTagIds,
     selectedFeatureTagIds, setSelectedFeatureTagIds,
     selectedAlcoholTagIds, setSelectedAlcoholTagIds,
+    selectedRelationTagIds, setSelectedRelationTagIds,
+    relationStatus, setRelationStatus,
     isMobileOpen, setIsMobileOpen,
     qualificationTags,
     achievementTags,
     workTags,
     alcoholTags,
-    featureTags
+    featureTags,
+    relationTags
 }: FilterSidebarProps) => {
 
 
@@ -236,6 +244,8 @@ export const FilterSidebar = ({
         setSelectedAlcoholTagIds([]);
         setSelectedFeatureTagIds([]);
         setSelectedCookingClassStatuses([]);
+        setSelectedRelationTagIds([]);
+        setRelationStatus('all');
     };
 
     const totalActiveFilters = [
@@ -246,7 +256,8 @@ export const FilterSidebar = ({
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
+        selectedRelationTagIds
+    ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0) + (relationStatus !== 'all' ? 1 : 0);
 
     // 都道府県リスト（居住地・出身地共通）
 
@@ -413,6 +424,34 @@ export const FilterSidebar = ({
                     selected={selectedNoteFeaturedPermissions}
                     onToggle={v => toggle(v, selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions)}
                 />
+            </FilterSection>
+
+            {/* リレーション */}
+            <FilterSection title="リレーション" badge={selectedRelationTagIds.length + (relationStatus !== 'all' ? 1 : 0)}>
+                <div className="filter-options">
+                    <label className="checkbox-label">
+                        <input type="radio" name="relationStatus" value="all" checked={relationStatus === 'all'} onChange={() => setRelationStatus('all')} />
+                        <span className="checkbox-text">すべて</span>
+                    </label>
+                    <label className="checkbox-label">
+                        <input type="radio" name="relationStatus" value="has" checked={relationStatus === 'has'} onChange={() => setRelationStatus('has')} />
+                        <span className="checkbox-text">リレーションあり</span>
+                    </label>
+                    <label className="checkbox-label">
+                        <input type="radio" name="relationStatus" value="none" checked={relationStatus === 'none'} onChange={() => setRelationStatus('none')} />
+                        <span className="checkbox-text">リレーションなし</span>
+                    </label>
+                </div>
+                {relationStatus === 'has' && relationTags.length > 0 && (
+                    <div style={{ marginTop: '12px', paddingLeft: '8px', borderLeft: '2px solid #eee' }}>
+                        <p className="filter-sub-label">詳細なリレーション（OR）</p>
+                        <CheckList
+                            items={relationTags.map(t => ({ value: t.id, label: t.name }))}
+                            selected={selectedRelationTagIds}
+                            onToggle={v => toggle(v, selectedRelationTagIds, setSelectedRelationTagIds)}
+                        />
+                    </div>
+                )}
             </FilterSection>
 
         </>

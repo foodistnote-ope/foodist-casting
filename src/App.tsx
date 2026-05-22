@@ -103,6 +103,8 @@ function App() {
   const [selectedWorkTagIds, setSelectedWorkTagIds] = useState<string[]>([]);
   const [selectedFeatureTagIds, setSelectedFeatureTagIds] = useState<string[]>([]);
   const [selectedAlcoholTagIds, setSelectedAlcoholTagIds] = useState<string[]>([]);
+  const [selectedRelationTagIds, setSelectedRelationTagIds] = useState<string[]>([]);
+  const [relationStatus, setRelationStatus] = useState<'all' | 'has' | 'none'>('all');
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions] = useState<string[]>([]);
@@ -119,8 +121,8 @@ function App() {
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, 
-        selectedFeatureTagIds, selectedAlcoholTagIds
-    ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0);
+        selectedFeatureTagIds, selectedAlcoholTagIds, selectedRelationTagIds
+    ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0) + (relationStatus !== 'all' ? 1 : 0);
   }, [
     searchQuery, selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
     selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
@@ -130,7 +132,7 @@ function App() {
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, 
-    selectedFeatureTagIds, selectedAlcoholTagIds
+    selectedFeatureTagIds, selectedAlcoholTagIds, selectedRelationTagIds, relationStatus
   ]);
 
   // ---- モーダル状態 ----
@@ -158,6 +160,7 @@ function App() {
   const featureTags = useMemo(() => [
     ...getSearchableTags('得意な料理ジャンル'),
   ], [tags]);
+  const relationTags = getSearchableTags('リレーション');
 
   // CSV インポート処理
   const [isImportingCsv, setIsImportingCsv] = useState(false);
@@ -428,6 +431,14 @@ function App() {
         ...selectedAlcoholTagIds,
       ];
       if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => (f.tagIds || []).includes(id))) return false;
+
+      // 11.5 リレーションの有無による絞り込み
+      const foodistRelationTags = (f.tagIds || []).filter(id => tagMap.get(id)?.category === 'リレーション');
+      if (relationStatus === 'has' && foodistRelationTags.length === 0) return false;
+      if (relationStatus === 'none' && foodistRelationTags.length > 0) return false;
+
+      // 11.6 具体的なリレーションタグでの絞り込み（OR）
+      if (selectedRelationTagIds.length > 0 && !selectedRelationTagIds.some(id => (f.tagIds || []).includes(id))) return false;
       
       // 12. フーディストノート掲載可否
       if (selectedNoteFeaturedPermissions.length > 0) {
@@ -454,7 +465,7 @@ function App() {
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
     selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    selectedAlcoholTagIds, selectedGenders,
+    selectedAlcoholTagIds, selectedRelationTagIds, relationStatus, selectedGenders,
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
   ]);
@@ -481,6 +492,8 @@ function App() {
     setSelectedWorkTagIds([]);
     setSelectedFeatureTagIds([]);
     setSelectedAlcoholTagIds([]);
+    setSelectedRelationTagIds([]);
+    setRelationStatus('all');
     setSelectedGenders([]);
     setSelectedNoteFeaturedPermissions([]);
     setSelectedCookingClassStatuses([]);
@@ -528,10 +541,10 @@ function App() {
     selectedChildStages, selectedFollowers, selectedInstagramFollowers,
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    selectedAlcoholTagIds, selectedGenders,
+    selectedAlcoholTagIds, selectedRelationTagIds, selectedGenders,
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
-  ].some(a => a.length > 0);
+  ].some(a => a.length > 0) || relationStatus !== 'all';
 
   const activeSnsFilter: string | null =
     selectedInstagramFollowers.length > 0 ? 'Instagram' :
@@ -730,6 +743,8 @@ function App() {
                   selectedWorkTagIds={selectedWorkTagIds} setSelectedWorkTagIds={setSelectedWorkTagIds}
                   selectedFeatureTagIds={selectedFeatureTagIds} setSelectedFeatureTagIds={setSelectedFeatureTagIds}
                   selectedAlcoholTagIds={selectedAlcoholTagIds} setSelectedAlcoholTagIds={setSelectedAlcoholTagIds}
+                  selectedRelationTagIds={selectedRelationTagIds} setSelectedRelationTagIds={setSelectedRelationTagIds}
+                  relationStatus={relationStatus} setRelationStatus={setRelationStatus}
                   selectedGenders={selectedGenders} setSelectedGenders={setSelectedGenders}
                   selectedNoteFeaturedPermissions={selectedNoteFeaturedPermissions} setSelectedNoteFeaturedPermissions={setSelectedNoteFeaturedPermissions}
                   selectedCookingClassStatuses={selectedCookingClassStatuses} setSelectedCookingClassStatuses={setSelectedCookingClassStatuses}
@@ -739,6 +754,7 @@ function App() {
                   workTags={workTags}
                   alcoholTags={alcoholTags}
                   featureTags={featureTags}
+                  relationTags={relationTags}
                 />
 
                 <div className="content-pad" style={{ flex: 1 }}>

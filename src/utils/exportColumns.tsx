@@ -158,8 +158,10 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f, _getFollowers, allTags) => {
             if (!f.tagIds || f.tagIds.length === 0) return '-';
             const names = f.tagIds
-                .map(id => allTags.find(t => t.id === id)?.name)
-                .filter(Boolean);
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category !== 'リレーション')
+                .map(t => t.name);
+            if (names.length === 0) return '-';
             return (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px', maxWidth: '200px' }}>
                     {names.map((name, i) => (
@@ -174,8 +176,9 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         csvValue: (f, _getFollowers, allTags) => {
             if (!f.tagIds || f.tagIds.length === 0) return '';
             return f.tagIds
-                .map(id => allTags.find(t => t.id === id)?.name)
-                .filter(Boolean)
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category !== 'リレーション')
+                .map(t => t.name)
                 .join(', ');
         },
     },
