@@ -159,7 +159,6 @@ export interface Foodist {
     hasChildren: 'あり' | 'なし' | '回答しない' | '未確認';
     childrenCount?: string;      // '0'/'1'/'2'/'3'/'4人以上'/'回答しない'/'未確認'
     childStage: string[];        // 子育てステージ（複数選択可）
-    listIntro?: string;          // 一覧用紹介文（カード表示用の短文・旧仕様）
     profileText?: string;        // プロフィール（詳細画面用の長文）
     avatarUrl?: string;
     /**
