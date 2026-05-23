@@ -627,7 +627,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '10px', flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                             <span>該当する項目がない場合は、下記の自己紹介欄にご入力ください。</span>
                         </div>
-                        {TAG_CATEGORIES.filter(cat => cat !== '飲酒について').map(cat => {
+                        {TAG_CATEGORIES.filter(cat => !['飲酒について', 'ステータス', 'リレーション'].includes(cat)).map(cat => {
                             const tags = allTags
                                 .filter(t => t.category === cat && t.active)
                                 .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
