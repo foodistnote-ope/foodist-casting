@@ -39,14 +39,6 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.title || '',
     },
     {
-        id: 'listIntro',
-        label: '一覧用紹介文（旧）',
-        defaultVisible: false,
-        render: (f) => f.listIntro ? <span title={f.listIntro}>{f.listIntro.length > 20 ? f.listIntro.slice(0, 20) + '...' : f.listIntro}</span> : '-',
-        sortValue: (f) => f.listIntro || '',
-        csvValue: (f) => f.listIntro || '',
-    },
-    {
         id: 'profileText',
         label: 'プロフィール',
         defaultVisible: false,
