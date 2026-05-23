@@ -4,7 +4,7 @@ import { FilterSidebar } from './components/FilterSidebar';
 import { ProfileModal } from './components/ProfileModal';
 import { DatabaseView } from './components/DatabaseView';
 import { FoodistEditModal } from './components/FoodistEditModal';
-import type { Foodist, MediaType } from './data/types';
+import { TAG_CATEGORIES, type Foodist, type MediaType } from './data/types';
 import { useTags } from './hooks/useTags';
 import { useFoodists, normalizeString } from './hooks/useFoodists';
 import { parseFoodistCsv, parsePatchCsv } from './utils/csvParser';
@@ -778,6 +778,11 @@ function App() {
                         const cardTags = (foodist.tagIds || [])
                           .map(id => tagMap.get(id))
                           .filter((t): t is NonNullable<typeof t> => t != null)
+                          .sort((a, b) => {
+                            const catDiff = TAG_CATEGORIES.indexOf(a.category) - TAG_CATEGORIES.indexOf(b.category);
+                            if (catDiff !== 0) return catDiff;
+                            return (a.sortOrder ?? 999) - (b.sortOrder ?? 999);
+                          })
                           .slice(0, 8);
 
                         const cardMedia = foodist.mediaAccounts

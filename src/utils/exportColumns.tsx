@@ -39,6 +39,14 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.title || '',
     },
     {
+        id: 'profileText',
+        label: 'プロフィール',
+        defaultVisible: false,
+        render: (f) => f.profileText ? <span title={f.profileText}>{f.profileText.length > 20 ? f.profileText.slice(0, 20) + '...' : f.profileText}</span> : '-',
+        sortValue: (f) => f.profileText || '',
+        csvValue: (f) => f.profileText || '',
+    },
+    {
         id: 'gender',
         label: '性別',
         defaultVisible: true,
