@@ -198,7 +198,7 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         const listIntro = getVal('一覧用紹介文');
                         if (listIntro !== undefined && listIntro !== '') patch.listIntro = listIntro;
 
-                        const profile = getVal('詳細プロフィール');
+                        const profile = getVal('プロフィール') || getVal('詳細プロフィール');
                         if (profile !== undefined && profile !== '') patch.profileText = profile;
 
                         const avatar = getVal('プロフィール画像URL');
@@ -425,7 +425,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                         const ageGroupKey = getRealHeader('年代') || getRealHeader('ageGroup');
                         const genderKey = getRealHeader('性別') || getRealHeader('gender');
                         const listIntroKey = getRealHeader('一覧用紹介文') || getRealHeader('listIntro');
-                        const profileTextKey = getRealHeader('詳細プロフィール') || getRealHeader('profileText');
+                        const profileTextKey = getRealHeader('プロフィール') || getRealHeader('詳細プロフィール') || getRealHeader('profileText');
                         const avatarUrlKey = getRealHeader('プロフィール画像URL') || getRealHeader('avatarUrl');
                         const tagsKey = getRealHeader('タグ') || getRealHeader('tags');
 

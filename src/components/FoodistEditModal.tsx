@@ -594,7 +594,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         <h3 className="form-section-title">プロフィール文</h3>
 
                         <div className="form-group">
-                            <label className="form-label">詳細プロフィール <span className="form-hint">（詳細画面用の長文）</span></label>
+                            <label className="form-label">プロフィール</label>
                             <textarea className="form-textarea" name="profileText" value={form.profileText || ''} onChange={handleChange} rows={5} />
                         </div>
 

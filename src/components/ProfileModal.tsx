@@ -223,7 +223,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
 
                     {/* プロフィール文 */}
                     <div className="modal-section">
-                        <h3 className="section-title">詳細プロフィール</h3>
+                        <h3 className="section-title">プロフィール</h3>
                         <p className="profile-text">{foodist.profileText || '未設定'}</p>
                     </div>
 
