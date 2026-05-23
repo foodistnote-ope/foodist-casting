@@ -594,11 +594,6 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         <h3 className="form-section-title">プロフィール文</h3>
 
                         <div className="form-group">
-                            <label className="form-label">一覧用紹介文 <span className="form-hint">（カード表示用の短文）</span></label>
-                            <textarea className="form-textarea" name="listIntro" value={form.listIntro || ''} onChange={handleChange} rows={2} placeholder="一覧カードに表示される短い紹介文" />
-                        </div>
-
-                        <div className="form-group">
                             <label className="form-label">詳細プロフィール <span className="form-hint">（詳細画面用の長文）</span></label>
                             <textarea className="form-textarea" name="profileText" value={form.profileText || ''} onChange={handleChange} rows={5} />
                         </div>
