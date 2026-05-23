@@ -104,6 +104,7 @@ function App() {
   const [selectedFeatureTagIds, setSelectedFeatureTagIds] = useState<string[]>([]);
   const [selectedAlcoholTagIds, setSelectedAlcoholTagIds] = useState<string[]>([]);
   const [selectedRelationTagIds, setSelectedRelationTagIds] = useState<string[]>([]);
+  const [selectedStatusTagIds, setSelectedStatusTagIds] = useState<string[]>([]);
   const [relationStatus, setRelationStatus] = useState<'all' | 'has' | 'none'>('all');
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
@@ -121,7 +122,7 @@ function App() {
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, 
-        selectedFeatureTagIds, selectedAlcoholTagIds, selectedRelationTagIds
+        selectedFeatureTagIds, selectedAlcoholTagIds, selectedRelationTagIds, selectedStatusTagIds
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0) + (relationStatus !== 'all' ? 1 : 0);
   }, [
     searchQuery, selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
@@ -132,7 +133,7 @@ function App() {
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, 
-    selectedFeatureTagIds, selectedAlcoholTagIds, selectedRelationTagIds, relationStatus
+    selectedFeatureTagIds, selectedAlcoholTagIds, selectedRelationTagIds, selectedStatusTagIds, relationStatus
   ]);
 
   // ---- モーダル状態 ----
@@ -161,6 +162,7 @@ function App() {
     ...getSearchableTags('得意な料理ジャンル'),
   ], [tags]);
   const relationTags = getSearchableTags('リレーション');
+  const statusTags = getSearchableTags('ステータス');
 
   // CSV インポート処理
   const [isImportingCsv, setIsImportingCsv] = useState(false);
@@ -429,6 +431,7 @@ function App() {
         ...selectedWorkTagIds,
         ...selectedFeatureTagIds,
         ...selectedAlcoholTagIds,
+        ...selectedStatusTagIds,
       ];
       if (allSelectedTagIds.length > 0 && !allSelectedTagIds.every(id => (f.tagIds || []).includes(id))) return false;
 
@@ -465,7 +468,7 @@ function App() {
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
     selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    selectedAlcoholTagIds, selectedRelationTagIds, relationStatus, selectedGenders,
+    selectedAlcoholTagIds, selectedRelationTagIds, selectedStatusTagIds, relationStatus, selectedGenders,
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
   ]);
@@ -493,6 +496,7 @@ function App() {
     setSelectedFeatureTagIds([]);
     setSelectedAlcoholTagIds([]);
     setSelectedRelationTagIds([]);
+    setSelectedStatusTagIds([]);
     setRelationStatus('all');
     setSelectedGenders([]);
     setSelectedNoteFeaturedPermissions([]);
@@ -541,7 +545,7 @@ function App() {
     selectedChildStages, selectedFollowers, selectedInstagramFollowers,
     selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-    selectedAlcoholTagIds, selectedRelationTagIds, selectedGenders,
+    selectedAlcoholTagIds, selectedRelationTagIds, selectedStatusTagIds, selectedGenders,
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
   ].some(a => a.length > 0) || relationStatus !== 'all';
@@ -744,6 +748,7 @@ function App() {
                   selectedFeatureTagIds={selectedFeatureTagIds} setSelectedFeatureTagIds={setSelectedFeatureTagIds}
                   selectedAlcoholTagIds={selectedAlcoholTagIds} setSelectedAlcoholTagIds={setSelectedAlcoholTagIds}
                   selectedRelationTagIds={selectedRelationTagIds} setSelectedRelationTagIds={setSelectedRelationTagIds}
+                  selectedStatusTagIds={selectedStatusTagIds} setSelectedStatusTagIds={setSelectedStatusTagIds}
                   relationStatus={relationStatus} setRelationStatus={setRelationStatus}
                   selectedGenders={selectedGenders} setSelectedGenders={setSelectedGenders}
                   selectedNoteFeaturedPermissions={selectedNoteFeaturedPermissions} setSelectedNoteFeaturedPermissions={setSelectedNoteFeaturedPermissions}
@@ -755,6 +760,7 @@ function App() {
                   alcoholTags={alcoholTags}
                   featureTags={featureTags}
                   relationTags={relationTags}
+                  statusTags={statusTags}
                 />
 
                 <div className="content-pad" style={{ flex: 1 }}>

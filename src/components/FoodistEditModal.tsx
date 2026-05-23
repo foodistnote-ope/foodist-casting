@@ -569,7 +569,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             return (
                                 <div key={cat} className="tag-category-section">
                                     <button type="button" className="tag-category-header" onClick={() => toggleTagCategory(cat)}>
-                                        <span>{cat} {selected.length > 0 && <span className="filter-badge">{selected.length}</span>}</span>
+                                        <span>{cat === 'ステータス' ? 'ステータス（管理用）' : cat} {selected.length > 0 && <span className="filter-badge">{selected.length}</span>}</span>
                                         <span>{isOpen ? '▲' : '▼'}</span>
                                     </button>
                                     {isOpen && (

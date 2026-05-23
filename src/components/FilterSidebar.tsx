@@ -55,6 +55,8 @@ interface FilterSidebarProps {
     setSelectedAlcoholTagIds: (ids: string[]) => void;
     selectedRelationTagIds: string[];
     setSelectedRelationTagIds: (ids: string[]) => void;
+    selectedStatusTagIds: string[];
+    setSelectedStatusTagIds: (ids: string[]) => void;
     relationStatus: 'all' | 'has' | 'none';
     setRelationStatus: (status: 'all' | 'has' | 'none') => void;
     // モバイル用表示状態
@@ -67,6 +69,7 @@ interface FilterSidebarProps {
     alcoholTags: Tag[];
     featureTags: Tag[];
     relationTags: Tag[];
+    statusTags: Tag[];
 }
 
 const AREA_GROUPS: Record<string, string[]> = {
@@ -198,6 +201,7 @@ export const FilterSidebar = ({
     selectedFeatureTagIds, setSelectedFeatureTagIds,
     selectedAlcoholTagIds, setSelectedAlcoholTagIds,
     selectedRelationTagIds, setSelectedRelationTagIds,
+    selectedStatusTagIds, setSelectedStatusTagIds,
     relationStatus, setRelationStatus,
     isMobileOpen, setIsMobileOpen,
     qualificationTags,
@@ -205,7 +209,8 @@ export const FilterSidebar = ({
     workTags,
     alcoholTags,
     featureTags,
-    relationTags
+    relationTags,
+    statusTags
 }: FilterSidebarProps) => {
 
 
@@ -245,6 +250,7 @@ export const FilterSidebar = ({
         setSelectedFeatureTagIds([]);
         setSelectedCookingClassStatuses([]);
         setSelectedRelationTagIds([]);
+        setSelectedStatusTagIds([]);
         setRelationStatus('all');
     };
 
@@ -256,7 +262,7 @@ export const FilterSidebar = ({
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-        selectedRelationTagIds
+        selectedRelationTagIds, selectedStatusTagIds
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0) + (relationStatus !== 'all' ? 1 : 0);
 
     // 都道府県リスト（居住地・出身地共通）
@@ -425,6 +431,17 @@ export const FilterSidebar = ({
                     onToggle={v => toggle(v, selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions)}
                 />
             </FilterSection>
+
+            {/* ステータス */}
+            {statusTags.length > 0 && (
+                <FilterSection title="ステータス" badge={selectedStatusTagIds.length}>
+                    <CheckList
+                        items={statusTags.map(t => ({ value: t.id, label: t.name }))}
+                        selected={selectedStatusTagIds}
+                        onToggle={v => toggle(v, selectedStatusTagIds, setSelectedStatusTagIds)}
+                    />
+                </FilterSection>
+            )}
 
             {/* リレーション */}
             <FilterSection title="リレーション" badge={selectedRelationTagIds.length + (relationStatus !== 'all' ? 1 : 0)}>
