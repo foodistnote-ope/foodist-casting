@@ -88,6 +88,11 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_al03', name: 'お酒は飲まないがPR可', category: '飲酒について', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
+    // ステータス
+    // =============================================
+    { id: 'tag_s001', name: '注目', category: 'ステータス', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+
+    // =============================================
     // リレーション
     // =============================================
     { id: 'tag_r004', name: 'フーディスト会員', category: 'リレーション', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
