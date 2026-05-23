@@ -39,7 +39,23 @@ export const useFoodists = () => {
 
                 if (count > 0) {
                     // Supabase にデータがある → 読み込む
-                    const data = await getAllFoodists();
+                    let data = await getAllFoodists();
+                    
+                    // --- 移行処理: membershipStatus が "あり" なのに "フーディスト会員" (tag_r004) がないデータを補完 ---
+                    let needsSave = false;
+                    data = data.map(f => {
+                        if (f.membershipStatus === 'あり' && !f.tagIds.includes('tag_r004')) {
+                            needsSave = true;
+                            return { ...f, tagIds: [...f.tagIds, 'tag_r004'] };
+                        }
+                        return f;
+                    });
+                    
+                    if (needsSave) {
+                        console.info('[useFoodists] 会員ステータスのタグ連動マイグレーションを実行します');
+                        putManyFoodists(data).catch(console.error);
+                    }
+                    
                     console.info(`[useFoodists] Supabase から ${data.length} 件読み込みました`);
                     setFoodistsState(data);
                     return;

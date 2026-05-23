@@ -303,6 +303,12 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         <div className="demo-grid">
                             <div className="demo-item"><span className="demo-label">メールアドレス</span><span className="demo-value" style={{ wordBreak: 'break-all' }}>{val(foodist.email)}</span></div>
                             <div className="demo-item"><span className="demo-label">電話番号</span><span className="demo-value">{val(foodist.phoneNumber)}</span></div>
+                            <div className="demo-item demo-item-full" style={{ marginTop: '4px' }}>
+                                <span className="demo-label">リレーション（過去の接点）</span>
+                                <span className="demo-value">
+                                    {tagsByCategory['リレーション']?.map(t => t.name).join('・') || 'なし'}
+                                </span>
+                            </div>
                         </div>
                     </div>
 

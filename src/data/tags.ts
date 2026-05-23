@@ -86,4 +86,13 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_al01', name: 'お酒を飲む', category: '飲酒について', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_al02', name: 'お酒を飲まない', category: '飲酒について', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_al03', name: 'お酒は飲まないがPR可', category: '飲酒について', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+
+    // =============================================
+    // リレーション
+    // =============================================
+    { id: 'tag_r004', name: 'フーディスト会員', category: 'リレーション', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_r005', name: 'フーディストナビ登録', category: 'リレーション', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_r001', name: '起用実績あり', category: 'リレーション', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_r002', name: 'アンケート回答あり', category: 'リレーション', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_r003', name: '担当者コンタクトあり', category: 'リレーション', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 ];

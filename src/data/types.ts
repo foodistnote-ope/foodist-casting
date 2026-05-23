@@ -8,7 +8,8 @@ export type TagCategory =
     | '資格・専門'
     | '実績'
     | '対応可能業務'
-    | '飲酒について';
+    | '飲酒について'
+    | 'リレーション';
 
 export const TAG_CATEGORIES: TagCategory[] = [
     '得意な料理ジャンル',
@@ -16,6 +17,7 @@ export const TAG_CATEGORIES: TagCategory[] = [
     '実績',
     '対応可能業務',
     '飲酒について',
+    'リレーション',
 ];
 
 // --- タグマスタ ---

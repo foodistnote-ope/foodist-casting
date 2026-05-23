@@ -113,7 +113,24 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+        setForm(prev => {
+            const next = { ...prev, [name]: value };
+            
+            // フーディスト会員登録状況と「フーディスト会員」タグの連動
+            if (name === 'membershipStatus') {
+                const memberTag = allTags.find(t => t.name === 'フーディスト会員' && t.category === 'リレーション');
+                if (memberTag) {
+                    if (value === 'あり') {
+                        if (!next.tagIds.includes(memberTag.id)) {
+                            next.tagIds = [...next.tagIds, memberTag.id];
+                        }
+                    } else {
+                        next.tagIds = next.tagIds.filter(id => id !== memberTag.id);
+                    }
+                }
+            }
+            return next;
+        });
     };
 
     // 生年月日の分割入力用
@@ -160,10 +177,19 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
     // --- タグID ---
     const toggleTagId = (id: string) => {
-        setForm(prev => ({
-            ...prev,
-            tagIds: prev.tagIds.includes(id) ? prev.tagIds.filter(t => t !== id) : [...prev.tagIds, id],
-        }));
+        setForm(prev => {
+            const isAdding = !prev.tagIds.includes(id);
+            const nextTagIds = isAdding ? [...prev.tagIds, id] : prev.tagIds.filter(t => t !== id);
+            const next = { ...prev, tagIds: nextTagIds };
+
+            // 「フーディスト会員」タグのトグルと会員登録状況を連動
+            const memberTag = allTags.find(t => t.name === 'フーディスト会員' && t.category === 'リレーション');
+            if (memberTag && id === memberTag.id) {
+                next.membershipStatus = isAdding ? 'あり' : 'なし';
+            }
+
+            return next;
+        });
     };
 
     const toggleTagCategory = (cat: TagCategory) => {
@@ -535,7 +561,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         {/* ===== 属性タグ ===== */}
                         <h3 className="form-section-title">属性タグ</h3>
 
-                        {TAG_CATEGORIES.filter(c => c !== '飲酒について').map(cat => {
+                        {TAG_CATEGORIES.filter(c => c !== '飲酒について' && c !== 'リレーション').map(cat => {
                             const catTags = tagsByCategory[cat];
                             const visibleTags = catTags.filter(t => t.active !== false);
                             const selected = catTags.filter(t => form.tagIds.includes(t.id));
@@ -657,6 +683,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
                         {/* ===== 連絡先 ===== */}
                         <h3 className="form-section-title">連絡先</h3>
+
                         <div className="form-row">
                             <div className="form-group">
                                 <label className="form-label">メールアドレス</label>
@@ -665,6 +692,23 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             <div className="form-group">
                                 <label className="form-label">電話番号</label>
                                 <input className="form-input" name="phoneNumber" value={form.phoneNumber || ''} onChange={handleChange} placeholder="090-1234-5678" />
+                            </div>
+                        </div>
+
+                        <div className="form-group" style={{ marginTop: '16px' }}>
+                            <label className="form-label">リレーション（過去の接点）</label>
+                            <div className="tags-checkbox-group">
+                                {(() => {
+                                    const catTags = tagsByCategory['リレーション'] || [];
+                                    const visibleTags = catTags.filter(t => t.active !== false);
+                                    if (visibleTags.length === 0) return <span style={{ color: '#64748b', fontSize: '0.82rem', padding: '4px 0' }}>タグがありません</span>;
+                                    return visibleTags.map(tag => (
+                                        <label key={tag.id} className={`tag-checkbox-label ${form.tagIds.includes(tag.id) ? 'selected' : ''}`}>
+                                            <input type="checkbox" style={{ display: 'none' }} checked={form.tagIds.includes(tag.id)} onChange={() => toggleTagId(tag.id)} />
+                                            {tag.name}
+                                        </label>
+                                    ));
+                                })()}
                             </div>
                         </div>
 
