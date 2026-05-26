@@ -17,6 +17,7 @@ import { calculateAge, calculateAgeGroup, getEffectiveAgeGroup } from './utils/d
 import Papa from 'papaparse';
 import { AVAILABLE_COLUMNS, getMediaFollowers } from './utils/exportColumns';
 import { downloadCsvAsShiftJis } from './utils/csvExport';
+import { MEDIA_ICONS, MEDIA_ICON_FILTER } from './utils/mediaIcons';
 import './App.css';
 
 type FollowerRange = { min: number, max: number };
@@ -98,6 +99,8 @@ function App() {
   const [selectedXFollowers, setSelectedXFollowers] = useState<string[]>([]);
   const [selectedTikTokFollowers, setSelectedTikTokFollowers] = useState<string[]>([]);
   const [selectedYouTubeFollowers, setSelectedYouTubeFollowers] = useState<string[]>([]);
+  const [selectedLemon8Followers, setSelectedLemon8Followers] = useState<string[]>([]);
+  const [selectedNoteFollowers, setSelectedNoteFollowers] = useState<string[]>([]);
   const [selectedQualificationTagIds, setSelectedQualificationTagIds] = useState<string[]>([]);
   const [selectedAchievementTagIds, setSelectedAchievementTagIds] = useState<string[]>([]);
   const [selectedWorkTagIds, setSelectedWorkTagIds] = useState<string[]>([]);
@@ -117,7 +120,7 @@ function App() {
         selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
         selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
         selectedChildStages, selectedFollowers, selectedInstagramFollowers,
-        selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
+        selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedLemon8Followers, selectedNoteFollowers,
         selectedPlatforms, selectedGenders,
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
@@ -128,7 +131,7 @@ function App() {
     searchQuery, selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
     selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
     selectedChildStages, selectedFollowers, selectedInstagramFollowers,
-    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
+    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedLemon8Followers, selectedNoteFollowers,
     selectedPlatforms, selectedGenders,
     selectedNoteFeaturedPermissions,
     selectedCookingClassStatuses,
@@ -413,6 +416,33 @@ function App() {
         if (!matchesRanges) return false;
       }
 
+      // 10.9 Lemon8フォロワー数
+      if (selectedLemon8Followers.length > 0) {
+        const acc = f.mediaAccounts.find(a => a.mediaType === 'Lemon8');
+        const count = acc?.metricValue;
+        if (count == null) return false;
+        const matchesRanges = selectedLemon8Followers.some(key => {
+          const rng = FOLLOWER_RANGES[key];
+          if (!rng) return false;
+          return count >= rng.min && count <= rng.max;
+        });
+        if (!matchesRanges) return false;
+      }
+
+      // 10.10 noteフォロワー数
+      if (selectedNoteFollowers.length > 0) {
+        const acc = f.mediaAccounts.find(a => a.mediaType === 'note');
+        const count = acc?.metricValue;
+        if (count == null) return false;
+        
+        const matchesRanges = selectedNoteFollowers.some(key => {
+          const rng = FOLLOWER_RANGES[key];
+          if (!rng) return false;
+          return count >= rng.min && count <= rng.max;
+        });
+        if (!matchesRanges) return false;
+      }
+
       // 11.5 保有プラットフォーム（OR検索: mediaAccountsにURLがあるレコードのmediaTypeで判定）
       if (selectedPlatforms.length > 0) {
         const ownedPlatforms = new Set(
@@ -465,7 +495,7 @@ function App() {
     foodists, searchQuery, selectedAreas, selectedBirthplaces, selectedAges,
     selectedMemberships, selectedMaritalStatus, selectedFaceVisibility, selectedHasChildren,
     selectedChildrenCount, selectedChildStages, selectedFollowers, selectedInstagramFollowers,
-    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers,
+    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedLemon8Followers, selectedNoteFollowers,
     selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     selectedAlcoholTagIds, selectedRelationTagIds, selectedStatusTagIds, relationStatus, selectedGenders,
@@ -489,6 +519,8 @@ function App() {
     setSelectedXFollowers([]);
     setSelectedTikTokFollowers([]);
     setSelectedYouTubeFollowers([]);
+    setSelectedLemon8Followers([]);
+    setSelectedNoteFollowers([]);
     setSelectedPlatforms([]);
     setSelectedQualificationTagIds([]);
     setSelectedAchievementTagIds([]);
@@ -543,7 +575,7 @@ function App() {
     selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
     selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
     selectedChildStages, selectedFollowers, selectedInstagramFollowers,
-    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedPlatforms,
+    selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedLemon8Followers, selectedNoteFollowers, selectedPlatforms,
     selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
     selectedAlcoholTagIds, selectedRelationTagIds, selectedStatusTagIds, selectedGenders,
     selectedNoteFeaturedPermissions,
@@ -555,6 +587,8 @@ function App() {
     selectedXFollowers.length > 0 ? 'X' :
     selectedTikTokFollowers.length > 0 ? 'TikTok' :
     selectedYouTubeFollowers.length > 0 ? 'YouTube' :
+    selectedLemon8Followers.length > 0 ? 'Lemon8' :
+    selectedNoteFollowers.length > 0 ? 'note' :
     selectedFollowers.length > 0 ? '__total__' :
     null;
 
@@ -741,6 +775,8 @@ function App() {
                   selectedXFollowers={selectedXFollowers} setSelectedXFollowers={setSelectedXFollowers}
                   selectedTikTokFollowers={selectedTikTokFollowers} setSelectedTikTokFollowers={setSelectedTikTokFollowers}
                   selectedYouTubeFollowers={selectedYouTubeFollowers} setSelectedYouTubeFollowers={setSelectedYouTubeFollowers}
+                  selectedLemon8Followers={selectedLemon8Followers} setSelectedLemon8Followers={setSelectedLemon8Followers}
+                  selectedNoteFollowers={selectedNoteFollowers} setSelectedNoteFollowers={setSelectedNoteFollowers}
                   selectedPlatforms={selectedPlatforms} setSelectedPlatforms={setSelectedPlatforms}
                   selectedQualificationTagIds={selectedQualificationTagIds} setSelectedQualificationTagIds={setSelectedQualificationTagIds}
                   selectedAchievementTagIds={selectedAchievementTagIds} setSelectedAchievementTagIds={setSelectedAchievementTagIds}
@@ -786,9 +822,9 @@ function App() {
                           .slice(0, 8);
 
                         const cardMedia = foodist.mediaAccounts
-                          .filter(a => a.url && ['Instagram', 'X', 'YouTube', 'TikTok', 'ブログ'].includes(a.mediaType) && a.showOnDetail)
+                          .filter(a => a.url && ['Instagram', 'X', 'YouTube', 'TikTok', 'Lemon8', 'note', 'ブログ', '公式ホームページ'].includes(a.mediaType) && a.showOnDetail)
                           .sort((a, b) => a.sortOrder - b.sortOrder)
-                          .slice(0, 5);
+                          .slice(0, 10);
 
                         return (
                           <div key={foodist.id} className="foodist-card" onClick={() => {
@@ -815,6 +851,8 @@ function App() {
                                       'X': 'Xフォロワー',
                                       'TikTok': 'TikTokフォロワー',
                                       'YouTube': 'YouTube登録者数',
+                                      'Lemon8': 'Lemon8フォロワー',
+                                      'note': 'noteフォロワー',
                                     };
                                     return (
                                       <>
@@ -835,10 +873,10 @@ function App() {
                                     {cardMedia.map(acc => (
                                       <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.mediaType} onClick={e => e.stopPropagation()}>
                                         <img
-                                          src={CARD_SNS_ICONS[acc.mediaType] || CARD_SNS_ICONS['ブログ']}
+                                          src={MEDIA_ICONS[acc.mediaType] || MEDIA_ICONS['ブログ']}
                                           alt={acc.mediaType}
                                           className="sns-icon-img"
-                                          style={acc.mediaType === 'X' ? { filter: 'invert(1)' } : undefined}
+                                          style={MEDIA_ICON_FILTER[acc.mediaType] ? { filter: MEDIA_ICON_FILTER[acc.mediaType] } : undefined}
                                         />
                                       </a>
                                     ))}

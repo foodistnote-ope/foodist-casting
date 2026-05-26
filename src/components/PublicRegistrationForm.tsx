@@ -582,14 +582,14 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                         </select>
                                     </div>
                                 )}
-                                {['Instagram', 'X', 'TikTok'].includes(acc.mediaType) ? (
+                                {['Instagram', 'X', 'TikTok', 'Lemon8', 'note'].includes(acc.mediaType) ? (
                                     <div className="form-group">
                                         <label className="form-label">
                                             {acc.mediaType} ID
                                         </label>
                                         <div className="input-with-prefix">
                                             <span className="prefix-text">
-                                                {acc.mediaType === 'Instagram' ? 'instagram.com/' : acc.mediaType === 'X' ? 'x.com/' : 'tiktok.com/@'}
+                                                {acc.mediaType === 'Instagram' ? 'instagram.com/' : acc.mediaType === 'X' ? 'x.com/' : acc.mediaType === 'Lemon8' ? 'lemon8-app.com/' : acc.mediaType === 'note' ? 'note.com/' : 'tiktok.com/@'}
                                             </span>
                                             <input 
                                                 className="form-input prefix-input" 
@@ -601,7 +601,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                                         val = extractIdFromUrl(val, acc.mediaType);
                                                     }
                                                     const id = val.replace(/^@/, '');
-                                                    const baseUrl = acc.mediaType === 'Instagram' ? 'https://www.instagram.com/' : acc.mediaType === 'X' ? 'https://x.com/' : 'https://www.tiktok.com/@';
+                                                    const baseUrl = acc.mediaType === 'Instagram' ? 'https://www.instagram.com/' : acc.mediaType === 'X' ? 'https://x.com/' : acc.mediaType === 'Lemon8' ? 'https://www.lemon8-app.com/' : acc.mediaType === 'note' ? 'https://note.com/' : 'https://www.tiktok.com/@';
                                                     updateMedia(acc.id, { url: id ? `${baseUrl}${id}/` : '' });
                                                 }} 
                                                 placeholder="IDを入力" 

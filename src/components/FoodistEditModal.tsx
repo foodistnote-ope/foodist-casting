@@ -236,7 +236,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         next.metricType = 'チャンネル登録者数';
                     } else if (patch.mediaType === 'ブログ' || patch.mediaType === '公式ホームページ') {
                         next.metricType = 'PV';
-                    } else if (['Instagram', 'X', 'TikTok'].includes(patch.mediaType)) {
+                    } else if (['Instagram', 'X', 'TikTok', 'Lemon8', 'note'].includes(patch.mediaType)) {
                         next.metricType = 'フォロワー数';
                     }
                 }

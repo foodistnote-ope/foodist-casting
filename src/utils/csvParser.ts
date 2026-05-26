@@ -259,6 +259,8 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                             { type: 'X', followerKey: 'X_フォロワー数', urlKey: 'X_URL' },
                             { type: 'TikTok', followerKey: 'TikTok_フォロワー数', urlKey: 'TikTok_URL' },
                             { type: 'YouTube', followerKey: 'YouTube_登録者数', urlKey: 'YouTube_URL' },
+                            { type: 'Lemon8', followerKey: 'Lemon8_フォロワー数', urlKey: 'Lemon8_URL' },
+                            { type: 'note', followerKey: 'note_フォロワー数', urlKey: 'note_URL' },
                             { type: 'ブログ', followerKey: 'ブログ_PV', urlKey: 'ブログ_URL' },
                         ];
                         const mediaToPatch: { type: MediaType; metricValue?: number; url?: string }[] = [];
@@ -383,6 +385,8 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                         addMedia('X', 'X_URL', 'X_名称', 'X_フォロワー数', 'フォロワー数');
                         addMedia('TikTok', 'TikTok_URL', 'TikTok_名称', 'TikTok_フォロワー数', 'フォロワー数');
                         addMedia('YouTube', 'YouTube_URL', 'YouTube_名称', 'YouTube_登録者数', 'チャンネル登録者数');
+                        addMedia('Lemon8', 'Lemon8_URL', 'Lemon8_名称', 'Lemon8_フォロワー数', 'フォロワー数');
+                        addMedia('note', 'note_URL', 'note_名称', 'note_フォロワー数', 'フォロワー数');
                         addMedia('公式ホームページ', '公式HP_URL', '公式HP_名称', '公式HP_PV', 'PV');
                         addMedia('その他', 'その他媒体_URL', 'その他媒体_名称', 'その他媒体_PV', 'なし');
 

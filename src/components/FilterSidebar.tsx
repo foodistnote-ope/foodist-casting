@@ -32,6 +32,10 @@ interface FilterSidebarProps {
     setSelectedTikTokFollowers: (v: string[]) => void;
     selectedYouTubeFollowers: string[];
     setSelectedYouTubeFollowers: (v: string[]) => void;
+    selectedLemon8Followers: string[];
+    setSelectedLemon8Followers: (v: string[]) => void;
+    selectedNoteFollowers: string[];
+    setSelectedNoteFollowers: (v: string[]) => void;
     selectedXFollowers: string[];
     setSelectedXFollowers: (v: string[]) => void;
     selectedPlatforms: string[];
@@ -94,7 +98,7 @@ const FOLLOWER_OPTIONS = [
     '10万〜30万未満', '30万〜50万未満', '50万〜100万未満',
     '100万〜200万未満', '200万以上'
 ];
-const PLATFORM_OPTIONS = ['ブログ', 'Instagram', 'X', 'TikTok', 'YouTube', '公式ホームページ', 'その他'];
+const PLATFORM_OPTIONS = ['ブログ', 'Instagram', 'X', 'TikTok', 'YouTube', 'Lemon8', 'note', '公式ホームページ', 'その他'];
 const NOTE_FEATURED_OPTIONS = [
     '掲載可（事前確認は不要）',
     '掲載可（事前確認が必要）',
@@ -191,6 +195,8 @@ export const FilterSidebar = ({
     selectedXFollowers, setSelectedXFollowers,
     selectedTikTokFollowers, setSelectedTikTokFollowers,
     selectedYouTubeFollowers, setSelectedYouTubeFollowers,
+    selectedLemon8Followers, setSelectedLemon8Followers,
+    selectedNoteFollowers, setSelectedNoteFollowers,
     selectedPlatforms, setSelectedPlatforms,
     selectedGenders, setSelectedGenders,
     selectedNoteFeaturedPermissions, setSelectedNoteFeaturedPermissions,
@@ -240,6 +246,8 @@ export const FilterSidebar = ({
         setSelectedXFollowers([]);
         setSelectedTikTokFollowers([]);
         setSelectedYouTubeFollowers([]);
+        setSelectedLemon8Followers([]);
+        setSelectedNoteFollowers([]);
         setSelectedPlatforms([]);
         setSelectedGenders([]);
         setSelectedNoteFeaturedPermissions([]);
@@ -258,6 +266,7 @@ export const FilterSidebar = ({
         selectedAreas, selectedBirthplaces, selectedAges, selectedMemberships, selectedMaritalStatus,
         selectedFaceVisibility, selectedHasChildren, selectedChildrenCount,
         selectedChildStages, selectedFollowers, selectedInstagramFollowers,
+        selectedXFollowers, selectedTikTokFollowers, selectedYouTubeFollowers, selectedLemon8Followers, selectedNoteFollowers,
         selectedPlatforms, selectedGenders,
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
@@ -362,6 +371,15 @@ export const FilterSidebar = ({
             {/* YouTube登録者数 */}
             <FilterSection title="YouTube登録者数" badge={selectedYouTubeFollowers.length}>
                 <CheckList items={FOLLOWER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedYouTubeFollowers} onToggle={v => toggle(v, selectedYouTubeFollowers, setSelectedYouTubeFollowers)} />
+            </FilterSection>
+
+            {/* Lemon8フォロワー数 */}
+            <FilterSection title="Lemon8フォロワー数" badge={selectedLemon8Followers.length}>
+                <CheckList items={FOLLOWER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedLemon8Followers} onToggle={v => toggle(v, selectedLemon8Followers, setSelectedLemon8Followers)} />
+            </FilterSection>
+            {/* noteフォロワー数 */}
+            <FilterSection title="noteフォロワー数" badge={selectedNoteFollowers.length}>
+                <CheckList items={FOLLOWER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedNoteFollowers} onToggle={v => toggle(v, selectedNoteFollowers, setSelectedNoteFollowers)} />
             </FilterSection>
 
             {/* 保有資格・専門 */}

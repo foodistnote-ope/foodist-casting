@@ -44,6 +44,8 @@ export type MediaType =
     | 'X'
     | 'TikTok'
     | 'YouTube'
+    | 'Lemon8'
+    | 'note'
     | '公式ホームページ'
     | 'その他';
 
@@ -53,6 +55,8 @@ export const MEDIA_TYPES: MediaType[] = [
     'X',
     'TikTok',
     'YouTube',
+    'Lemon8',
+    'note',
     '公式ホームページ',
     'その他',
 ];
@@ -63,6 +67,8 @@ export const FOLLOWER_CONTRIBUTING_MEDIA: MediaType[] = [
     'X',
     'TikTok',
     'YouTube',
+    'Lemon8',
+    'note',
 ];
 
 export type MetricType = 'PV' | 'フォロワー数' | 'チャンネル登録者数' | 'なし';
