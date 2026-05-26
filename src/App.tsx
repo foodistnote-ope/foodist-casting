@@ -851,6 +851,8 @@ function App() {
                                       'X': 'Xフォロワー',
                                       'TikTok': 'TikTokフォロワー',
                                       'YouTube': 'YouTube登録者数',
+                                      'Lemon8': 'Lemon8フォロワー',
+                                      'note': 'noteフォロワー',
                                     };
                                     return (
                                       <>
