@@ -1,5 +1,7 @@
 import type { Foodist, Tag } from '../data/types';
 import { calculateAge, getEffectiveAgeGroup } from './dateUtils';
+import { MEDIA_ICONS, MEDIA_ICON_FILTER } from './mediaIcons';
+import type { MediaType } from '../data/types';
 
 export type ColumnDef = {
     id: string;
@@ -123,41 +125,32 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f) => f.totalFollowers ? f.totalFollowers.toLocaleString() : '未設定',
         sortValue: (f) => f.totalFollowers || 0,
     },
-    {
-        id: 'instagram',
-        label: 'Instagram',
+    ...(['Instagram', 'X', 'TikTok', 'YouTube', 'Lemon8', 'note', 'ブログ'] as MediaType[]).map(mediaType => ({
+        id: mediaType === 'ブログ' ? 'blog' : mediaType.toLowerCase(),
+        label: mediaType === 'ブログ' ? 'ブログ (月間PV)' : mediaType,
         defaultVisible: false,
-        render: (f, getFollowers) => getFollowers(f, 'Instagram')?.toLocaleString() || '-',
-        sortValue: (f, getFollowers) => getFollowers(f, 'Instagram') || 0,
-    },
-    {
-        id: 'x',
-        label: 'X',
-        defaultVisible: false,
-        render: (f, getFollowers) => getFollowers(f, 'X')?.toLocaleString() || '-',
-        sortValue: (f, getFollowers) => getFollowers(f, 'X') || 0,
-    },
-    {
-        id: 'tiktok',
-        label: 'TikTok',
-        defaultVisible: false,
-        render: (f, getFollowers) => getFollowers(f, 'TikTok')?.toLocaleString() || '-',
-        sortValue: (f, getFollowers) => getFollowers(f, 'TikTok') || 0,
-    },
-    {
-        id: 'youtube',
-        label: 'YouTube',
-        defaultVisible: false,
-        render: (f, getFollowers) => getFollowers(f, 'YouTube')?.toLocaleString() || '-',
-        sortValue: (f, getFollowers) => getFollowers(f, 'YouTube') || 0,
-    },
-    {
-        id: 'blog',
-        label: 'ブログ (月間PV)',
-        defaultVisible: false,
-        render: (f, getFollowers) => getFollowers(f, 'ブログ')?.toLocaleString() || '-',
-        sortValue: (f, getFollowers) => getFollowers(f, 'ブログ') || 0,
-    },
+        render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => {
+            const count = getFollowers(f, mediaType);
+            if (count == null) return '-';
+            return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <img 
+                        src={MEDIA_ICONS[mediaType]} 
+                        alt={mediaType} 
+                        style={{ 
+                            width: '16px', 
+                            height: '16px', 
+                            objectFit: 'contain', 
+                            filter: MEDIA_ICON_FILTER[mediaType],
+                            borderRadius: mediaType === 'ブログ' ? '3px' : '0'
+                        }} 
+                    />
+                    {count.toLocaleString()}
+                </div>
+            );
+        },
+        sortValue: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => getFollowers(f, mediaType) || 0,
+    })),
     // ── スキル・タグ ──────────────────────────────
     {
         id: 'tags',
