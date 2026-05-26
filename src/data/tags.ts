@@ -99,5 +99,6 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_r005', name: 'フーディストナビ登録', category: 'リレーション', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_r001', name: '起用実績あり', category: 'リレーション', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 'tag_r002', name: 'アンケート回答あり', category: 'リレーション', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
-    { id: 'tag_r003', name: '担当者コンタクトあり', category: 'リレーション', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_r006', name: 'アンケート依頼済み（未回答）', category: 'リレーション', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 'tag_r003', name: '担当者コンタクトあり', category: 'リレーション', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 ];
