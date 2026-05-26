@@ -251,25 +251,19 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
     };
 
     // --- メモ ---
-    const addNote = () => {
-        const n: FoodieNote = {
-            id: generateId('note'),
-            noteType: 'その他',
-            content: '',
-            updatedAt: new Date().toISOString(),
-        };
-        setForm(prev => ({ ...prev, notes: [...prev.notes, n] }));
-    };
-
-    const updateNote = (id: string, patch: Partial<FoodieNote>) => {
-        setForm(prev => ({
-            ...prev,
-            notes: prev.notes.map(n => n.id === id ? { ...n, ...patch } : n),
-        }));
-    };
-
-    const removeNote = (id: string) => {
-        setForm(prev => ({ ...prev, notes: prev.notes.filter(n => n.id !== id) }));
+    const updateSpecificNote = (type: NoteType, content: string) => {
+        setForm(prev => {
+            const otherNotes = prev.notes.filter(n => n.noteType !== type);
+            if (content.trim() !== '') {
+                const existingNote = prev.notes.find(n => n.noteType === type);
+                const noteId = existingNote ? existingNote.id : generateId('note');
+                return {
+                    ...prev,
+                    notes: [...otherNotes, { id: noteId, noteType: type, content, updatedAt: new Date().toISOString() }]
+                };
+            }
+            return { ...prev, notes: otherNotes };
+        });
     };
 
     const previewTotal = calcTotalFollowers(form.mediaAccounts);
@@ -665,7 +659,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             </select>
                         </div>
                         <div className="form-group">
-                            <label className="form-label">特記事項・理由</label>
+                            <label className="form-label">掲載可否の特記事項・理由</label>
                             <textarea 
                                 className="form-textarea" 
                                 name="noteFeaturedMemo" 
@@ -707,31 +701,30 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                             </div>
                         </div>
 
-                        {/* ===== メモ（提案時メモ・その他） ===== */}
-                        <h3 className="form-section-title">メモ（提案時メモ・その他）</h3>
+                        {/* ===== メモ ===== */}
+                        <h3 className="form-section-title">メモ</h3>
 
-                        {form.notes.map((note, idx) => (
-                            <div key={note.id} className="note-edit-row">
-                                <div className="media-account-header">
-                                    <select className="form-select" style={{ flex: 1 }} value={note.noteType} onChange={e => updateNote(note.id, { noteType: e.target.value as FoodieNote['noteType'] })}>
-                                        {NOTE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                                    </select>
-                                    <button type="button" className="btn-icon-danger" onClick={() => removeNote(note.id)}>削除</button>
-                                    <span className="media-account-num">#{idx + 1}</span>
-                                </div>
-                                <textarea
-                                    className="form-textarea"
-                                    rows={3}
-                                    value={note.content}
-                                    onChange={e => updateNote(note.id, { content: e.target.value })}
-                                    placeholder="メモを入力..."
-                                />
-                            </div>
-                        ))}
+                        <div className="form-group">
+                            <label className="form-label">提案時メモ</label>
+                            <textarea
+                                className="form-textarea"
+                                rows={3}
+                                value={form.notes.find(n => n.noteType === '提案時メモ')?.content || ''}
+                                onChange={e => updateSpecificNote('提案時メモ', e.target.value)}
+                                placeholder="対応可能メニュー・謝礼など"
+                            />
+                        </div>
 
-                        <button type="button" className="btn-secondary btn-add-media" onClick={addNote}>
-                            ＋ メモを追加する
-                        </button>
+                        <div className="form-group" style={{ marginTop: '16px' }}>
+                            <label className="form-label">その他メモ</label>
+                            <textarea
+                                className="form-textarea"
+                                rows={3}
+                                value={form.notes.find(n => n.noteType === 'その他')?.content || ''}
+                                onChange={e => updateSpecificNote('その他', e.target.value)}
+                                placeholder="その他、管理用のメモを入力..."
+                            />
+                        </div>
                     </form>
                 </div>
 

@@ -392,11 +392,20 @@ export const useFoodists = () => {
                 updated = { ...updated, tagIds: merged };
             }
 
-            // メモの追記
+            // メモの追記・上書き（各種別1件のみ）
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const patchNotes: any[] = (patch as any)._patchNotes ?? [];
             if (patchNotes.length > 0) {
-                updated = { ...updated, notes: [...existing.notes, ...patchNotes] };
+                const mergedNotes = [...existing.notes];
+                patchNotes.forEach(pn => {
+                    const existingIdx = mergedNotes.findIndex(n => n.noteType === pn.noteType);
+                    if (existingIdx >= 0) {
+                        mergedNotes[existingIdx] = { ...mergedNotes[existingIdx], content: pn.content, updatedAt: now };
+                    } else {
+                        mergedNotes.push(pn);
+                    }
+                });
+                updated = { ...updated, notes: mergedNotes };
             }
 
             // SNS / 媒体アカウントの部分更新

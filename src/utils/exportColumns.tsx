@@ -260,6 +260,30 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
             return perm + memo;
         },
     },
+    {
+        id: 'proposalMemo',
+        label: '提案時メモ',
+        defaultVisible: false,
+        render: (f) => {
+            const memo = f.notes?.filter(n => n.noteType === '提案時メモ').map(n => n.content).join('\n');
+            if (!memo) return '-';
+            return <span title={memo}>{memo.length > 20 ? memo.slice(0, 20) + '...' : memo}</span>;
+        },
+        sortValue: (f) => f.notes?.filter(n => n.noteType === '提案時メモ').map(n => n.content).join('\n') || '',
+        csvValue: (f) => f.notes?.filter(n => n.noteType === '提案時メモ').map(n => n.content).join('\n') || '',
+    },
+    {
+        id: 'otherMemo',
+        label: 'その他メモ',
+        defaultVisible: false,
+        render: (f) => {
+            const memo = f.notes?.filter(n => n.noteType === 'その他').map(n => n.content).join('\n');
+            if (!memo) return '-';
+            return <span title={memo}>{memo.length > 20 ? memo.slice(0, 20) + '...' : memo}</span>;
+        },
+        sortValue: (f) => f.notes?.filter(n => n.noteType === 'その他').map(n => n.content).join('\n') || '',
+        csvValue: (f) => f.notes?.filter(n => n.noteType === 'その他').map(n => n.content).join('\n') || '',
+    },
     // ── 連絡先（デフォルト非表示） ─────────────────
     {
         id: 'email',

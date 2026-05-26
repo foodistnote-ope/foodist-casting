@@ -930,6 +930,7 @@ function App() {
             <DatabaseView
               foodists={foodists}
               allTags={tags}
+              onView={openFoodistModal}
               onEdit={f => { setEditingFoodist(f); setIsEditModalOpen(true); }}
               onAdd={() => { setEditingFoodist(null); setIsEditModalOpen(true); }}
               onDelete={(id) => {
