@@ -8,6 +8,7 @@ import './DatabaseView.css';
 interface DatabaseViewProps {
     foodists: Foodist[];
     allTags: Tag[];
+    onView?: (foodist: Foodist) => void;
     onEdit: (foodist: Foodist) => void;
     onAdd: () => void;
     onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,6 +23,7 @@ import { AVAILABLE_COLUMNS, getMediaFollowers } from '../utils/exportColumns';
 export const DatabaseView = ({ 
     foodists, 
     allTags, 
+    onView,
     onEdit, 
     onAdd, 
     onImport, 
@@ -342,6 +344,12 @@ export const DatabaseView = ({
                                     ))}
                                     <td>
                                         <div style={{ display: 'flex', gap: '4px' }}>
+                                            {onView && (
+                                                <button className="btn-text" style={{ display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => onView(foodist)}>
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                                    詳細
+                                                </button>
+                                            )}
                                             <button className="btn-text" style={{ display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => onEdit(foodist)}>
                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                                 編集

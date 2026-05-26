@@ -776,7 +776,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </div>
 
                             <div className="form-group mt-16" style={{ marginBottom: 0 }}>
-                                <label className="form-label">特記事項・理由（任意）</label>
+                                <label className="form-label">掲載可否の特記事項・理由（任意）</label>
                                 <p className="form-hint mb-8">掲載不可の理由や、アカウントによって掲載可否が異なる場合など、補足事項があればご記入ください。</p>
                                 <textarea 
                                     name="noteFeaturedMemo" 

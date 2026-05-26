@@ -276,7 +276,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             </div>
                             {foodist.noteFeaturedMemo && (
                                 <div className="demo-item demo-item-full" style={{ marginTop: 8 }}>
-                                    <span className="demo-label">特記事項・理由</span>
+                                    <span className="demo-label">掲載可否の特記事項・理由</span>
                                     <span className="demo-value" style={{ whiteSpace: 'pre-wrap', display: 'block', padding: '8px', background: '#fffbeb', borderRadius: '4px', border: '1px solid #fbbf24' }}>
                                         {foodist.noteFeaturedMemo}
                                     </span>
