@@ -10,6 +10,7 @@ export type TagCategory =
     | '対応可能業務'
     | '飲酒について'
     | 'ステータス'
+    | 'アンバサダー・パートナー'
     | 'リレーション';
 
 export const TAG_CATEGORIES: TagCategory[] = [
@@ -19,6 +20,7 @@ export const TAG_CATEGORIES: TagCategory[] = [
     '対応可能業務',
     '飲酒について',
     'ステータス',
+    'アンバサダー・パートナー',
     'リレーション',
 ];
 

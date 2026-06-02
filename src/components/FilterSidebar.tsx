@@ -61,6 +61,8 @@ interface FilterSidebarProps {
     setSelectedRelationTagIds: (ids: string[]) => void;
     selectedStatusTagIds: string[];
     setSelectedStatusTagIds: (ids: string[]) => void;
+    selectedOrgTagIds: string[];
+    setSelectedOrgTagIds: (ids: string[]) => void;
     relationStatus: 'all' | 'has' | 'none';
     setRelationStatus: (status: 'all' | 'has' | 'none') => void;
     // モバイル用表示状態
@@ -74,6 +76,7 @@ interface FilterSidebarProps {
     featureTags: Tag[];
     relationTags: Tag[];
     statusTags: Tag[];
+    orgTags: Tag[];
 }
 
 const AREA_GROUPS: Record<string, string[]> = {
@@ -208,6 +211,7 @@ export const FilterSidebar = ({
     selectedAlcoholTagIds, setSelectedAlcoholTagIds,
     selectedRelationTagIds, setSelectedRelationTagIds,
     selectedStatusTagIds, setSelectedStatusTagIds,
+    selectedOrgTagIds, setSelectedOrgTagIds,
     relationStatus, setRelationStatus,
     isMobileOpen, setIsMobileOpen,
     qualificationTags,
@@ -216,7 +220,8 @@ export const FilterSidebar = ({
     alcoholTags,
     featureTags,
     relationTags,
-    statusTags
+    statusTags,
+    orgTags
 }: FilterSidebarProps) => {
 
 
@@ -259,6 +264,7 @@ export const FilterSidebar = ({
         setSelectedCookingClassStatuses([]);
         setSelectedRelationTagIds([]);
         setSelectedStatusTagIds([]);
+        setSelectedOrgTagIds([]);
         setRelationStatus('all');
     };
 
@@ -271,7 +277,7 @@ export const FilterSidebar = ({
         selectedNoteFeaturedPermissions,
         selectedCookingClassStatuses,
         selectedQualificationTagIds, selectedAchievementTagIds, selectedWorkTagIds, selectedFeatureTagIds,
-        selectedRelationTagIds, selectedStatusTagIds
+        selectedRelationTagIds, selectedStatusTagIds, selectedOrgTagIds
     ].reduce((s, a) => s + a.length, 0) + (searchQuery ? 1 : 0) + (relationStatus !== 'all' ? 1 : 0);
 
     // 都道府県リスト（居住地・出身地共通）
@@ -460,6 +466,16 @@ export const FilterSidebar = ({
                     />
                 </FilterSection>
             )}
+
+            {/* アンバサダー・パートナー */}
+            <FilterSection title="アンバサダー・パートナー" badge={selectedOrgTagIds.length} defaultOpen={false}>
+                <CheckList
+                    items={orgTags.map(t => ({ value: t.id, label: t.name }))}
+                    selected={selectedOrgTagIds}
+                    onToggle={v => toggle(v, selectedOrgTagIds, setSelectedOrgTagIds)}
+                    showMoreThreshold={SHOW_MORE_THRESHOLD}
+                />
+            </FilterSection>
 
             {/* リレーション */}
             <FilterSection title="リレーション" badge={selectedRelationTagIds.length + (relationStatus !== 'all' ? 1 : 0)}>

@@ -93,6 +93,14 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 'tag_s001', name: '注目', category: 'ステータス', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
+    // アンバサダー・パートナー
+    // =============================================
+    { id: 't_ambassador', name: 'フーディストノートアンバサダー', category: 'アンバサダー・パートナー', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 't_chef', name: 'シェフインフルエンサー', category: 'アンバサダー・パートナー', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 't_content_partner', name: 'コンテンツ制作パートナー', category: 'アンバサダー・パートナー', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 't_official_partner', name: 'オフィシャルパートナー', category: 'アンバサダー・パートナー', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+
+    // =============================================
     // リレーション
     // =============================================
     { id: 'tag_r004', name: 'フーディスト会員', category: 'リレーション', sortOrder: 1, active: true, searchVisible: true, createdAt: now, updatedAt: now },
