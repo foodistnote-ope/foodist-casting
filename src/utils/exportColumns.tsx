@@ -114,19 +114,6 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.hasChildren || '',
     },
     {
-        id: 'hasChildren',
-        label: '子どもの有無',
-        defaultVisible: false,
-        render: (f) => {
-            if (f.hasChildren === 'あり' && f.childrenCount) {
-                const countStr = f.childrenCount === '4人以上' || f.childrenCount === '回答しない' ? f.childrenCount : `${f.childrenCount}人`;
-                return `あり (${countStr})`;
-            }
-            return f.hasChildren || '-';
-        },
-        sortValue: (f) => f.hasChildren || '',
-    },
-    {
         id: 'childStage',
         label: '子育てステージ',
         defaultVisible: false,
@@ -364,13 +351,6 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f) => f.phoneNumber || '-',
         sortValue: (f) => f.phoneNumber || '',
     },
-    {
-        id: 'createdAt',
-        label: '登録日',
-        defaultVisible: false,
-        render: (f) => f.createdAt ? f.createdAt.slice(0, 10) : '-',
-        sortValue: (f) => f.createdAt,
-    },
     // ── システム管理用 ────────────────────────────
     {
         id: 'aliases',
@@ -378,6 +358,13 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f) => f.aliases && f.aliases.length > 0 ? f.aliases.join(', ') : '-',
         sortValue: (f) => f.aliases?.join(', ') || '',
+    },
+    {
+        id: 'createdAt',
+        label: '登録日',
+        defaultVisible: false,
+        render: (f) => f.createdAt ? f.createdAt.slice(0, 10) : '-',
+        sortValue: (f) => f.createdAt,
     },
     {
         id: 'sysUpdatedAt',
