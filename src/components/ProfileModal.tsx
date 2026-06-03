@@ -26,6 +26,7 @@ const TAG_CATEGORY_LABELS: { key: string; label: string }[] = [
     { key: '対応可能業務', label: '対応可能業務' },
     { key: 'ターゲット適性', label: 'ターゲット適性' },
     { key: 'ステータス', label: 'ステータス（管理用）' },
+    { key: 'アンバサダー・パートナー', label: 'アンバサダー・パートナー' },
 ];
 
 export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClick }: ProfileModalProps) => {
