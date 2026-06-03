@@ -66,6 +66,13 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.birthDate ? calculateAge(f.birthDate) : f.age,
     },
     {
+        id: 'birthDate',
+        label: '生年月日',
+        defaultVisible: false,
+        render: (f) => f.birthDate || '-',
+        sortValue: (f) => f.birthDate || '',
+    },
+    {
         id: 'ageGroup',
         label: '年代',
         defaultVisible: true,
@@ -107,6 +114,13 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.hasChildren || '',
     },
     {
+        id: 'childStage',
+        label: '子育てステージ',
+        defaultVisible: false,
+        render: (f) => f.childStage && f.childStage.length > 0 ? f.childStage.join(', ') : '-',
+        sortValue: (f) => f.childStage?.join(', ') || '',
+    },
+    {
         id: 'membership',
         label: '会員登録状況',
         defaultVisible: true,
@@ -125,32 +139,70 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f) => f.totalFollowers ? f.totalFollowers.toLocaleString() : '未設定',
         sortValue: (f) => f.totalFollowers || 0,
     },
-    ...(['Instagram', 'X', 'TikTok', 'YouTube', 'Lemon8', 'note', 'ブログ'] as MediaType[]).map(mediaType => ({
-        id: mediaType === 'ブログ' ? 'blog' : mediaType.toLowerCase(),
-        label: mediaType === 'ブログ' ? 'ブログ (月間PV)' : mediaType,
-        defaultVisible: false,
-        render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => {
-            const count = getFollowers(f, mediaType);
-            if (count == null) return '-';
-            return (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <img 
-                        src={MEDIA_ICONS[mediaType]} 
-                        alt={mediaType} 
-                        style={{ 
-                            width: '16px', 
-                            height: '16px', 
-                            objectFit: 'contain', 
-                            filter: MEDIA_ICON_FILTER[mediaType],
-                            borderRadius: mediaType === 'ブログ' ? '3px' : '0'
-                        }} 
-                    />
-                    {count.toLocaleString()}
-                </div>
-            );
-        },
-        sortValue: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => getFollowers(f, mediaType) || 0,
-    })),
+    ...(['Instagram', 'X', 'TikTok', 'YouTube', 'Lemon8', 'note', 'ブログ'] as MediaType[]).flatMap(mediaType => {
+        const baseId = mediaType === 'ブログ' ? 'blog' : mediaType.toLowerCase();
+        
+        // 基本のラベル（フォロワー数など）
+        const metricLabel = mediaType === 'ブログ' ? 'ブログ 月間PV' : 
+                          mediaType === 'YouTube' ? 'YouTube チャンネル登録者数' : 
+                          `${mediaType} フォロワー数`;
+        
+        const cols: ColumnDef[] = [
+            {
+                id: `${baseId}_url`,
+                label: `${mediaType} URL`,
+                defaultVisible: false,
+                render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '-',
+                sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '',
+            },
+            {
+                id: baseId,
+                label: metricLabel,
+                defaultVisible: false,
+                render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => {
+                    const count = getFollowers(f, mediaType);
+                    if (count == null) return '-';
+                    return (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <img 
+                                src={MEDIA_ICONS[mediaType]} 
+                                alt={mediaType} 
+                                style={{ 
+                                    width: '16px', 
+                                    height: '16px', 
+                                    objectFit: 'contain', 
+                                    filter: MEDIA_ICON_FILTER[mediaType],
+                                    borderRadius: mediaType === 'ブログ' ? '3px' : '0'
+                                }} 
+                            />
+                            {count.toLocaleString()}
+                        </div>
+                    );
+                },
+                sortValue: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => getFollowers(f, mediaType) || 0,
+            }
+        ];
+
+        if (mediaType === 'Instagram') {
+            cols.push({
+                id: `${baseId}_reels`,
+                label: `Instagram リール投稿頻度`,
+                defaultVisible: false,
+                render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '-',
+                sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '',
+            });
+        }
+
+        cols.push({
+            id: `${baseId}_updatedAt`,
+            label: `${mediaType} 更新日時`,
+            defaultVisible: false,
+            render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt?.slice(0, 10) || '-',
+            sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt || '',
+        });
+
+        return cols;
+    }),
     // ── スキル・タグ ──────────────────────────────
     {
         id: 'tags',
@@ -299,11 +351,26 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f) => f.phoneNumber || '-',
         sortValue: (f) => f.phoneNumber || '',
     },
+    // ── システム管理用 ────────────────────────────
+    {
+        id: 'aliases',
+        label: '活動名（別名）',
+        defaultVisible: false,
+        render: (f) => f.aliases && f.aliases.length > 0 ? f.aliases.join(', ') : '-',
+        sortValue: (f) => f.aliases?.join(', ') || '',
+    },
     {
         id: 'createdAt',
         label: '登録日',
         defaultVisible: false,
         render: (f) => f.createdAt ? f.createdAt.slice(0, 10) : '-',
         sortValue: (f) => f.createdAt,
+    },
+    {
+        id: 'sysUpdatedAt',
+        label: '最終更新日時',
+        defaultVisible: false,
+        render: (f) => f.updatedAt ? f.updatedAt.slice(0, 10) : '-',
+        sortValue: (f) => f.updatedAt || '',
     },
 ];
