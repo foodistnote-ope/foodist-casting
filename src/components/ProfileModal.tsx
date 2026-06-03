@@ -100,7 +100,14 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         {/* 総フォロワー数 */}
                         <div className="modal-stats" style={{ marginTop: 12 }}>
                             <span className="stat-label">総フォロワー:</span>
-                            <span className="stat-value">{foodist.totalFollowers ? foodist.totalFollowers.toLocaleString() : '未設定'}</span>
+                            <span className="stat-value">
+                                {foodist.totalFollowers ? foodist.totalFollowers.toLocaleString() : '未設定'}
+                                {foodist.updatedAt && (
+                                    <span style={{ fontSize: '0.65em', color: '#64748b', marginLeft: '8px', fontWeight: 'normal' }}>
+                                        (情報更新日: {new Date(foodist.updatedAt).toLocaleDateString('ja-JP')})
+                                    </span>
+                                )}
+                            </span>
                         </div>
 
                         {/* 媒体リンク */}
@@ -176,7 +183,14 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                                 {metricRows.map(acc => (
                                     <div key={acc.id} className="demo-item">
                                         <span className="demo-label">{acc.mediaType} {acc.metricType === 'PV' ? '月間PV' : acc.metricType}</span>
-                                        <span className="demo-value">{acc.metricValue!.toLocaleString()}</span>
+                                        <span className="demo-value">
+                                            {acc.metricValue!.toLocaleString()}
+                                            {acc.updatedAt && (
+                                                <span style={{ fontSize: '0.8em', color: '#64748b', marginLeft: '8px', fontWeight: 'normal' }}>
+                                                    (最終更新: {new Date(acc.updatedAt).toLocaleDateString('ja-JP')})
+                                                </span>
+                                            )}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
