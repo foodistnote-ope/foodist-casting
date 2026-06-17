@@ -360,6 +360,13 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.aliases?.join(', ') || '',
     },
     {
+        id: 'lastSurveyDate',
+        label: '最新アンケート回答日',
+        defaultVisible: false,
+        render: (f) => f.lastSurveyDate ? f.lastSurveyDate.slice(0, 10) : '-',
+        sortValue: (f) => f.lastSurveyDate || '',
+    },
+    {
         id: 'createdAt',
         label: '登録日',
         defaultVisible: false,
