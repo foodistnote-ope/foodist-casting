@@ -50,6 +50,7 @@ const emptyFoodist: Omit<Foodist, 'id'> = {
     noteFeaturedMemo: '',
     email: '',
     phoneNumber: '',
+    lastSurveyDate: '',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
 };

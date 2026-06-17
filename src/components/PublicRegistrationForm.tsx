@@ -67,6 +67,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     noteFeaturedMemo: '',
     cookingClassStatus: '未確認',
     phoneNumber: '',
+    lastSurveyDate: '',
     createdAt: '',
     updatedAt: '',
 };
@@ -225,6 +226,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             const applicationData = {
                 ...form,
                 birthDate: ageGroupOnly ? undefined : form.birthDate,
+                lastSurveyDate: now,
                 createdAt: now,
                 updatedAt: now,
             };

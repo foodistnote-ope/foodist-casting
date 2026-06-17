@@ -207,6 +207,9 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         const phone = getVal('電話番号');
                         if (phone !== undefined && phone !== '') patch.phoneNumber = phone;
 
+                        const surveyDate = getVal('最新アンケート回答日');
+                        if (surveyDate !== undefined && surveyDate !== '') patch.lastSurveyDate = surveyDate;
+
                         const fvMemo = getVal('顔出し詳細') || getVal('顔出しメモ');
                         if (fvMemo !== undefined && fvMemo !== '') patch.faceVisibilityMemo = fvMemo;
 
@@ -428,6 +431,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                         const profileTextKey = getRealHeader('プロフィール') || getRealHeader('詳細プロフィール') || getRealHeader('profileText');
                         const avatarUrlKey = getRealHeader('プロフィール画像URL') || getRealHeader('avatarUrl');
                         const tagsKey = getRealHeader('タグ') || getRealHeader('tags');
+                        const surveyDateKey = getRealHeader('最新アンケート回答日') || getRealHeader('lastSurveyDate');
 
                         const f: Foodist = {
                             id: row[getRealHeader('id')!] || `foodist-${Date.now()}-${index}-${Math.floor(Math.random() * 1000000)}`,
@@ -474,6 +478,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             phoneNumber: (getRealHeader('電話番号') || getRealHeader('phoneNumber')) ? row[(getRealHeader('電話番号') || getRealHeader('phoneNumber'))!] : undefined,
                             faceVisibilityMemo: (getRealHeader('顔出し詳細') || getRealHeader('faceVisibilityMemo')) ? row[(getRealHeader('顔出し詳細') || getRealHeader('faceVisibilityMemo'))!] : undefined,
                             cookingClassStatus: (getRealHeader('料理教室の運営状況') || getRealHeader('cookingClassStatus')) ? row[(getRealHeader('料理教室の運営状況') || getRealHeader('cookingClassStatus'))!] as any : '未確認',
+                            lastSurveyDate: surveyDateKey ? row[surveyDateKey] : undefined,
                             createdAt: now,
                             updatedAt: now,
                         };
