@@ -99,6 +99,8 @@ export const DEFAULT_TAGS: Tag[] = [
     { id: 't_chef', name: 'シェフインフルエンサー', category: 'アンバサダー・パートナー', sortOrder: 2, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 't_content_partner', name: 'コンテンツ制作パートナー', category: 'アンバサダー・パートナー', sortOrder: 3, active: true, searchVisible: true, createdAt: now, updatedAt: now },
     { id: 't_official_partner', name: 'オフィシャルパートナー', category: 'アンバサダー・パートナー', sortOrder: 4, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 't_next_foodist', name: '元・ネクストフーディスト', category: 'アンバサダー・パートナー', sortOrder: 5, active: true, searchVisible: true, createdAt: now, updatedAt: now },
+    { id: 't_foodie_table', name: '元・フーディーテーブルアンバサダー', category: 'アンバサダー・パートナー', sortOrder: 6, active: true, searchVisible: true, createdAt: now, updatedAt: now },
 
     // =============================================
     // リレーション
