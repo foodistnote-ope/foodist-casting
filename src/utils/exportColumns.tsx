@@ -363,8 +363,18 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'lastSurveyDate',
         label: '最新アンケート回答日',
         defaultVisible: false,
-        render: (f) => f.lastSurveyDate ? f.lastSurveyDate.slice(0, 10) : '-',
-        sortValue: (f) => f.lastSurveyDate || '',
+        render: (f, _getFollowers, allTags) => {
+            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
+            return (hasTag && f.lastSurveyDate) ? f.lastSurveyDate.slice(0, 10) : '-';
+        },
+        sortValue: (f, _getFollowers, allTags) => {
+            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
+            return hasTag ? (f.lastSurveyDate || '') : '';
+        },
+        csvValue: (f, _getFollowers, allTags) => {
+            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
+            return (hasTag && f.lastSurveyDate) ? f.lastSurveyDate.slice(0, 10) : '';
+        },
     },
     {
         id: 'createdAt',
