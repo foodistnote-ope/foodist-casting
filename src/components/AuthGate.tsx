@@ -10,8 +10,8 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [error, setError] = useState(false);
 
-  // 正解のパスワード
-  const CORRECT_PASSWORD = import.meta.env.VITE_APP_ACCESS_PASSWORD || 'foodist-casting-2026';
+  // 正解のパスワード（環境変数から取得。設定されていない場合はエラーにするか空文字にしてログイン不可にする）
+  const CORRECT_PASSWORD = import.meta.env.VITE_APP_ACCESS_PASSWORD;
 
   useEffect(() => {
     const authStatus = localStorage.getItem('foodist_auth');
