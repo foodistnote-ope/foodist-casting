@@ -47,7 +47,7 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     maritalStatus: undefined,
     area: '',
     birthplace: '',
-    birthDate: '1990-01-01',
+    birthDate: '',
     age: undefined,
     ageGroup: undefined,
     gender: '',
@@ -298,7 +298,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 />
                             </div>
                         </div>
-                        <p className="form-hint" style={{ whiteSpace: 'nowrap', marginBottom: 0 }}>
+                        <p className="form-hint" style={{ marginBottom: 0 }}>
                             フーディスト会員への無料登録がまだの方は、ぜひこの機会に<a href="https://foodist-service.jp/register" target="_blank" rel="noreferrer" style={{ color: '#888888', fontWeight: 600, textDecoration: 'underline' }}>ご登録ください</a>。
                         </p>
                     </section>
