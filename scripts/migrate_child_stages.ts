@@ -35,16 +35,16 @@ async function migrateData() {
 
     if (foodist.childStage && Array.isArray(foodist.childStage)) {
       const newChildStage = foodist.childStage.map((stage) => {
-        if (stage === '乳幼児あり') return '乳幼児';
-        if (stage === '未就学児あり') return '未就学児';
-        if (stage === '小学生の子あり') return '小学生の子';
-        if (stage === '中高生の子あり') return '中高生の子';
-        if (stage === '成人した子あり') return '成人した子';
+        if (stage === '乳幼児あり' || stage === '乳幼児') return '乳幼児';
+        if (stage === '未就学児あり' || stage === '未就学児') return '未就学児';
+        if (stage === '小学生の子あり' || stage === '小学生の子' || stage === '小学生') return '小学生';
+        if (stage === '中高生の子あり' || stage === '中高生の子' || stage === '中学生' || stage === '中高生') return '中高生';
+        if (stage === '成人した子あり' || stage === '成人した子' || stage === '成人') return '成人';
         return stage;
       });
 
       // Sort by correct predefined order
-      const correctOrder = ['乳幼児', '未就学児', '小学生の子', '中高生の子', '成人した子', '答えない', '確認'];
+      const correctOrder = ['乳幼児', '未就学児', '小学生', '中高生', '成人', '回答しない', '未確認'];
       newChildStage.sort((a, b) => {
         let indexA = correctOrder.indexOf(a);
         let indexB = correctOrder.indexOf(b);
