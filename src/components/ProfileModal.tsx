@@ -167,7 +167,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">子どもの有無</span><span className="demo-value">{val(foodist.hasChildren)}</span></div>
                             <div className="demo-item"><span className="demo-label">子どもの数</span><span className="demo-value">{foodist.childrenCount ? `${foodist.childrenCount}人` : '未設定'}</span></div>
                             <div className="demo-item demo-item-full">
-                                <span className="demo-label">子育てステージ</span>
+                                <span className="demo-label">お子さまの成長時期</span>
                                 <span className="demo-value">
                                     {foodist.childStage.length > 0 ? foodist.childStage.join('・') : '未設定'}
                                 </span>

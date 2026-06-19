@@ -203,12 +203,14 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
 
     // --- 子育てステージ ---
     const toggleChildStage = (stage: string) => {
-        setForm(prev => ({
-            ...prev,
-            childStage: prev.childStage.includes(stage)
+        setForm(prev => {
+            const nextChildStage = prev.childStage.includes(stage)
                 ? prev.childStage.filter(s => s !== stage)
-                : [...prev.childStage, stage],
-        }));
+                : [...prev.childStage, stage];
+            
+            nextChildStage.sort((a, b) => CHILD_STAGES.indexOf(a as any) - CHILD_STAGES.indexOf(b as any));
+            return { ...prev, childStage: nextChildStage };
+        });
     };
 
     // --- 媒体アカウント ---
@@ -508,7 +510,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">子育てステージ（複数選択可）</label>
+                            <label className="form-label">お子さまの成長時期（複数選択可）</label>
                             <div className="tags-checkbox-group">
                                 {CHILD_STAGES.map(stage => (
                                     <label key={stage} className={`tag-checkbox-label ${form.childStage.includes(stage) ? 'selected' : ''}`}>

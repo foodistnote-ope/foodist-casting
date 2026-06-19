@@ -599,6 +599,7 @@
     .section-title { font-size: 1.15rem; }
     .form-row { flex-direction: column; gap: 0; }
     .image-upload-wrapper { flex-direction: column; text-align: center; }
+    .upload-buttons-row { justify-content: center; }
 
     /* スマホ全体のタップ領域最適化（強制） */
     .radio-option {
@@ -725,4 +726,97 @@
     margin: 0 8px;
     font-size: 1rem;
     font-weight: 500;
+}
+
+/* =========================================
+   Confirmation View Styles & Final Fixes
+========================================= */
+.confirmation-view .form-section {
+    padding: 32px 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    margin-bottom: 24px;
+}
+
+.confirm-row {
+    display: flex;
+    padding: 16px 0;
+    border-bottom: 1px dashed #e2e8f0;
+    align-items: center;
+}
+
+.confirm-row:last-child {
+    border-bottom: none;
+}
+
+.confirm-label {
+    width: 240px;
+    flex-shrink: 0;
+    font-weight: 500;
+    color: #64748b;
+    font-size: 0.85rem;
+    padding-right: 16px;
+}
+
+.confirm-value {
+    flex: 1;
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 1rem;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.confirm-media-box {
+    border: 1px solid #e2e8f0;
+}
+
+/* ボタンの影を正しく分離 */
+.btn-primary.btn-xl {
+    box-shadow: 0 10px 25px rgba(230, 81, 0, 0.3);
+}
+
+.btn-secondary.btn-xl {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    background-color: #ffffff;
+}
+
+/* 戻るボタンと送信ボタンのレスポンシブ調整 */
+@media (max-width: 768px) {
+    .confirmation-view .form-section {
+        padding: 20px 12px;
+    }
+    
+    .confirm-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 0;
+    }
+    
+    .confirm-label {
+        width: 100%;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+    
+    .confirm-value {
+        width: 100%;
+    }
+    
+    .confirm-actions {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    /* 全てのbtn-xlを横幅いっぱいではなく、フォームと確認画面で全く同じ最大幅に制限する */
+    .btn-xl {
+        width: 100% !important;
+        max-width: 340px !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
 }

@@ -4,7 +4,7 @@ import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, AGE_GROUPS, CHILD_STAGES, FO
 import { submitApplication } from '../lib/supabaseDb';
 import { supabase } from '../lib/supabaseClient';
 import { notifySlack } from '../utils/notifications';
-import { calculateAgeGroup } from '../utils/dateUtils';
+import { calculateAgeGroup, calculateAge } from '../utils/dateUtils';
 import './PublicRegistrationForm.css';
 
 interface PublicRegistrationFormProps {
@@ -77,6 +77,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [agreed, setAgreed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isConfirming, setIsConfirming] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
     const [ageGroupOnly, setAgeGroupOnly] = useState(false);
@@ -116,12 +117,14 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     };
 
     const toggleChildStage = (stage: string) => {
-        setForm(prev => ({
-            ...prev,
-            childStage: prev.childStage.includes(stage)
+        setForm(prev => {
+            const nextChildStage = prev.childStage.includes(stage)
                 ? prev.childStage.filter(s => s !== stage)
-                : [...prev.childStage, stage],
-        }));
+                : [...prev.childStage, stage];
+            
+            nextChildStage.sort((a, b) => CHILD_STAGES.indexOf(a as any) - CHILD_STAGES.indexOf(b as any));
+            return { ...prev, childStage: nextChildStage };
+        });
     };
 
     const handleAlcoholTagChange = (tagId: string) => {
@@ -215,10 +218,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleConfirm = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // スマホ(iOS Safari等)での「無言ブロック現象」を防ぐためのカスタムバリデーション処理
         const formElement = e.currentTarget as HTMLFormElement;
         if (!formElement.checkValidity()) {
             const firstInvalid = formElement.querySelector(':invalid') as HTMLElement;
@@ -232,6 +234,11 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         if (!form.displayName) return alert('活動名は必須です。');
         if (!form.email) return alert('メールアドレスは必須です。');
 
+        setIsConfirming(true);
+        window.scrollTo(0, 0);
+    };
+
+    const handleActualSubmit = async () => {
         setIsSubmitting(true);
         try {
             const now = new Date().toISOString();
@@ -269,6 +276,128 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         );
     }
 
+    if (isConfirming) {
+        return (
+            <div className="registration-container confirmation-view">
+                <header className="registration-header">
+                    <div className="header-inner">
+                        <h1 className="form-title">入力内容の確認</h1>
+                        <p className="form-subtitle">以下の内容で送信します。よろしければ「アンケートを送信する」ボタンを押してください。</p>
+                    </div>
+                </header>
+                <div className="confirmation-content">
+
+                    <section className="form-section">
+                        <h2 className="section-title">ご連絡先</h2>
+                        <div className="confirm-row"><span className="confirm-label">メールアドレス</span><span className="confirm-value">{form.email}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">電話番号</span><span className="confirm-value">{form.phoneNumber || '-'}</span></div>
+                    </section>
+
+                    <section className="form-section">
+                        <h2 className="section-title">基本情報</h2>
+                        <div className="confirm-row"><span className="confirm-label">活動名（ニックネーム）</span><span className="confirm-value">{form.displayName}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">本名</span><span className="confirm-value">{form.realName || '-'}</span></div>
+                        <div className="confirm-row">
+                            <span className="confirm-label">プロフィール画像</span>
+                            <span className="confirm-value">
+                                {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width: 80, height: 80, objectFit: 'cover', borderRadius: 8}} /> : '設定なし'}
+                            </span>
+                        </div>
+                        <div className="confirm-row"><span className="confirm-label">肩書き</span><span className="confirm-value">{form.title || '-'}</span></div>
+                        <div className="confirm-row">
+                            <span className="confirm-label">生年月日</span>
+                            <span className="confirm-value">
+                                {ageGroupOnly ? `${form.ageGroup || '-'}（年代のみ公開）` : (form.birthDate ? `${form.birthDate} (${calculateAge(form.birthDate)}歳)` : '-')}
+                            </span>
+                        </div>
+                        <div className="confirm-row"><span className="confirm-label">性別</span><span className="confirm-value">{form.gender || '-'}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">居住地（都道府県）</span><span className="confirm-value">{form.area || '-'}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">出身地（都道府県）</span><span className="confirm-value">{form.birthplace || '-'}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">婚姻状況</span><span className="confirm-value">{form.maritalStatus || '-'}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">お子さまの有無</span><span className="confirm-value">{form.hasChildren || '-'}</span></div>
+                        {form.hasChildren === 'あり' && (
+                            <>
+                                <div className="confirm-row"><span className="confirm-label">お子さまの人数</span><span className="confirm-value">{form.childrenCount || '-'}</span></div>
+                                <div className="confirm-row"><span className="confirm-label">お子さまの成長時期</span><span className="confirm-value">{form.childStage?.join('、') || '-'}</span></div>
+                            </>
+                        )}
+                    </section>
+
+                    <section className="form-section">
+                        <h2 className="section-title">SNS・媒体情報</h2>
+                        {form.mediaAccounts.length > 0 ? form.mediaAccounts.map((acc, idx) => (
+                            <div key={acc.id} className="confirm-media-box" style={{ background: '#f8fafc', padding: 16, borderRadius: 8, marginBottom: 12 }}>
+                                <div style={{ fontWeight: 'bold', marginBottom: 8 }}>SNS #{idx + 1}: {acc.mediaType}</div>
+                                <div style={{ fontSize: '0.9rem' }}>URL/ID: {acc.url ? extractIdFromUrl(acc.url, acc.mediaType) : '-'}</div>
+                                {acc.metricValue !== undefined && acc.metricValue > 0 && <div style={{ fontSize: '0.9rem' }}>{acc.metricType === 'PV' ? '月間PV数' : 'フォロワー数'}: {acc.metricValue}</div>}
+                                {acc.mediaType === 'Instagram' && <div style={{ fontSize: '0.9rem' }}>リール投稿頻度: {acc.reelsFrequency || '-'}</div>}
+                            </div>
+                        )) : <p>登録なし</p>}
+                    </section>
+
+                    <section className="form-section">
+                        <h2 className="section-title">活動実績・スキル・資格</h2>
+                        {TAG_CATEGORIES.filter(cat => !['飲酒について', 'ステータス', 'リレーション', 'アンバサダー・パートナー'].includes(cat)).map(category => {
+                            const tagsInCat = allTags.filter(t => t.category === category);
+                            const selectedTags = tagsInCat.filter(t => form.tagIds.includes(t.id));
+                            if (selectedTags.length === 0) return null;
+                            return (
+                                <div className="confirm-row" key={category}>
+                                    <span className="confirm-label">{category}</span>
+                                    <span className="confirm-value" style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                        {selectedTags.map(t => (
+                                            <span key={t.id} style={{ background: '#f1f5f9', padding: '4px 8px', borderRadius: 6, fontSize: '0.85rem' }}>{t.name}</span>
+                                        ))}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </section>
+
+                    <section className="form-section">
+                        <h2 className="section-title">自己紹介</h2>
+                        <div className="confirm-row" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <div className="confirm-value" style={{ whiteSpace: 'pre-wrap', width: '100%', background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>{form.profileText || '-'}</div>
+                        </div>
+                    </section>
+
+                    <section className="form-section">
+                        <h2 className="section-title">PR・掲載に関する情報</h2>
+                        <div className="confirm-row"><span className="confirm-label">PR企画でのお顔出しについて</span><span className="confirm-value">{form.faceVisibility || '-'}</span></div>
+                        {form.faceVisibility === '条件付き可' && (
+                            <div className="confirm-row" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                                <span className="confirm-label" style={{ marginBottom: 12 }}>お顔出しの条件</span>
+                                <div className="confirm-value" style={{ whiteSpace: 'pre-wrap', width: '100%', background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>{form.faceVisibilityMemo || '-'}</div>
+                            </div>
+                        )}
+                        <div className="confirm-row">
+                            <span className="confirm-label">飲酒について</span>
+                            <span className="confirm-value">
+                                {allTags.filter(t => t.category === '飲酒について' && form.tagIds.includes(t.id)).map(t => t.name).join('、') || '-'}
+                            </span>
+                        </div>
+                        <div className="confirm-row"><span className="confirm-label">料理教室の運営について</span><span className="confirm-value">{form.cookingClassStatus || '-'}</span></div>
+                        
+                        <div className="confirm-row"><span className="confirm-label">フーディストノートへの掲載</span><span className="confirm-value">{form.noteFeaturedPermission || '-'}</span></div>
+                        <div className="confirm-row" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <span className="confirm-label" style={{ marginBottom: 12 }}>掲載に関する特記事項</span>
+                            <div className="confirm-value" style={{ whiteSpace: 'pre-wrap', width: '100%', background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>{form.noteFeaturedMemo || '-'}</div>
+                        </div>
+                    </section>
+
+                    <div className="form-submit-area confirm-actions" style={{ display: 'flex', flexDirection: 'row', gap: '40px', justifyContent: 'center', marginTop: '20px' }}>
+                        <button type="button" className="btn-secondary btn-xl" onClick={() => { setIsConfirming(false); window.scrollTo(0, 0); }} disabled={isSubmitting}>
+                            修正する
+                        </button>
+                        <button type="button" className="btn-primary btn-xl" onClick={handleActualSubmit} disabled={isSubmitting}>
+                            {isSubmitting ? '送信中...' : 'アンケートを送信する'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="registration-container">
             <header className="registration-header">
@@ -284,7 +413,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             </header>
 
             <main className="registration-main">
-                <form className="public-form" onSubmit={handleSubmit} noValidate>
+                <form className="public-form" onSubmit={handleConfirm} noValidate>
                     {/* ===== 通知用連絡先 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">ご連絡先</h2>
@@ -571,7 +700,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     </select>
                                 </div>
                                 <div className="form-group">
-                                    <label className="form-label">子育てステージ（複数選択可）</label>
+                                    <label className="form-label">お子さまの成長時期（複数選択可）</label>
                                     <div className="tag-grid">
                                         {CHILD_STAGES.filter(s => s !== '未確認' && s !== '回答しない').map(stage => (
                                             <label key={stage} className={`tag-pill ${form.childStage.includes(stage) ? 'active' : ''}`}>
@@ -861,7 +990,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             </label>
                         </div>
                         <button type="submit" className="btn-primary btn-xl" disabled={isSubmitting || !agreed}>
-                            {isSubmitting ? '送信中...' : 'アンケートを送信する'}
+                            {isSubmitting ? '送信中...' : '入力内容を確認する'}
                         </button>
                     </div>
                 </form>

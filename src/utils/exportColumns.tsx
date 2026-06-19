@@ -115,7 +115,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     },
     {
         id: 'childStage',
-        label: '子育てステージ',
+        label: 'お子さまの成長時期',
         defaultVisible: false,
         render: (f) => f.childStage && f.childStage.length > 0 ? f.childStage.join(', ') : '-',
         sortValue: (f) => f.childStage?.join(', ') || '',
