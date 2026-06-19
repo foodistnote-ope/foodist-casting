@@ -13,6 +13,7 @@ export const AuthGate: React.FC<AuthGateProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+
   // 起動時にSupabaseのセッションを確認する
   useEffect(() => {
     const checkSession = async () => {

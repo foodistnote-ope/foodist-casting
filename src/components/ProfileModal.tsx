@@ -306,6 +306,17 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         <div className="demo-grid">
                             <div className="demo-item"><span className="demo-label">メールアドレス</span><span className="demo-value" style={{ wordBreak: 'break-all' }}>{val(foodist.email)}</span></div>
                             <div className="demo-item"><span className="demo-label">電話番号</span><span className="demo-value">{val(foodist.phoneNumber)}</span></div>
+                            {tagsByCategory['リレーション']?.some(t => t.name === 'アンケート回答あり') && (
+                                <div className="demo-item demo-item-full">
+                                    <span className="demo-label">最新アンケート回答日</span>
+                                    <span className="demo-value">
+                                        {foodist.lastSurveyDate ? new Date(foodist.lastSurveyDate).toLocaleDateString('ja-JP') : '未回答'}
+                                        <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>
+                                            ※ユーザーによるアンケート回答後に運営側で情報を更新している場合があります。（最終データ更新日: {foodist.updatedAt ? new Date(foodist.updatedAt).toLocaleDateString('ja-JP') : '-'}）
+                                        </div>
+                                    </span>
+                                </div>
+                            )}
                             <div className="demo-item demo-item-full" style={{ marginTop: '4px' }}>
                                 <span className="demo-label">リレーション（過去の接点）</span>
                                 <span className="demo-value">

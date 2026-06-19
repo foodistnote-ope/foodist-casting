@@ -187,6 +187,8 @@ export interface Foodist {
     cookingClassStatus?: CookingClassStatus;
     email?: string;
     phoneNumber?: string;
+    /** 最新のアンケート回答日 */
+    lastSurveyDate?: string;
     createdAt: string;
     updatedAt: string;
 }
