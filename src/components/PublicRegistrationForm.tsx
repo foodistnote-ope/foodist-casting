@@ -83,9 +83,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 生年月日の分割入力用
-    const [birthYear, setBirthYear] = useState('1990');
-    const [birthMonth, setBirthMonth] = useState('1');
-    const [birthDay, setBirthDay] = useState('1');
+    const [birthYear, setBirthYear] = useState('');
+    const [birthMonth, setBirthMonth] = useState('');
+    const [birthDay, setBirthDay] = useState('');
 
     const handleBirthPartChange = (part: 'y' | 'm' | 'd', val: string) => {
         let y = birthYear;
@@ -381,11 +381,44 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             
                             {!ageGroupOnly ? (
                                 <div className="birthdate-input-combined animate-fade-in">
-                                    <input type="number" className="birth-input birth-year" placeholder="YYYY" value={birthYear} onChange={e => handleBirthPartChange('y', e.target.value)} />
+                                    <select 
+                                        className="birth-input birth-year" 
+                                        value={birthYear} 
+                                        onFocus={() => !birthYear && handleBirthPartChange('y', '1990')}
+                                        onChange={e => handleBirthPartChange('y', e.target.value)} 
+                                        style={{ appearance: 'none', cursor: 'pointer' }}
+                                    >
+                                        <option value="">年</option>
+                                        {Array.from({ length: new Date().getFullYear() - 1929 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                                            <option key={y} value={y}>{y}</option>
+                                        ))}
+                                    </select>
                                     <span className="birth-divider">/</span>
-                                    <input type="number" className="birth-input birth-month" placeholder="MM" min={1} max={12} value={birthMonth} onChange={e => handleBirthPartChange('m', e.target.value)} />
+                                    <select 
+                                        className="birth-input birth-month" 
+                                        value={birthMonth} 
+                                        onFocus={() => !birthMonth && handleBirthPartChange('m', '1')}
+                                        onChange={e => handleBirthPartChange('m', e.target.value)} 
+                                        style={{ appearance: 'none', cursor: 'pointer' }}
+                                    >
+                                        <option value="">月</option>
+                                        {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                                            <option key={m} value={m}>{m}</option>
+                                        ))}
+                                    </select>
                                     <span className="birth-divider">/</span>
-                                    <input type="number" className="birth-input birth-day" placeholder="DD" min={1} max={31} value={birthDay} onChange={e => handleBirthPartChange('d', e.target.value)} />
+                                    <select 
+                                        className="birth-input birth-day" 
+                                        value={birthDay} 
+                                        onFocus={() => !birthDay && handleBirthPartChange('d', '1')}
+                                        onChange={e => handleBirthPartChange('d', e.target.value)} 
+                                        style={{ appearance: 'none', cursor: 'pointer' }}
+                                    >
+                                        <option value="">日</option>
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                                            <option key={d} value={d}>{d}</option>
+                                        ))}
+                                    </select>
                                 </div>
                             ) : (
                                 <div className="radio-group-horizontal animate-fade-in">
