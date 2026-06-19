@@ -345,7 +345,7 @@ export const FilterSidebar = ({
                 <CheckList items={HAS_CHILDREN_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedHasChildren} onToggle={v => toggle(v, selectedHasChildren, setSelectedHasChildren)} />
                 <p className="filter-sub-label" style={{ marginTop: 10 }}>子どもの数</p>
                 <CheckList items={CHILDREN_COUNT_OPTIONS.map(v => ({ value: v, label: `${v}人` }))} selected={selectedChildrenCount} onToggle={v => toggle(v, selectedChildrenCount, setSelectedChildrenCount)} />
-                <p className="filter-sub-label" style={{ marginTop: 10 }}>お子さまの成長時期（OR）</p>
+                <p className="filter-sub-label" style={{ marginTop: 10 }}>お子さまの成長時期</p>
                 <CheckList items={CHILD_STAGE_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedChildStages} onToggle={v => toggle(v, selectedChildStages, setSelectedChildStages)} />
             </FilterSection>
 
