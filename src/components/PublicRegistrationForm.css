@@ -596,6 +596,26 @@
     .section-title { font-size: 1.15rem; }
     .form-row { flex-direction: column; gap: 0; }
     .image-upload-wrapper { flex-direction: column; text-align: center; }
+
+    /* スマホ全体のタップ領域最適化 */
+    .radio-option {
+        min-height: 52px; /* タップしやすい高さを確保 */
+        padding: 12px 16px;
+    }
+    
+    .form-input, .form-select, .birthdate-input-combined {
+        min-height: 52px; /* 入力しやすさを確保 */
+        font-size: 1rem; /* iOSのズーム防止 */
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .radio-group-horizontal {
+        gap: 10px;
+        grid-template-columns: repeat(2, 1fr); /* スマホでは2列で綺麗に並べる */
+    }
 }
 
 .form-child-details {

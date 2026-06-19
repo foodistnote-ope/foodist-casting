@@ -7,9 +7,14 @@
 - **無断でのプッシュ禁止**:
   コードの変更やファイルの作成・修正を行った後、ユーザーから明確な「コミット・プッシュしてOK」という許可（またはそれに準ずる指示）が出るまでは、絶対に `git commit` および `git push` を実行しないでください。
   
-- **確認ステップの徹底とプッシュのタイミング**:
-  コードを修正した際は、**必ずローカルホスト（npm run dev）での画面・動作確認をユーザーに依頼してください**。
-  「ユーザーからローカルホストでの動作確認が完了した」という明確な報告を受けるまでは、絶対に `git push`（およびPR作成）を行わないでください。例外はありません。
+2. **Localhost Confirmation First**:
+   - The AI MUST NEVER execute `git push` or create a Pull Request directly after modifying code.
+   - After any code modification, the AI MUST explicitly ask the USER to verify the changes on `localhost` (e.g., `npm run dev`).
+   - Only AFTER the USER explicitly confirms that the localhost verification was successful, the AI is allowed to proceed with committing, pushing, or PR creation.
+
+3. **Consent Before Action (Tools Execution)**:
+   - Before executing ANY tool that modifies files or runs commands, the AI MUST explain its intended actions in text (e.g., "I will now edit file X to do Y") and ask for the user's consent.
+   - The AI must wait for the user to explicitly agree before triggering the tool call, to prevent confusing permission popups for the user.
 
 ## 2. コミュニケーションと作業フロー
 

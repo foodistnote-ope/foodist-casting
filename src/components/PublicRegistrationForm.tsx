@@ -83,9 +83,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 生年月日の分割入力用
-    const [birthYear, setBirthYear] = useState('1990');
-    const [birthMonth, setBirthMonth] = useState('1');
-    const [birthDay, setBirthDay] = useState('1');
+    const [birthYear, setBirthYear] = useState('');
+    const [birthMonth, setBirthMonth] = useState('');
+    const [birthDay, setBirthDay] = useState('');
 
     const handleBirthPartChange = (part: 'y' | 'm' | 'd', val: string) => {
         let y = birthYear;
@@ -381,11 +381,44 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             
                             {!ageGroupOnly ? (
                                 <div className="birthdate-input-combined animate-fade-in">
-                                    <input type="number" className="birth-input birth-year" placeholder="YYYY" value={birthYear} onChange={e => handleBirthPartChange('y', e.target.value)} />
+                                    <select 
+                                        className="birth-input birth-year" 
+                                        value={birthYear} 
+                                        onFocus={() => !birthYear && handleBirthPartChange('y', '1990')}
+                                        onChange={e => handleBirthPartChange('y', e.target.value)} 
+                                        style={{ appearance: 'none', cursor: 'pointer' }}
+                                    >
+                                        <option value="">年</option>
+                                        {Array.from({ length: new Date().getFullYear() - 1929 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                                            <option key={y} value={y}>{y}</option>
+                                        ))}
+                                    </select>
                                     <span className="birth-divider">/</span>
-                                    <input type="number" className="birth-input birth-month" placeholder="MM" min={1} max={12} value={birthMonth} onChange={e => handleBirthPartChange('m', e.target.value)} />
+                                    <select 
+                                        className="birth-input birth-month" 
+                                        value={birthMonth} 
+                                        onFocus={() => !birthMonth && handleBirthPartChange('m', '1')}
+                                        onChange={e => handleBirthPartChange('m', e.target.value)} 
+                                        style={{ appearance: 'none', cursor: 'pointer' }}
+                                    >
+                                        <option value="">月</option>
+                                        {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                                            <option key={m} value={m}>{m}</option>
+                                        ))}
+                                    </select>
                                     <span className="birth-divider">/</span>
-                                    <input type="number" className="birth-input birth-day" placeholder="DD" min={1} max={31} value={birthDay} onChange={e => handleBirthPartChange('d', e.target.value)} />
+                                    <select 
+                                        className="birth-input birth-day" 
+                                        value={birthDay} 
+                                        onFocus={() => !birthDay && handleBirthPartChange('d', '1')}
+                                        onChange={e => handleBirthPartChange('d', e.target.value)} 
+                                        style={{ appearance: 'none', cursor: 'pointer' }}
+                                    >
+                                        <option value="">日</option>
+                                        {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                                            <option key={d} value={d}>{d}</option>
+                                        ))}
+                                    </select>
                                 </div>
                             ) : (
                                 <div className="radio-group-horizontal animate-fade-in">
@@ -598,17 +631,26 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                                 value={extractIdFromUrl(acc.url, acc.mediaType)} 
                                                 onChange={e => {
                                                     let val = e.target.value.trim();
+                                                    // 全角英数字を半角に変換
+                                                    val = val.replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).toLowerCase();
                                                     // URLがペーストされた場合の自動抽出
                                                     if (val.includes('.com/')) {
                                                         val = extractIdFromUrl(val, acc.mediaType);
                                                     }
-                                                    const id = val.replace(/^@/, '');
+                                                    const id = val.replace(/^@/, ''); // 強制削除を廃止
                                                     const baseUrl = acc.mediaType === 'Instagram' ? 'https://www.instagram.com/' : acc.mediaType === 'X' ? 'https://x.com/' : acc.mediaType === 'Lemon8' ? 'https://www.lemon8-app.com/' : acc.mediaType === 'note' ? 'https://note.com/' : 'https://www.tiktok.com/@';
                                                     updateMedia(acc.id, { url: id ? `${baseUrl}${id}/` : '' });
                                                 }} 
-                                                placeholder="IDを入力" 
+                                                placeholder="半角小文字で入力" 
+                                                inputMode="url"
+                                                autoCapitalize="none"
+                                                spellCheck={false}
+                                                autoComplete="off"
                                             />
                                         </div>
+                                        {/[^a-z0-9._-]/.test(extractIdFromUrl(acc.url, acc.mediaType)) && (
+                                            <p className="error-text" style={{ color: '#ef4444', marginTop: 6, fontSize: '0.85rem' }}>※半角小文字の英数字（一部記号含む）で入力してください</p>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="form-group">
