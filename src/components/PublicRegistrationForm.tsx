@@ -27,7 +27,7 @@ const extractIdFromUrl = (url: string | undefined, type: MediaType) => {
         // すでにURL形式の場合
         if (url.startsWith('http') || url.includes('.com/')) {
             const u = new URL(url.startsWith('http') ? url : `https://${url}`);
-            const path = u.pathname.replace(/\/$/, '');
+            const path = decodeURIComponent(u.pathname).replace(/\/$/, '');
             if (type === 'TikTok') return path.split('@').pop() || '';
             return path.split('/').pop() || '';
         }
