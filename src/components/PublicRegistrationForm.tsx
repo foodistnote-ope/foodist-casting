@@ -217,6 +217,18 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // スマホ(iOS Safari等)での「無言ブロック現象」を防ぐためのカスタムバリデーション処理
+        const formElement = e.currentTarget as HTMLFormElement;
+        if (!formElement.checkValidity()) {
+            const firstInvalid = formElement.querySelector(':invalid') as HTMLElement;
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            alert('必須項目が未入力、または形式が正しくありません。該当箇所をご確認ください。');
+            return;
+        }
+
         if (!form.displayName) return alert('活動名は必須です。');
         if (!form.email) return alert('メールアドレスは必須です。');
 
@@ -269,7 +281,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             </header>
 
             <main className="registration-main">
-                <form className="public-form" onSubmit={handleSubmit}>
+                <form className="public-form" onSubmit={handleSubmit} noValidate>
                     {/* ===== 通知用連絡先 ===== */}
                     <section className="form-section">
                         <h2 className="section-title">ご連絡先</h2>
