@@ -318,7 +318,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         {form.hasChildren === 'あり' && (
                             <>
                                 <div className="confirm-row"><span className="confirm-label">お子さまの人数</span><span className="confirm-value">{form.childrenCount || '-'}</span></div>
-                                <div className="confirm-row"><span className="confirm-label">子育てステージ</span><span className="confirm-value">{form.childStage?.join('、') || '-'}</span></div>
+                                <div className="confirm-row"><span className="confirm-label">お子さまの成長時期</span><span className="confirm-value">{form.childStage?.join('、') || '-'}</span></div>
                             </>
                         )}
                     </section>
@@ -700,7 +700,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     </select>
                                 </div>
                                 <div className="form-group">
-                                    <label className="form-label">子育てステージ（複数選択可）</label>
+                                    <label className="form-label">お子さまの成長時期（複数選択可）</label>
                                     <div className="tag-grid">
                                         {CHILD_STAGES.filter(s => s !== '未確認' && s !== '回答しない').map(stage => (
                                             <label key={stage} className={`tag-pill ${form.childStage.includes(stage) ? 'active' : ''}`}>
