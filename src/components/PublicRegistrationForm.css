@@ -622,11 +622,26 @@
         grid-template-columns: repeat(2, 1fr) !important; 
     }
 
+    /* スマホで2段になるラジオボタンの中身を左揃えにして整頓 */
+    .radio-group-horizontal .radio-option {
+        justify-content: flex-start !important;
+        text-align: left !important;
+        padding-left: 20px !important; /* 左側に少し余白を持たせてバランスを取る */
+    }
+
     /* 送信ボタンやその他のボタンもスマホ向けに高くする */
     .btn-xl {
         width: 100% !important;
         min-height: 56px !important;
         padding: 16px !important;
+    }
+
+    .btn-add-media {
+        min-height: 52px !important;
+        font-size: 1rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     /* 複数選択タグ（チェックボックス）もタップしやすく */

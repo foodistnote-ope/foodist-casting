@@ -273,7 +273,10 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         <div className="registration-container">
             <header className="registration-header">
                 <div className="header-inner">
-                    <h1 className="form-title">【ご協力のお願い】料理の活動に関するアンケート</h1>
+                    <h1 className="form-title">
+                        <span style={{ display: 'inline-block' }}>料理の活動に関する</span>
+                        <span style={{ display: 'inline-block' }}>アンケート</span>
+                    </h1>
                     <p className="form-subtitle">
                         本アンケートは、みなさまの活動状況やご希望をお伺いし、今後の企画やお仕事依頼の参考にさせていただくことを目的としております。所要時間は5〜10分程度です。ぜひご協力をお願いいたします。
                     </p>
@@ -396,7 +399,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <select 
                                         className="birth-input birth-year" 
                                         value={birthYear} 
-                                        onFocus={() => !birthYear && handleBirthPartChange('y', '1990')}
                                         onChange={e => handleBirthPartChange('y', e.target.value)} 
                                         style={{ appearance: 'none', cursor: 'pointer' }}
                                     >
@@ -409,7 +411,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <select 
                                         className="birth-input birth-month" 
                                         value={birthMonth} 
-                                        onFocus={() => !birthMonth && handleBirthPartChange('m', '1')}
                                         onChange={e => handleBirthPartChange('m', e.target.value)} 
                                         style={{ appearance: 'none', cursor: 'pointer' }}
                                     >
@@ -422,7 +423,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <select 
                                         className="birth-input birth-day" 
                                         value={birthDay} 
-                                        onFocus={() => !birthDay && handleBirthPartChange('d', '1')}
                                         onChange={e => handleBirthPartChange('d', e.target.value)} 
                                         style={{ appearance: 'none', cursor: 'pointer' }}
                                     >
