@@ -43,11 +43,25 @@ async function migrateData() {
         return stage;
       });
 
-      // Check if any change was made
-      for (let i = 0; i < foodist.childStage.length; i++) {
-        if (foodist.childStage[i] !== newChildStage[i]) {
+      // Sort by correct predefined order
+      const correctOrder = ['乳幼児', '未就学児', '小学生の子', '中高生の子', '成人した子', '答えない', '確認'];
+      newChildStage.sort((a, b) => {
+        let indexA = correctOrder.indexOf(a);
+        let indexB = correctOrder.indexOf(b);
+        if (indexA === -1) indexA = 999;
+        if (indexB === -1) indexB = 999;
+        return indexA - indexB;
+      });
+
+      // Check if any change was made (content or order)
+      if (foodist.childStage.length !== newChildStage.length) {
           modified = true;
-          break;
+      } else {
+        for (let i = 0; i < foodist.childStage.length; i++) {
+          if (foodist.childStage[i] !== newChildStage[i]) {
+            modified = true;
+            break;
+          }
         }
       }
 

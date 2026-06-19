@@ -117,12 +117,14 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     };
 
     const toggleChildStage = (stage: string) => {
-        setForm(prev => ({
-            ...prev,
-            childStage: prev.childStage.includes(stage)
+        setForm(prev => {
+            const nextChildStage = prev.childStage.includes(stage)
                 ? prev.childStage.filter(s => s !== stage)
-                : [...prev.childStage, stage],
-        }));
+                : [...prev.childStage, stage];
+            
+            nextChildStage.sort((a, b) => CHILD_STAGES.indexOf(a as any) - CHILD_STAGES.indexOf(b as any));
+            return { ...prev, childStage: nextChildStage };
+        });
     };
 
     const handleAlcoholTagChange = (tagId: string) => {
