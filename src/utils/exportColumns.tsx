@@ -365,7 +365,8 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f, _getFollowers, allTags) => {
             const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
-            return (hasTag && f.lastSurveyDate) ? f.lastSurveyDate.slice(0, 10) : '-';
+            if (!hasTag) return '-';
+            return f.lastSurveyDate ? f.lastSurveyDate.slice(0, 10) : '不明';
         },
         sortValue: (f, _getFollowers, allTags) => {
             const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
@@ -373,7 +374,8 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         },
         csvValue: (f, _getFollowers, allTags) => {
             const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
-            return (hasTag && f.lastSurveyDate) ? f.lastSurveyDate.slice(0, 10) : '';
+            if (!hasTag) return '';
+            return f.lastSurveyDate ? f.lastSurveyDate.slice(0, 10) : '不明';
         },
     },
     {
