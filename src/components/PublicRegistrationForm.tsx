@@ -193,7 +193,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                 const updated = { ...a, ...patch };
                 if (patch.mediaType) {
                     if (patch.mediaType === 'YouTube') updated.metricType = 'チャンネル登録者数';
-                    else if (patch.mediaType === 'ブログ') updated.metricType = 'PV';
+                    else if (patch.mediaType === 'ブログ' || patch.mediaType === '公式ホームページ') updated.metricType = 'PV';
+                    else if (patch.mediaType === 'その他') updated.metricType = 'なし';
                     else updated.metricType = 'フォロワー数';
                 }
                 return updated;
@@ -818,12 +819,29 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                             {MEDIA_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                                         </select>
                                     </div>
-                                    <div className="form-group">
-                                        <label className="form-label">
-                                            {acc.metricType === 'PV' ? '月間PV数' : 'フォロワー数'}
-                                        </label>
-                                        <input type="number" className="form-input" value={acc.metricValue || ''} onChange={e => updateMedia(acc.id, { metricValue: parseInt(e.target.value) || 0 })} placeholder="0" />
-                                    </div>
+                                    {acc.mediaType === 'その他' ? (
+                                        <div className="form-group">
+                                            <label className="form-label">指標の単位</label>
+                                            <select className="form-select" value={acc.metricType} onChange={e => updateMedia(acc.id, { metricType: e.target.value as MetricType })}>
+                                                {METRIC_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                                            </select>
+                                        </div>
+                                    ) : (
+                                        <div className="form-group">
+                                            <label className="form-label">
+                                                {acc.metricType === 'PV' ? '月間PV数' : acc.metricType}
+                                            </label>
+                                            <input type="number" className="form-input" value={acc.metricValue || ''} onChange={e => updateMedia(acc.id, { metricValue: parseInt(e.target.value) || 0 })} placeholder="0" />
+                                        </div>
+                                    )}
+                                    {acc.mediaType === 'その他' && acc.metricType !== 'なし' && (
+                                        <div className="form-group">
+                                            <label className="form-label">
+                                                {acc.metricType === 'PV' ? '月間PV数' : acc.metricType}
+                                            </label>
+                                            <input type="number" className="form-input" value={acc.metricValue || ''} onChange={e => updateMedia(acc.id, { metricValue: parseInt(e.target.value) || 0 })} placeholder="0" />
+                                        </div>
+                                    )}
                                 </div>
                                 {acc.mediaType === 'Instagram' && (
                                     <div className="form-group">
