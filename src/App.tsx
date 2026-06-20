@@ -663,6 +663,11 @@ function App() {
     );
   }
 
+  if (window.location.hostname === 'foodist-casting.vercel.app' && window.location.pathname === '/apply') {
+    window.location.replace('https://foodist-form.vercel.app/');
+    return null;
+  }
+
   if (isPublicApplyPage) {
     return <PublicRegistrationForm allTags={tags} />;
   }

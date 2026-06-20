@@ -77,7 +77,7 @@ export const ApplicationReviewView = ({ allTags, onEdit }: ApplicationReviewView
                 </div>
                 <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <a 
-                        href="/apply" 
+                        href="https://foodist-form.vercel.app/" 
                         target="_blank" 
                         rel="noreferrer" 
                         className="btn-text" 
