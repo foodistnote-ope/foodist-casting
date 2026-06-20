@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Foodist, Tag, MediaAccount, MediaType, MetricType, TagCategory } from '../data/types';
 import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, AGE_GROUPS, CHILD_STAGES, FOLLOWER_CONTRIBUTING_MEDIA, calcTotalFollowers } from '../data/types';
 import { submitApplication } from '../lib/supabaseDb';
@@ -72,8 +72,37 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     updatedAt: '',
 };
 
+const STORAGE_KEY = 'foodistFormBackup_v2';
+
+const getInitialFormState = () => {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            // 画像ファイル実体は復元できないためURLをクリア
+            if (parsed.avatarUrl && parsed.avatarUrl.startsWith('blob:')) {
+                parsed.avatarUrl = '';
+            }
+            return { ...emptyFormData, ...parsed };
+        }
+    } catch (e) {
+        console.error('Failed to restore form backup', e);
+    }
+    return emptyFormData;
+};
+
 export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps) => {
-    const [form, setForm] = useState(emptyFormData);
+    const [form, setForm] = useState(getInitialFormState);
+    const [isRestored, setIsRestored] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                return !!(parsed.displayName || parsed.email || parsed.avatarUrl);
+            } catch(e) {}
+        }
+        return false;
+    });
     const [agreed, setAgreed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -83,10 +112,17 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [ageGroupOnly, setAgeGroupOnly] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // 生年月日の分割入力用
-    const [birthYear, setBirthYear] = useState('');
-    const [birthMonth, setBirthMonth] = useState('');
-    const [birthDay, setBirthDay] = useState('');
+    // 生年月日の分割入力用（復元データがあれば初期値にセット）
+    const [birthYear, setBirthYear] = useState(() => form.birthDate ? form.birthDate.split('-')[0] : '');
+    const [birthMonth, setBirthMonth] = useState(() => form.birthDate ? form.birthDate.split('-')[1].replace(/^0/, '') : '');
+    const [birthDay, setBirthDay] = useState(() => form.birthDate ? form.birthDate.split('-')[2].replace(/^0/, '') : '');
+
+    // --- 自動バックアップ処理 ---
+    useEffect(() => {
+        // フォームの状態が更新されるたびに保存
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+    }, [form]);
+    // ---------------------------------
 
     const handleBirthPartChange = (part: 'y' | 'm' | 'd', val: string) => {
         let y = birthYear;
@@ -185,12 +221,16 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // 手元ですぐにプレビューを表示する
-        const localPreview = URL.createObjectURL(file);
-        setForm(prev => ({ ...prev, avatarUrl: localPreview }));
-
         setUploadingImage(true);
         try {
+            // 前の画像（未送信のゴミ画像）があれば削除する
+            if (form.avatarUrl && form.avatarUrl.includes('/pending/')) {
+                const oldPath = form.avatarUrl.split('/foodist-assets/')[1];
+                if (oldPath) {
+                    await supabase.storage.from('foodist-assets').remove([oldPath]);
+                }
+            }
+
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${fileExt}`;
             const filePath = `pending/${fileName}`;
@@ -205,7 +245,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                 .from('foodist-assets')
                 .getPublicUrl(filePath);
 
-            // 最終的な公開URLに差し替える
             setForm(prev => ({ ...prev, avatarUrl: publicUrl }));
         } catch (err) {
             console.error('Image upload failed:', err);
@@ -213,7 +252,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             setForm(prev => ({ ...prev, avatarUrl: '' })); // 失敗時はリセット
         } finally {
             setUploadingImage(false);
-            // 入力値をリセットして、同じファイルを再度選択可能にする
             if (e.target) e.target.value = '';
         }
     };
@@ -231,6 +269,15 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             return;
         }
 
+        // --- URLバリデーション（XSS対策・入力ミス防止） ---
+        for (const acc of form.mediaAccounts) {
+            if (acc.url && !/^https?:\/\//i.test(acc.url)) {
+                alert(`「${acc.mediaType}」のURLが不正です（http:// または https:// で始めてください）。`);
+                return;
+            }
+        }
+        // --------------------------------------------------
+
         if (!form.displayName) return alert('活動名は必須です。');
         if (!form.email) return alert('メールアドレスは必須です。');
 
@@ -239,6 +286,21 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     };
 
     const handleActualSubmit = async () => {
+        // --- 二重チェック（バリデーション再実行） ---
+        if (!form.displayName || !form.email) {
+            alert('必須項目が入力されていません。');
+            setIsConfirming(false);
+            return;
+        }
+        for (const acc of form.mediaAccounts) {
+            if (acc.url && !/^https?:\/\//i.test(acc.url)) {
+                alert(`「${acc.mediaType}」のURLが不正です（http:// または https:// で始めてください）。`);
+                setIsConfirming(false);
+                return;
+            }
+        }
+        // ------------------------------------------
+
         setIsSubmitting(true);
         try {
             const now = new Date().toISOString();
@@ -255,12 +317,25 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             
             setIsSubmitted(true);
             window.scrollTo(0, 0);
+
+            // 送信完了時にバックアップを削除
+            localStorage.removeItem(STORAGE_KEY);
         } catch (err) {
             console.error('Submission failed:', err);
             alert('送信に失敗しました。時間をおいて再度お試しください。');
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleReset = () => {
+        if (!window.confirm('入力内容をすべて消去して最初からやり直しますか？')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        setForm(emptyFormData);
+        setBirthYear('');
+        setBirthMonth('');
+        setBirthDay('');
+        setIsRestored(false);
     };
 
     if (isSubmitted) {
@@ -328,7 +403,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         {form.mediaAccounts.length > 0 ? form.mediaAccounts.map((acc, idx) => (
                             <div key={acc.id} className="confirm-media-box" style={{ background: '#f8fafc', padding: 16, borderRadius: 8, marginBottom: 12 }}>
                                 <div style={{ fontWeight: 'bold', marginBottom: 8 }}>SNS #{idx + 1}: {acc.mediaType}</div>
-                                <div style={{ fontSize: '0.9rem' }}>URL/ID: {acc.url ? extractIdFromUrl(acc.url, acc.mediaType) : '-'}</div>
+                                <div style={{ fontSize: '0.9rem' }}>URL: {acc.url || '-'}</div>
                                 {acc.metricValue !== undefined && acc.metricValue > 0 && <div style={{ fontSize: '0.9rem' }}>{acc.metricType === 'PV' ? '月間PV数' : 'フォロワー数'}: {acc.metricValue}</div>}
                                 {acc.mediaType === 'Instagram' && <div style={{ fontSize: '0.9rem' }}>リール投稿頻度: {acc.reelsFrequency || '-'}</div>}
                             </div>
@@ -400,6 +475,12 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
     return (
         <div className="registration-container">
+            {isRestored && (
+                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '12px 16px', borderRadius: 8, marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                    <span style={{ fontSize: '0.95rem', color: '#166534' }}>💡 前回の入力途中から再開しました。</span>
+                    <button type="button" onClick={handleReset} style={{ background: 'white', border: '1px solid #166534', color: '#166534', padding: '6px 12px', borderRadius: 6, fontSize: '0.85rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>最初からやり直す</button>
+                </div>
+            )}
             <header className="registration-header">
                 <div className="header-inner">
                     <h1 className="form-title">
@@ -780,7 +861,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                                     }
                                                     const id = val.replace(/^@/, ''); // 強制削除を廃止
                                                     const baseUrl = acc.mediaType === 'Instagram' ? 'https://www.instagram.com/' : acc.mediaType === 'X' ? 'https://x.com/' : acc.mediaType === 'Lemon8' ? 'https://www.lemon8-app.com/' : acc.mediaType === 'note' ? 'https://note.com/' : 'https://www.tiktok.com/@';
-                                                    updateMedia(acc.id, { url: id ? `${baseUrl}${id}/` : '' });
+                                                    const trailingSlash = acc.mediaType === 'TikTok' ? '' : '/';
+                                                    updateMedia(acc.id, { url: id ? `${baseUrl}${id}${trailingSlash}` : '' });
                                                 }} 
                                                 placeholder="半角小文字で入力" 
                                                 inputMode="url"
@@ -796,7 +878,15 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 ) : (
                                     <div className="form-group">
                                         <label className="form-label">URL</label>
-                                        <input className="form-input" value={acc.url} onChange={e => updateMedia(acc.id, { url: e.target.value })} placeholder="https://..." />
+                                        <input 
+                                            className="form-input" 
+                                            type="url"
+                                            pattern="https?://.*"
+                                            title="http:// または https:// から始まる正しいURLを入力してください"
+                                            value={acc.url} 
+                                            onChange={e => updateMedia(acc.id, { url: e.target.value })} 
+                                            placeholder="https://..." 
+                                        />
                                     </div>
                                 )}
                             </div>
