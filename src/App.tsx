@@ -40,7 +40,9 @@ function App() {
     return (localStorage.getItem('app_current_view') as any) || 'dashboard';
   });
 
-  const isPublicApplyPage = window.location.pathname === '/apply';
+  const isPublicApplyPage = 
+    window.location.pathname === '/apply' || 
+    window.location.hostname === 'foodist-form.vercel.app';
 
   // 表示モードの永続化
   useEffect(() => {
