@@ -79,6 +79,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isConfirming, setIsConfirming] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
+    const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string>('');
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
     const [ageGroupOnly, setAgeGroupOnly] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -189,33 +191,10 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         const localPreview = URL.createObjectURL(file);
         setForm(prev => ({ ...prev, avatarUrl: localPreview }));
 
-        setUploadingImage(true);
-        try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${fileExt}`;
-            const filePath = `pending/${fileName}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from('foodist-assets')
-                .upload(filePath, file);
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl } } = supabase.storage
-                .from('foodist-assets')
-                .getPublicUrl(filePath);
-
-            // 最終的な公開URLに差し替える
-            setForm(prev => ({ ...prev, avatarUrl: publicUrl }));
-        } catch (err) {
-            console.error('Image upload failed:', err);
-            alert('画像のアップロードに失敗しました。');
-            setForm(prev => ({ ...prev, avatarUrl: '' })); // 失敗時はリセット
-        } finally {
-            setUploadingImage(false);
-            // 入力値をリセットして、同じファイルを再度選択可能にする
-            if (e.target) e.target.value = '';
-        }
+        setSelectedImageFile(file);
+        setAvatarPreview(URL.createObjectURL(file));
+        
+        if (e.target) e.target.value = '';
     };
 
     const handleConfirm = (e: React.FormEvent) => {
@@ -231,6 +210,15 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             return;
         }
 
+        // --- URLバリデーション（XSS対策・入力ミス防止） ---
+        for (const acc of form.mediaAccounts) {
+            if (acc.url && !/^https?:\/\//i.test(acc.url)) {
+                alert(`「${acc.mediaType}」のURLが不正です（http:// または https:// で始めてください）。`);
+                return;
+            }
+        }
+        // --------------------------------------------------
+
         if (!form.displayName) return alert('活動名は必須です。');
         if (!form.email) return alert('メールアドレスは必須です。');
 
@@ -239,11 +227,49 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     };
 
     const handleActualSubmit = async () => {
+        // --- 二重チェック（バリデーション再実行） ---
+        if (!form.displayName || !form.email) {
+            alert('必須項目が入力されていません。');
+            setIsConfirming(false);
+            return;
+        }
+        for (const acc of form.mediaAccounts) {
+            if (acc.url && !/^https?:\/\//i.test(acc.url)) {
+                alert(`「${acc.mediaType}」のURLが不正です（http:// または https:// で始めてください）。`);
+                setIsConfirming(false);
+                return;
+            }
+        }
+        // ------------------------------------------
+
         setIsSubmitting(true);
         try {
+            let finalAvatarUrl = form.avatarUrl;
+
+            // --- 送信時に画像をアップロード ---
+            if (selectedImageFile) {
+                const fileExt = selectedImageFile.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${fileExt}`;
+                const filePath = `pending/${fileName}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('foodist-assets')
+                    .upload(filePath, selectedImageFile);
+
+                if (uploadError) throw uploadError;
+
+                const { data: { publicUrl } } = supabase.storage
+                    .from('foodist-assets')
+                    .getPublicUrl(filePath);
+
+                finalAvatarUrl = publicUrl;
+            }
+            // ----------------------------------
+
             const now = new Date().toISOString();
             const applicationData = {
                 ...form,
+                avatarUrl: finalAvatarUrl,
                 birthDate: ageGroupOnly ? undefined : form.birthDate,
                 lastSurveyDate: now,
                 createdAt: now,
@@ -796,7 +822,15 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 ) : (
                                     <div className="form-group">
                                         <label className="form-label">URL</label>
-                                        <input className="form-input" value={acc.url} onChange={e => updateMedia(acc.id, { url: e.target.value })} placeholder="https://..." />
+                                        <input 
+                                            className="form-input" 
+                                            type="url"
+                                            pattern="https?://.*"
+                                            title="http:// または https:// から始まる正しいURLを入力してください"
+                                            value={acc.url} 
+                                            onChange={e => updateMedia(acc.id, { url: e.target.value })} 
+                                            placeholder="https://..." 
+                                        />
                                     </div>
                                 )}
                             </div>
