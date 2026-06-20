@@ -72,8 +72,27 @@ const emptyFormData: Omit<Foodist, 'id'> & { email: string } = {
     updatedAt: '',
 };
 
+const STORAGE_KEY = 'foodistFormBackup_v2';
+
+const getInitialFormState = () => {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            // 画像ファイル実体は復元できないためURLをクリア
+            if (parsed.avatarUrl && parsed.avatarUrl.startsWith('blob:')) {
+                parsed.avatarUrl = '';
+            }
+            return { ...emptyFormData, ...parsed };
+        }
+    } catch (e) {
+        console.error('Failed to restore form backup', e);
+    }
+    return emptyFormData;
+};
+
 export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps) => {
-    const [form, setForm] = useState(emptyFormData);
+    const [form, setForm] = useState(getInitialFormState);
     const [agreed, setAgreed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -85,41 +104,15 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [ageGroupOnly, setAgeGroupOnly] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // 生年月日の分割入力用
-    const [birthYear, setBirthYear] = useState('');
-    const [birthMonth, setBirthMonth] = useState('');
-    const [birthDay, setBirthDay] = useState('');
+    // 生年月日の分割入力用（復元データがあれば初期値にセット）
+    const [birthYear, setBirthYear] = useState(() => form.birthDate ? form.birthDate.split('-')[0] : '');
+    const [birthMonth, setBirthMonth] = useState(() => form.birthDate ? form.birthDate.split('-')[1].replace(/^0/, '') : '');
+    const [birthDay, setBirthDay] = useState(() => form.birthDate ? form.birthDate.split('-')[2].replace(/^0/, '') : '');
 
-    // --- 自動バックアップ・復元処理 ---
+    // --- 自動バックアップ処理 ---
     useEffect(() => {
-        const saved = sessionStorage.getItem('foodistFormBackup');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                // 画像ファイル実体は復元できないためURLをクリア
-                if (parsed.avatarUrl && parsed.avatarUrl.startsWith('blob:')) {
-                    parsed.avatarUrl = '';
-                }
-                setForm(parsed);
-
-                // 生年月日の個別入力欄を復元
-                if (parsed.birthDate) {
-                    const [y, m, d] = parsed.birthDate.split('-');
-                    if (y && m && d) {
-                        setBirthYear(y);
-                        setBirthMonth(m.replace(/^0/, ''));
-                        setBirthDay(d.replace(/^0/, ''));
-                    }
-                }
-            } catch (e) {
-                console.error('Failed to restore form backup', e);
-            }
-        }
-    }, []);
-
-    useEffect(() => {
-        // フォームの状態が更新されるたびに保存（マウント直後の空データでの上書きを防ぐため、何か入力があれば保存）
-        sessionStorage.setItem('foodistFormBackup', JSON.stringify(form));
+        // フォームの状態が更新されるたびに保存
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
     }, [form]);
     // ---------------------------------
 
@@ -316,7 +309,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             window.scrollTo(0, 0);
 
             // 送信完了時にバックアップを削除
-            sessionStorage.removeItem('foodistFormBackup');
+            localStorage.removeItem(STORAGE_KEY);
         } catch (err) {
             console.error('Submission failed:', err);
             alert('送信に失敗しました。時間をおいて再度お試しください。');
