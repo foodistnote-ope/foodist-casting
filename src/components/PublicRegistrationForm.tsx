@@ -354,7 +354,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         {form.mediaAccounts.length > 0 ? form.mediaAccounts.map((acc, idx) => (
                             <div key={acc.id} className="confirm-media-box" style={{ background: '#f8fafc', padding: 16, borderRadius: 8, marginBottom: 12 }}>
                                 <div style={{ fontWeight: 'bold', marginBottom: 8 }}>SNS #{idx + 1}: {acc.mediaType}</div>
-                                <div style={{ fontSize: '0.9rem' }}>URL/ID: {acc.url ? extractIdFromUrl(acc.url, acc.mediaType) : '-'}</div>
+                                <div style={{ fontSize: '0.9rem' }}>URL: {acc.url || '-'}</div>
                                 {acc.metricValue !== undefined && acc.metricValue > 0 && <div style={{ fontSize: '0.9rem' }}>{acc.metricType === 'PV' ? '月間PV数' : 'フォロワー数'}: {acc.metricValue}</div>}
                                 {acc.mediaType === 'Instagram' && <div style={{ fontSize: '0.9rem' }}>リール投稿頻度: {acc.reelsFrequency || '-'}</div>}
                             </div>
