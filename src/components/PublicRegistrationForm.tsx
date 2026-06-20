@@ -93,13 +93,21 @@ const getInitialFormState = () => {
 
 export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps) => {
     const [form, setForm] = useState(getInitialFormState);
+    const [isRestored, setIsRestored] = useState(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                return !!(parsed.displayName || parsed.email || parsed.avatarUrl);
+            } catch(e) {}
+        }
+        return false;
+    });
     const [agreed, setAgreed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isConfirming, setIsConfirming] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
-    const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
-    const [avatarPreview, setAvatarPreview] = useState<string>('');
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
     const [ageGroupOnly, setAgeGroupOnly] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -213,14 +221,39 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // 手元ですぐにプレビューを表示する
-        const localPreview = URL.createObjectURL(file);
-        setForm(prev => ({ ...prev, avatarUrl: localPreview }));
+        setUploadingImage(true);
+        try {
+            // 前の画像（未送信のゴミ画像）があれば削除する
+            if (form.avatarUrl && form.avatarUrl.includes('/pending/')) {
+                const oldPath = form.avatarUrl.split('/foodist-assets/')[1];
+                if (oldPath) {
+                    await supabase.storage.from('foodist-assets').remove([oldPath]);
+                }
+            }
 
-        setSelectedImageFile(file);
-        setAvatarPreview(URL.createObjectURL(file));
-        
-        if (e.target) e.target.value = '';
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${fileExt}`;
+            const filePath = `pending/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('foodist-assets')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('foodist-assets')
+                .getPublicUrl(filePath);
+
+            setForm(prev => ({ ...prev, avatarUrl: publicUrl }));
+        } catch (err) {
+            console.error('Image upload failed:', err);
+            alert('画像のアップロードに失敗しました。');
+            setForm(prev => ({ ...prev, avatarUrl: '' })); // 失敗時はリセット
+        } finally {
+            setUploadingImage(false);
+            if (e.target) e.target.value = '';
+        }
     };
 
     const handleConfirm = (e: React.FormEvent) => {
@@ -270,32 +303,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
         setIsSubmitting(true);
         try {
-            let finalAvatarUrl = form.avatarUrl;
-
-            // --- 送信時に画像をアップロード ---
-            if (selectedImageFile) {
-                const fileExt = selectedImageFile.name.split('.').pop();
-                const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${fileExt}`;
-                const filePath = `pending/${fileName}`;
-
-                const { error: uploadError } = await supabase.storage
-                    .from('foodist-assets')
-                    .upload(filePath, selectedImageFile);
-
-                if (uploadError) throw uploadError;
-
-                const { data: { publicUrl } } = supabase.storage
-                    .from('foodist-assets')
-                    .getPublicUrl(filePath);
-
-                finalAvatarUrl = publicUrl;
-            }
-            // ----------------------------------
-
             const now = new Date().toISOString();
             const applicationData = {
                 ...form,
-                avatarUrl: finalAvatarUrl,
                 birthDate: ageGroupOnly ? undefined : form.birthDate,
                 lastSurveyDate: now,
                 createdAt: now,
@@ -316,6 +326,16 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleReset = () => {
+        if (!window.confirm('入力内容をすべて消去して最初からやり直しますか？')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        setForm(emptyFormData);
+        setBirthYear('');
+        setBirthMonth('');
+        setBirthDay('');
+        setIsRestored(false);
     };
 
     if (isSubmitted) {
@@ -455,6 +475,12 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
     return (
         <div className="registration-container">
+            {isRestored && (
+                <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', padding: '12px 16px', borderRadius: 8, marginBottom: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                    <span style={{ fontSize: '0.95rem', color: '#166534' }}>💡 前回の入力途中から再開しました。</span>
+                    <button type="button" onClick={handleReset} style={{ background: 'white', border: '1px solid #166534', color: '#166534', padding: '6px 12px', borderRadius: 6, fontSize: '0.85rem', cursor: 'pointer', whiteSpace: 'nowrap' }}>最初からやり直す</button>
+                </div>
+            )}
             <header className="registration-header">
                 <div className="header-inner">
                     <h1 className="form-title">
