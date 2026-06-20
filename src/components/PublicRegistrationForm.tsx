@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Foodist, Tag, MediaAccount, MediaType, MetricType, TagCategory } from '../data/types';
 import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, AGE_GROUPS, CHILD_STAGES, FOLLOWER_CONTRIBUTING_MEDIA, calcTotalFollowers } from '../data/types';
 import { submitApplication } from '../lib/supabaseDb';
@@ -89,6 +89,39 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [birthYear, setBirthYear] = useState('');
     const [birthMonth, setBirthMonth] = useState('');
     const [birthDay, setBirthDay] = useState('');
+
+    // --- 自動バックアップ・復元処理 ---
+    useEffect(() => {
+        const saved = sessionStorage.getItem('foodistFormBackup');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // 画像ファイル実体は復元できないためURLをクリア
+                if (parsed.avatarUrl && parsed.avatarUrl.startsWith('blob:')) {
+                    parsed.avatarUrl = '';
+                }
+                setForm(parsed);
+
+                // 生年月日の個別入力欄を復元
+                if (parsed.birthDate) {
+                    const [y, m, d] = parsed.birthDate.split('-');
+                    if (y && m && d) {
+                        setBirthYear(y);
+                        setBirthMonth(m.replace(/^0/, ''));
+                        setBirthDay(d.replace(/^0/, ''));
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to restore form backup', e);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        // フォームの状態が更新されるたびに保存（マウント直後の空データでの上書きを防ぐため、何か入力があれば保存）
+        sessionStorage.setItem('foodistFormBackup', JSON.stringify(form));
+    }, [form]);
+    // ---------------------------------
 
     const handleBirthPartChange = (part: 'y' | 'm' | 'd', val: string) => {
         let y = birthYear;
@@ -281,6 +314,9 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             
             setIsSubmitted(true);
             window.scrollTo(0, 0);
+
+            // 送信完了時にバックアップを削除
+            sessionStorage.removeItem('foodistFormBackup');
         } catch (err) {
             console.error('Submission failed:', err);
             alert('送信に失敗しました。時間をおいて再度お試しください。');
