@@ -887,6 +887,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                                 autoCapitalize="none"
                                                 spellCheck={false}
                                                 autoComplete="off"
+                                                required
                                             />
                                         </div>
                                         {/[^a-z0-9._-]/.test(extractIdFromUrl(acc.url, acc.mediaType)) && (
@@ -904,6 +905,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                             value={acc.url} 
                                             onChange={e => updateMedia(acc.id, { url: e.target.value })} 
                                             placeholder="https://..." 
+                                            required
                                         />
                                     </div>
                                 )}
