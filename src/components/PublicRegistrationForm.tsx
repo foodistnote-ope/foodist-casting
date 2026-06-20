@@ -806,7 +806,8 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                                     }
                                                     const id = val.replace(/^@/, ''); // 強制削除を廃止
                                                     const baseUrl = acc.mediaType === 'Instagram' ? 'https://www.instagram.com/' : acc.mediaType === 'X' ? 'https://x.com/' : acc.mediaType === 'Lemon8' ? 'https://www.lemon8-app.com/' : acc.mediaType === 'note' ? 'https://note.com/' : 'https://www.tiktok.com/@';
-                                                    updateMedia(acc.id, { url: id ? `${baseUrl}${id}/` : '' });
+                                                    const trailingSlash = acc.mediaType === 'TikTok' ? '' : '/';
+                                                    updateMedia(acc.id, { url: id ? `${baseUrl}${id}${trailingSlash}` : '' });
                                                 }} 
                                                 placeholder="半角小文字で入力" 
                                                 inputMode="url"
