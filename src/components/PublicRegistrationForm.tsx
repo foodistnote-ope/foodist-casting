@@ -623,6 +623,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <select 
                                         className="birth-input birth-year" 
                                         value={birthYear} 
+                                        onFocus={() => !birthYear && handleBirthPartChange('y', '1990')}
                                         onChange={e => handleBirthPartChange('y', e.target.value)} 
                                         style={{ appearance: 'none', cursor: 'pointer' }}
                                     >
@@ -635,6 +636,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <select 
                                         className="birth-input birth-month" 
                                         value={birthMonth} 
+                                        onFocus={() => !birthMonth && handleBirthPartChange('m', '1')}
                                         onChange={e => handleBirthPartChange('m', e.target.value)} 
                                         style={{ appearance: 'none', cursor: 'pointer' }}
                                     >
@@ -647,6 +649,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     <select 
                                         className="birth-input birth-day" 
                                         value={birthDay} 
+                                        onFocus={() => !birthDay && handleBirthPartChange('d', '1')}
                                         onChange={e => handleBirthPartChange('d', e.target.value)} 
                                         style={{ appearance: 'none', cursor: 'pointer' }}
                                     >
