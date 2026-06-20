@@ -718,6 +718,25 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         <div className="form-group" style={{ marginTop: '16px' }}>
+                            <label className="form-label">最新アンケート回答日</label>
+                            <input 
+                                type="date" 
+                                className="form-input" 
+                                value={form.lastSurveyDate ? form.lastSurveyDate.split('T')[0] : ''} 
+                                onChange={e => {
+                                    const val = e.target.value;
+                                    setForm(prev => ({
+                                        ...prev,
+                                        // タイムゾーンのズレを防ぐため、単純な 'YYYY-MM-DD' として保存するか、
+                                        // 既存のデータに合わせて ISO 文字列で保存する。
+                                        // ここでは 00:00:00Z として保存。
+                                        lastSurveyDate: val ? new Date(`${val}T00:00:00Z`).toISOString() : undefined
+                                    }));
+                                }}
+                            />
+                        </div>
+
+                        <div className="form-group" style={{ marginTop: '16px' }}>
                             <label className="form-label">リレーション（過去の接点）</label>
                             <div className="tags-checkbox-group">
                                 {(() => {

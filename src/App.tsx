@@ -976,6 +976,12 @@ function App() {
                   ...JSON.parse(JSON.stringify(app.data)),
                   id: app.id
                 };
+                
+                // 申請データを編集モーダルに渡す際、最新アンケート回答日が未設定なら申請日時をセットする
+                if (!foodistData.lastSurveyDate && app.createdAt) {
+                  foodistData.lastSurveyDate = app.createdAt;
+                }
+
                 if (foodistData.birthDate) {
                   const age = calculateAge(foodistData.birthDate);
                   const ageGroup = calculateAgeGroup(foodistData.birthDate);
