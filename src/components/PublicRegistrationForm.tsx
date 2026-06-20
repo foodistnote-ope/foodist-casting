@@ -260,6 +260,19 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const handleConfirm = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // --- 媒体入力の空欄チェック（親切なエラーメッセージ用） ---
+        const emptyMedia = form.mediaAccounts.find(acc => {
+            if (['Instagram', 'X', 'TikTok', 'Lemon8', 'note'].includes(acc.mediaType)) {
+                return !extractIdFromUrl(acc.url || '', acc.mediaType);
+            }
+            return !acc.url;
+        });
+
+        if (emptyMedia) {
+            alert(`追加されたSNS・媒体情報（${emptyMedia.mediaType}）の入力欄が空になっています。\nURLまたはIDを入力するか、不要な場合は「削除」ボタンで枠を消去してください。`);
+            return;
+        }
+
         const formElement = e.currentTarget as HTMLFormElement;
         if (!formElement.checkValidity()) {
             const firstInvalid = formElement.querySelector(':invalid') as HTMLElement;
