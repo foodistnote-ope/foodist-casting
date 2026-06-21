@@ -108,16 +108,7 @@ export const ApplicationReviewView = ({ allTags, onEdit }: ApplicationReviewView
                                         <h3 className="app-display-name">{app.data.displayName}</h3>
                                         <span className="app-date">{new Date(app.createdAt).toLocaleDateString()} 申請</span>
                                     </div>
-                                    <p className="app-title">{app.data.title || '（肩書きなし）'}</p>
-                                    <div className="app-meta">
-                                        <span>📍 {app.data.area || '地域未設定'}</span>
-                                        <span>📧 {app.data.email}</span>
-                                        {app.data.phoneNumber && <span>📞 {app.data.phoneNumber}</span>}
-                                        <span>📊 フォロワー: {app.data.totalFollowers?.toLocaleString() ?? 0}</span>
-                                        {app.data.hasChildren === 'あり' && (
-                                            <span>👶 子: {app.data.childrenCount === '4人以上' || app.data.childrenCount === '回答しない' ? app.data.childrenCount : `${app.data.childrenCount}人`}</span>
-                                        )}
-                                    </div>
+
                                 </div>
                             </div>
                             <div className="app-actions">
