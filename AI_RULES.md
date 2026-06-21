@@ -2,22 +2,18 @@
 
 このファイルは、AIアシスタントがこのプロジェクト（foodist-casting）で開発作業をサポートする際に、必ず遵守すべきルールを定義したものです。AIは新しい会話を開始した際、または作業を行う際にこのファイルを参照し、以下のルールを厳格に守ってください。
 
-## 1. Git 操作に関するルール（最重要）
+## 1. 言語とコミュニケーション（初心者対応）
+- コードのコメントや README などのドキュメントは、プログラミング初心者にも理解できるよう、専門用語を極力避けて「すべてわかりやすい日本語」で記述してください。
+- ユーザーは自身でターミナル操作を行いません。**必要な操作（サーバーの起動や再起動などの裏側のタスク管理を含む）はすべてAI側（ツール）で実行してください。** やむを得ずユーザー側の操作が必要な場合のみ、手順を丁寧に説明してください。
 
-- **無断でのプッシュ禁止**:
-  コードの変更やファイルの作成・修正を行った後、ユーザーから明確な「コミット・プッシュしてOK」という許可（またはそれに準ずる指示）が出るまでは、絶対に `git commit` および `git push` を実行しないでください。
-  
-2. **Localhost Confirmation First**:
-   - The AI MUST NEVER execute `git push` or create a Pull Request directly after modifying code.
-   - After any code modification, the AI MUST explicitly ask the USER to verify the changes on `localhost` (e.g., `npm run dev`).
-   - Only AFTER the USER explicitly confirms that the localhost verification was successful, the AI is allowed to proceed with committing, pushing, or PR creation.
+## 2. アクション実行前の同意（ポップアップ対策）
+- ファイルの変更やコマンドを実行するツールを呼び出す前に、必ず「これからファイルXを編集し、Yを実行します」とテキストで意図を説明してください。
+- ユーザーの混乱を招く許可ポップアップを未然に防ぐため、ユーザーが明示的に「OK」と同意するまで、実際のツールの呼び出し（実行）は待機してください。
 
-3. **Consent Before Action (Tools Execution)**:
-   - Before executing ANY tool that modifies files or runs commands, the AI MUST explain its intended actions in text (e.g., "I will now edit file X to do Y") and ask for the user's consent.
-   - The AI must wait for the user to explicitly agree before triggering the tool call, to prevent confusing permission popups for the user.
+## 3. 作業完了の報告と、ローカル環境での確認
+- 修正が完了した段階で、「どのファイルを・どのように修正したか」を簡潔に報告し、次のステップ（確認依頼）を提示してください。
+- コード変更後、AI自身で勝手に Git 操作に進んではいけません。必ずユーザーに「ローカルホスト環境（例：npm run dev の画面など）で、変更内容が正しく反映されているか確認してください」と明示的に依頼してください。
 
-## 2. コミュニケーションと作業フロー
-
-- 修正が完了した段階で、どのファイルをどのように修正したかを簡潔に報告し、次のステップ（確認依頼）を提示してください。
-- ユーザーから修正内容に対するフィードバックや追加要望があった場合は、プッシュする前にコードを再修正してください。
-- ユーザーから「確認しました。問題ありません」「プッシュしてください」「PRを作ってください」などの許可が出た段階で、初めてコミットとプッシュを行ってください。
+## 4. Git 操作に関するルール（最重要）
+- ローカル環境での検証成功をユーザーが確認し、かつ「コミット・プッシュしてOK」「PRを作ってください」等の明確な許可が出るまでは、絶対に git commit、git push、プルリクエストの作成を実行しないでください。
+- ユーザーからフィードバックがあった場合は、プッシュする前にコードを再修正し、最終的な許可が出てから初めて Git 操作を行ってください。
