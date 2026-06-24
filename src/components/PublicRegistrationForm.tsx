@@ -359,7 +359,11 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                     <div className="success-icon-wrapper">
                         <svg className="success-icon-svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
-                    <h1>登録を受け付けました</h1>
+                    <h1>回答を受け付けました</h1>
+                    <p style={{ textAlign: 'center', marginTop: '1rem', lineHeight: '1.6', color: '#4b5563' }}>
+                        ご協力誠にありがとうございました。<br />
+                        ご回答いただいた内容は、今後の企画やお仕事のご相談の参考にさせていただきます。
+                    </p>
                 </div>
             </div>
         );
@@ -403,11 +407,11 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="confirm-row"><span className="confirm-label">居住地（都道府県）</span><span className="confirm-value">{form.area || '-'}</span></div>
                         <div className="confirm-row"><span className="confirm-label">出身地（都道府県）</span><span className="confirm-value">{form.birthplace || '-'}</span></div>
                         <div className="confirm-row"><span className="confirm-label">婚姻状況</span><span className="confirm-value">{form.maritalStatus || '-'}</span></div>
-                        <div className="confirm-row"><span className="confirm-label">お子さまの有無</span><span className="confirm-value">{form.hasChildren || '-'}</span></div>
+                        <div className="confirm-row"><span className="confirm-label">お子さんの有無</span><span className="confirm-value">{form.hasChildren || '-'}</span></div>
                         {form.hasChildren === 'あり' && (
                             <>
-                                <div className="confirm-row"><span className="confirm-label">お子さまの人数</span><span className="confirm-value">{form.childrenCount || '-'}</span></div>
-                                <div className="confirm-row"><span className="confirm-label">お子さまの成長時期</span><span className="confirm-value">{form.childStage?.join('、') || '-'}</span></div>
+                                <div className="confirm-row"><span className="confirm-label">お子さんの人数</span><span className="confirm-value">{form.childrenCount || '-'}</span></div>
+                                <div className="confirm-row"><span className="confirm-label">お子さんの成長時期</span><span className="confirm-value">{form.childStage?.join('、') || '-'}</span></div>
                             </>
                         )}
                     </section>
@@ -605,7 +609,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                             {form.avatarUrl ? '画像を差し替える' : '画像を選択'}
                                         </label>
                                     </div>
-                                    <p className="form-hint mt-12">高解像度の画像を推奨します（横幅1200px以上推奨、最小640px）。</p>
+                                    <p className="form-hint mt-12">高解像度の画像を推奨します（横幅1200px以上推奨、最小640px）</p>
                                 </div>
                             </div>
                         </div>
@@ -763,7 +767,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label required">お子さまの有無</label>
+                            <label className="form-label required">お子さんの有無</label>
                             <div className="radio-group-horizontal">
                                 {['あり', 'なし', '回答しない'].map(opt => (
                                     <label key={opt} className={`radio-option ${form.hasChildren === opt ? 'selected' : ''}`}>
@@ -784,7 +788,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         {form.hasChildren === 'あり' && (
                             <div className="form-child-details animate-fade-in">
                                 <div className="form-group">
-                                    <label className="form-label">お子さまの人数</label>
+                                    <label className="form-label">お子さんの人数</label>
                                     <select name="childrenCount" className="form-select" value={form.childrenCount || ''} onChange={handleChange}>
                                         <option value="">選択してください</option>
                                         <option value="1">1人</option>
@@ -795,7 +799,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                     </select>
                                 </div>
                                 <div className="form-group">
-                                    <label className="form-label">お子さまの成長時期（複数選択可）</label>
+                                    <label className="form-label">お子さんの成長時期（複数選択可）</label>
                                     <div className="tag-grid">
                                         {CHILD_STAGES.filter(s => s !== '未確認' && s !== '回答しない').map(stage => (
                                             <label key={stage} className={`tag-pill ${form.childStage.includes(stage) ? 'active' : ''}`}>

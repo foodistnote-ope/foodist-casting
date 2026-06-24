@@ -190,7 +190,7 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                             patch.childrenCount = childCount === '非公開' ? '回答しない' : childCount;
                         }
 
-                        const childStage = getVal('お子さまの成長時期') ?? getVal('子育てステージ');
+                        const childStage = getVal('お子さんの成長時期') ?? getVal('お子さまの成長時期') ?? getVal('子育てステージ');
                         if (childStage !== undefined && childStage !== '') {
                             patch.childStage = childStage.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
                         }
@@ -416,7 +416,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                         const membershipRaw = (membershipKey ? row[membershipKey] : '要確認') as Foodist['membershipStatus'];
                         const maritalKey = getRealHeader('婚姻状況') || getRealHeader('maritalStatus');
                         const maritalRaw = (maritalKey ? row[maritalKey] : '未確認') as Foodist['maritalStatus'];
-                        const childStageKey = getRealHeader('お子さまの成長時期') || getRealHeader('子育てステージ');
+                        const childStageKey = getRealHeader('お子さんの成長時期') || getRealHeader('お子さまの成長時期') || getRealHeader('子育てステージ');
                         const childStageRaw = childStageKey ? row[childStageKey] : '';
                         const childStage = childStageRaw ? childStageRaw.split(/[,、\n]/).map(s => s.trim()).filter(Boolean) : [];
 

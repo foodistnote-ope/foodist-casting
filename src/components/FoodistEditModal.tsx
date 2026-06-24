@@ -507,7 +507,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">お子さまの成長時期（複数選択可）</label>
+                            <label className="form-label">お子さんの成長時期（複数選択可）</label>
                             <div className="tags-checkbox-group">
                                 {CHILD_STAGES.map(stage => (
                                     <label key={stage} className={`tag-checkbox-label ${form.childStage.includes(stage) ? 'selected' : ''}`}>
