@@ -115,7 +115,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     },
     {
         id: 'childStage',
-        label: 'お子さまの成長時期',
+        label: 'お子さんの成長時期',
         defaultVisible: false,
         render: (f) => f.childStage && f.childStage.length > 0 ? f.childStage.join(', ') : '-',
         sortValue: (f) => f.childStage?.join(', ') || '',
@@ -366,7 +366,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f, _getFollowers, allTags) => {
             const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
             if (!hasTag) return '-';
-            return f.lastSurveyDate ? f.lastSurveyDate.slice(0, 10) : '不明';
+            return f.lastSurveyDate ? new Date(f.lastSurveyDate).toLocaleDateString('ja-JP') : '不明';
         },
         sortValue: (f, _getFollowers, allTags) => {
             const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
@@ -375,21 +375,21 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         csvValue: (f, _getFollowers, allTags) => {
             const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
             if (!hasTag) return '';
-            return f.lastSurveyDate ? f.lastSurveyDate.slice(0, 10) : '不明';
+            return f.lastSurveyDate ? new Date(f.lastSurveyDate).toLocaleDateString('ja-JP') : '不明';
         },
     },
     {
         id: 'createdAt',
         label: '登録日',
         defaultVisible: false,
-        render: (f) => f.createdAt ? f.createdAt.slice(0, 10) : '-',
+        render: (f) => f.createdAt ? new Date(f.createdAt).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.createdAt,
     },
     {
         id: 'sysUpdatedAt',
         label: '最終更新日時',
         defaultVisible: false,
-        render: (f) => f.updatedAt ? f.updatedAt.slice(0, 10) : '-',
+        render: (f) => f.updatedAt ? new Date(f.updatedAt).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.updatedAt || '',
     },
 ];
