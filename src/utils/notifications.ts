@@ -3,34 +3,51 @@
  */
 
 const notifySlack = async (displayName: string, data: any) => {
-    // .env ファイルから Slack Webhook の URL を読み込みます
-    const webhookUrl = import.meta.env.VITE_SLACK_WEBHOOK_URL;
-
-    // URLが設定されていない場合は、エラーにならないようにここで処理を終わります
-    if (!webhookUrl) {
-        console.warn('Slack Webhook URLが設定されていません。通知はスキップされました。');
-        return false;
+    // ローカル開発環境のフォールバック処理
+    // Viteデベロップメントサーバーでは /api のルーティングがデフォルトで動作しないため、
+    // ローカルテスト時に SlackWebhook が動作するようVITE_SLACK_WEBHOOK_URLがある場合はそちらを使います。
+    // ※ セキュリティ向上のため、本番環境の.envにはVITE_プレフィックスを設定しないでください。
+    if (import.meta.env.DEV) {
+        const localWebhookUrl = import.meta.env.VITE_SLACK_WEBHOOK_URL;
+        if (localWebhookUrl) {
+            const message = {
+                text: `${displayName}さんから「料理の活動に関するアンケート」が送信されました。\n管理画面の「登録審査」から確認をお願いします。`
+            };
+            try {
+                const formData = new URLSearchParams();
+                formData.append('payload', JSON.stringify(message));
+                await fetch(localWebhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData,
+                    mode: 'no-cors'
+                });
+                console.log('[Local Dev] Slackへ通知を直接送信しました:', displayName);
+                return true;
+            } catch (err) {
+                console.error('[Local Dev] Slack通知の送信に失敗しました:', err);
+                return false;
+            }
+        } else {
+            // ローカルで VITE_SLACK_WEBHOOK_URL が設定されていない場合はスキップ
+            console.log(`[Local Dev] Slack Webhook URLが未設定のため通知をスキップしました (displayName: ${displayName})`);
+            return true;
+        }
     }
 
-    // Slackに送信するメッセージの内容を作成します
-    const message = {
-        text: `${displayName}さんから「料理の活動に関するアンケート」が送信されました。\n管理画面の「登録審査」から確認をお願いします。`
-    };
-
+    // 本番環境 (Vercel) ではバックエンドのServerless Functionを呼び出す
     try {
-        // SlackのWebhookは、ブラウザから送る際に特定のデータ形式でないと弾かれることがあります。
-        // 確実に届く形式（URLエンコード形式のpayload）に変換して送信します。
-        const formData = new URLSearchParams();
-        formData.append('payload', JSON.stringify(message));
-
-        await fetch(webhookUrl, {
+        const response = await fetch('/api/notify', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/json'
             },
-            body: formData,
-            mode: 'no-cors'
+            body: JSON.stringify({ displayName }),
         });
+        
+        if (!response.ok) {
+            throw new Error(`Serverless API error: ${response.statusText}`);
+        }
         
         console.log('Slackへ通知を送信しました:', displayName);
         return true;
