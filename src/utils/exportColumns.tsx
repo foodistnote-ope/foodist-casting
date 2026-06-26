@@ -41,19 +41,29 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.title || '',
     },
     {
-        id: 'profileText',
-        label: 'プロフィール',
-        defaultVisible: false,
-        render: (f) => f.profileText ? <span title={f.profileText}>{f.profileText.length > 20 ? f.profileText.slice(0, 20) + '...' : f.profileText}</span> : '-',
-        sortValue: (f) => f.profileText || '',
-        csvValue: (f) => f.profileText || '',
+        id: 'membership',
+        label: '会員登録状況',
+        defaultVisible: true,
+        render: (f) => (
+            <span className={`membership-badge membership-${f.membershipStatus}`}>
+                {f.membershipStatus}
+            </span>
+        ),
+        sortValue: (f) => f.membershipStatus,
     },
     {
-        id: 'gender',
-        label: '性別',
-        defaultVisible: true,
-        render: (f) => f.gender || '-',
-        sortValue: (f) => f.gender || '',
+        id: 'avatarUrl',
+        label: 'プロフィール画像URL',
+        defaultVisible: false,
+        render: (f) => f.avatarUrl || '-',
+        sortValue: (f) => f.avatarUrl || '',
+    },
+    {
+        id: 'birthDate',
+        label: '生年月日',
+        defaultVisible: false,
+        render: (f) => f.birthDate || '-',
+        sortValue: (f) => f.birthDate || '',
     },
     {
         id: 'age',
@@ -66,13 +76,12 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.birthDate ? calculateAge(f.birthDate) : f.age,
     },
     {
-        id: 'birthDate',
-        label: '生年月日',
-        defaultVisible: false,
-        render: (f) => f.birthDate || '-',
-        sortValue: (f) => f.birthDate || '',
+        id: 'gender',
+        label: '性別',
+        defaultVisible: true,
+        render: (f) => f.gender || '-',
+        sortValue: (f) => f.gender || '',
     },
-
     {
         id: 'area',
         label: '居住地',
@@ -98,14 +107,15 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'hasChildren',
         label: '子どもの有無',
         defaultVisible: false,
-        render: (f) => {
-            if (f.hasChildren === 'あり' && f.childrenCount) {
-                const countStr = f.childrenCount === '4人以上' || f.childrenCount === '回答しない' ? f.childrenCount : `${f.childrenCount}人`;
-                return `あり (${countStr})`;
-            }
-            return f.hasChildren || '-';
-        },
+        render: (f) => f.hasChildren || '-',
         sortValue: (f) => f.hasChildren || '',
+    },
+    {
+        id: 'childrenCount',
+        label: '子どもの数',
+        defaultVisible: false,
+        render: (f) => f.childrenCount || '-',
+        sortValue: (f) => f.childrenCount || '',
     },
     {
         id: 'childStage',
@@ -113,123 +123,16 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f) => f.childStage && f.childStage.length > 0 ? f.childStage.join(', ') : '-',
         sortValue: (f) => f.childStage?.join(', ') || '',
+        csvValue: (f) => f.childStage && f.childStage.length > 0 ? f.childStage.join(', ') : '',
     },
     {
-        id: 'membership',
-        label: '会員登録状況',
-        defaultVisible: true,
-        render: (f) => (
-            <span className={`membership-badge membership-${f.membershipStatus}`}>
-                {f.membershipStatus}
-            </span>
-        ),
-        sortValue: (f) => f.membershipStatus,
-    },
-    // ── SNS・媒体情報 ─────────────────────────────
-    {
-        id: 'totalFollowers',
-        label: '総フォロワー',
-        defaultVisible: true,
-        render: (f) => f.totalFollowers ? f.totalFollowers.toLocaleString() : '未設定',
-        sortValue: (f) => f.totalFollowers || 0,
-    },
-    ...(['Instagram', 'X', 'TikTok', 'YouTube', 'Lemon8', 'note', 'ブログ'] as MediaType[]).flatMap(mediaType => {
-        const baseId = mediaType === 'ブログ' ? 'blog' : mediaType.toLowerCase();
-        
-        // 基本のラベル（フォロワー数など）
-        const metricLabel = mediaType === 'ブログ' ? 'ブログ 月間PV' : 
-                          mediaType === 'YouTube' ? 'YouTube チャンネル登録者数' : 
-                          `${mediaType} フォロワー数`;
-        
-        const cols: ColumnDef[] = [
-            {
-                id: `${baseId}_url`,
-                label: `${mediaType} URL`,
-                defaultVisible: false,
-                render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '-',
-                sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '',
-            },
-            {
-                id: baseId,
-                label: metricLabel,
-                defaultVisible: false,
-                render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => {
-                    const count = getFollowers(f, mediaType);
-                    if (count == null) return '-';
-                    return (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <img 
-                                src={MEDIA_ICONS[mediaType]} 
-                                alt={mediaType} 
-                                style={{ 
-                                    width: '16px', 
-                                    height: '16px', 
-                                    objectFit: 'contain', 
-                                    filter: MEDIA_ICON_FILTER[mediaType],
-                                    borderRadius: mediaType === 'ブログ' ? '3px' : '0'
-                                }} 
-                            />
-                            {count.toLocaleString()}
-                        </div>
-                    );
-                },
-                sortValue: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => getFollowers(f, mediaType) || 0,
-            }
-        ];
-
-        if (mediaType === 'Instagram') {
-            cols.push({
-                id: `${baseId}_reels`,
-                label: `Instagram リール投稿頻度`,
-                defaultVisible: false,
-                render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '-',
-                sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '',
-            });
-        }
-
-        cols.push({
-            id: `${baseId}_updatedAt`,
-            label: `${mediaType} 更新日時`,
-            defaultVisible: false,
-            render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt?.slice(0, 10) || '-',
-            sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt || '',
-        });
-
-        return cols;
-    }),
-    // ── スキル・タグ ──────────────────────────────
-    {
-        id: 'tags',
-        label: 'スキル・タグ',
+        id: 'profileText',
+        label: 'プロフィール',
         defaultVisible: false,
-        render: (f, _getFollowers, allTags) => {
-            if (!f.tagIds || f.tagIds.length === 0) return '-';
-            const names = f.tagIds
-                .map(id => allTags.find(t => t.id === id))
-                .filter((t): t is Tag => !!t && t.category !== 'リレーション')
-                .map(t => t.name);
-            if (names.length === 0) return '-';
-            return (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px', maxWidth: '200px' }}>
-                    {names.map((name, i) => (
-                        <span key={i} style={{ fontSize: '0.65rem', background: '#f0f0f0', borderRadius: '3px', padding: '1px 4px' }}>
-                            {name}
-                        </span>
-                    ))}
-                </div>
-            );
-        },
-        sortValue: (f) => f.tagIds?.length || 0,
-        csvValue: (f, _getFollowers, allTags) => {
-            if (!f.tagIds || f.tagIds.length === 0) return '';
-            return f.tagIds
-                .map(id => allTags.find(t => t.id === id))
-                .filter((t): t is Tag => !!t && t.category !== 'リレーション')
-                .map(t => t.name)
-                .join(', ');
-        },
+        render: (f) => f.profileText ? <span title={f.profileText}>{f.profileText.length > 20 ? f.profileText.slice(0, 20) + '...' : f.profileText}</span> : '-',
+        sortValue: (f) => f.profileText || '',
+        csvValue: (f) => f.profileText || '',
     },
-    // ── PR・掲載に関する情報 ──────────────────────
     {
         id: 'faceVisibility',
         label: '顔出し可否',
@@ -243,6 +146,31 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f) => f.faceVisibilityMemo || '-',
         sortValue: (f) => f.faceVisibilityMemo || '',
+    },
+    {
+        id: 'alcohol',
+        label: '飲酒について',
+        defaultVisible: false,
+        render: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '-';
+            const names = f.tagIds
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category === '飲酒について')
+                .map(t => t.name);
+            return names.length > 0 ? names.join(', ') : '-';
+        },
+        sortValue: (f, _getFollowers, allTags) => {
+            const names = f.tagIds?.map(id => allTags.find(t => t.id === id)).filter((t): t is Tag => !!t && t.category === '飲酒について').map(t => t.name);
+            return names?.join(', ') || '';
+        },
+        csvValue: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '';
+            const names = f.tagIds
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category === '飲酒について')
+                .map(t => t.name);
+            return names.join(', ');
+        },
     },
     {
         id: 'cookingClassStatus',
@@ -281,29 +209,83 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
                         flexWrap: 'wrap',
                     }}>
                         {shortLabel}
-                        {hasMemo && (
-                            <span style={{
-                                fontSize: '0.65rem',
-                                background: '#fef3c7',
-                                color: '#92400e',
-                                border: '1px solid #fbbf24',
-                                borderRadius: '3px',
-                                padding: '0 4px',
-                                fontWeight: 'bold',
-                                whiteSpace: 'nowrap',
-                            }} title={f.noteFeaturedMemo}>
-                                特記事項あり
-                            </span>
-                        )}
                     </div>
                 </div>
             );
         },
         sortValue: (f) => f.noteFeaturedPermission || '',
-        csvValue: (f) => {
-            const perm = f.noteFeaturedPermission || '';
-            const memo = f.noteFeaturedMemo ? `（備考: ${f.noteFeaturedMemo}）` : '';
-            return perm + memo;
+        csvValue: (f) => f.noteFeaturedPermission || '',
+    },
+    {
+        id: 'noteFeaturedMemo',
+        label: '掲載可否の特記事項',
+        defaultVisible: false,
+        render: (f) => f.noteFeaturedMemo || '-',
+        sortValue: (f) => f.noteFeaturedMemo || '',
+        csvValue: (f) => f.noteFeaturedMemo || '',
+    },
+    {
+        id: 'email',
+        label: 'メールアドレス',
+        defaultVisible: false,
+        render: (f) => f.email || '-',
+        sortValue: (f) => f.email || '',
+    },
+    {
+        id: 'phoneNumber',
+        label: '電話番号',
+        defaultVisible: false,
+        render: (f) => f.phoneNumber || '-',
+        sortValue: (f) => f.phoneNumber || '',
+    },
+    {
+        id: 'lastSurveyDate',
+        label: '最新アンケート回答日',
+        defaultVisible: false,
+        render: (f, _getFollowers, allTags) => {
+            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
+            if (!hasTag) return '-';
+            return f.lastSurveyDate ? new Date(f.lastSurveyDate).toLocaleDateString('ja-JP') : '不明';
+        },
+        sortValue: (f, _getFollowers, allTags) => {
+            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
+            return hasTag ? (f.lastSurveyDate || '') : '';
+        },
+        csvValue: (f, _getFollowers, allTags) => {
+            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
+            if (!hasTag) return '';
+            return f.lastSurveyDate ? new Date(f.lastSurveyDate).toLocaleDateString('ja-JP') : '不明';
+        },
+    },
+    {
+        id: 'tags',
+        label: 'タグ',
+        defaultVisible: false,
+        render: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '-';
+            const names = f.tagIds
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category !== 'リレーション' && t.category !== '飲酒について')
+                .map(t => t.name);
+            if (names.length === 0) return '-';
+            return (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px', maxWidth: '200px' }}>
+                    {names.map((name, i) => (
+                        <span key={i} style={{ fontSize: '0.65rem', background: '#f0f0f0', borderRadius: '3px', padding: '1px 4px' }}>
+                            {name}
+                        </span>
+                    ))}
+                </div>
+            );
+        },
+        sortValue: (f) => f.tagIds?.length || 0,
+        csvValue: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '';
+            return f.tagIds
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category !== 'リレーション' && t.category !== '飲酒について')
+                .map(t => t.name)
+                .join(', ');
         },
     },
     {
@@ -330,52 +312,100 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         sortValue: (f) => f.notes?.filter(n => n.noteType === 'その他').map(n => n.content).join('\n') || '',
         csvValue: (f) => f.notes?.filter(n => n.noteType === 'その他').map(n => n.content).join('\n') || '',
     },
-    // ── 連絡先（デフォルト非表示） ─────────────────
+    // ── SNS・媒体情報 ─────────────────────────────
     {
-        id: 'email',
-        label: 'メールアドレス',
-        defaultVisible: false,
-        render: (f) => f.email || '-',
-        sortValue: (f) => f.email || '',
+        id: 'totalFollowers',
+        label: '総フォロワー',
+        defaultVisible: true,
+        render: (f) => f.totalFollowers ? f.totalFollowers.toLocaleString() : '未設定',
+        sortValue: (f) => f.totalFollowers || 0,
+        csvValue: (f) => f.totalFollowers ? String(f.totalFollowers) : '',
     },
-    {
-        id: 'phoneNumber',
-        label: '電話番号',
-        defaultVisible: false,
-        render: (f) => f.phoneNumber || '-',
-        sortValue: (f) => f.phoneNumber || '',
-    },
+    ...(['Instagram', 'X', 'TikTok', 'YouTube', 'Lemon8', 'note', 'ブログ'] as MediaType[]).flatMap(mediaType => {
+        const baseId = mediaType === 'ブログ' ? 'blog' : mediaType.toLowerCase();
+        
+        // 基本のラベル（フォロワー数など）
+        const metricLabel = mediaType === 'ブログ' ? 'ブログ_PV' : 
+                          mediaType === 'YouTube' ? 'YouTube_登録者数' : 
+                          `${mediaType}_フォロワー数`;
+        
+        const cols: ColumnDef[] = [
+            {
+                id: `${baseId}_url`,
+                label: `${mediaType}_URL`,
+                defaultVisible: false,
+                render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '-',
+                sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '',
+                csvValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || '',
+            },
+            {
+                id: baseId,
+                label: metricLabel,
+                defaultVisible: false,
+                render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => {
+                    const count = getFollowers(f, mediaType);
+                    if (count == null) return '-';
+                    return (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <img 
+                                src={MEDIA_ICONS[mediaType]} 
+                                alt={mediaType} 
+                                style={{ 
+                                    width: '16px', 
+                                    height: '16px', 
+                                    objectFit: 'contain', 
+                                    filter: MEDIA_ICON_FILTER[mediaType],
+                                    borderRadius: mediaType === 'ブログ' ? '3px' : '0'
+                                }} 
+                            />
+                            {count.toLocaleString()}
+                        </div>
+                    );
+                },
+                sortValue: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => getFollowers(f, mediaType) || 0,
+                csvValue: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined) => {
+                    const count = getFollowers(f, mediaType);
+                    return count == null ? '' : String(count);
+                }
+            }
+        ];
+
+        if (mediaType === 'Instagram') {
+            cols.push({
+                id: `${baseId}_reels`,
+                label: `Instagram_リール投稿頻度`,
+                defaultVisible: false,
+                render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '-',
+                sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '',
+                csvValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.reelsFrequency || '',
+            });
+        }
+
+        cols.push({
+            id: `${baseId}_updatedAt`,
+            label: `${mediaType}_更新日時`,
+            defaultVisible: false,
+            render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt?.slice(0, 10) || '-',
+            sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt || '',
+            csvValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt?.slice(0, 10) || '',
+        });
+
+        return cols;
+    }),
     // ── システム管理用 ────────────────────────────
     {
         id: 'aliases',
         label: '活動名（別名）',
         defaultVisible: false,
+        excludeFromExport: true,
         render: (f) => f.aliases && f.aliases.length > 0 ? f.aliases.join(', ') : '-',
         sortValue: (f) => f.aliases?.join(', ') || '',
-    },
-    {
-        id: 'lastSurveyDate',
-        label: '最新アンケート回答日',
-        defaultVisible: false,
-        render: (f, _getFollowers, allTags) => {
-            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
-            if (!hasTag) return '-';
-            return f.lastSurveyDate ? new Date(f.lastSurveyDate).toLocaleDateString('ja-JP') : '不明';
-        },
-        sortValue: (f, _getFollowers, allTags) => {
-            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
-            return hasTag ? (f.lastSurveyDate || '') : '';
-        },
-        csvValue: (f, _getFollowers, allTags) => {
-            const hasTag = f.tagIds?.some(id => allTags.find(t => t.id === id)?.name === 'アンケート回答あり');
-            if (!hasTag) return '';
-            return f.lastSurveyDate ? new Date(f.lastSurveyDate).toLocaleDateString('ja-JP') : '不明';
-        },
     },
     {
         id: 'createdAt',
         label: '登録日',
         defaultVisible: false,
+        excludeFromExport: true,
         render: (f) => f.createdAt ? new Date(f.createdAt).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.createdAt,
     },
@@ -383,6 +413,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'sysUpdatedAt',
         label: '最終更新日時',
         defaultVisible: false,
+        excludeFromExport: true,
         render: (f) => f.updatedAt ? new Date(f.updatedAt).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.updatedAt || '',
     },

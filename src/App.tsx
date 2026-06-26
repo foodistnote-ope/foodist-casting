@@ -300,7 +300,7 @@ function App() {
   // ---- フィルタリング ----
   const filteredFoodists = useMemo(() => {
     return foodists.filter(f => {
-      // 1. キーワード検索（活動名・肩書き・一覧用紹介文・タグ名・エイリアス等）
+      // 1. キーワード検索（活動名・肩書き・タグ名・エイリアス等）
       const q = searchQuery.toLowerCase();
       const nq = normalizeString(searchQuery);
       const tagNames = (f.tagIds || []).map(id => tagMap.get(id)?.name || '').join(' ').toLowerCase();
