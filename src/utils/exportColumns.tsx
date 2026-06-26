@@ -72,13 +72,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         render: (f) => f.birthDate || '-',
         sortValue: (f) => f.birthDate || '',
     },
-    {
-        id: 'ageGroup',
-        label: '年代',
-        defaultVisible: true,
-        render: (f) => getEffectiveAgeGroup(f) || '-',
-        sortValue: (f) => getEffectiveAgeGroup(f) || '',
-    },
+
     {
         id: 'area',
         label: '居住地',

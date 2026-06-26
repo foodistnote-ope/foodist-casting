@@ -435,13 +435,8 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 <input type="number" className="form-input" name="age" value={form.age ?? ''} min={0} max={120}
                                     onChange={e => set('age', e.target.value ? parseInt(e.target.value) : undefined)} />
                             </div>
-                            <div className="form-group">
-                                <label className="form-label">年代</label>
-                                <select className="form-select" name="ageGroup" value={form.ageGroup || ''} onChange={handleChange}>
-                                    <option value="">-- 未設定 --</option>
-                                    {AGE_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
-                                </select>
-                            </div>
+                            {/* レイアウト幅調整用の空要素 */}
+                            <div className="form-group"></div>
                         </div>
 
                         <div className="form-row">

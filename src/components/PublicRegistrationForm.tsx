@@ -109,7 +109,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [isConfirming, setIsConfirming] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
-    const [ageGroupOnly, setAgeGroupOnly] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 生年月日の分割入力用（復元データがあれば初期値にセット）
@@ -292,6 +291,13 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
         }
         // --------------------------------------------------
 
+        const cookingGenreTags = allTags.filter(t => t.category === '得意な料理ジャンル').map(t => t.id);
+        const hasCookingGenre = form.tagIds.some(id => cookingGenreTags.includes(id));
+        if (!hasCookingGenre) {
+            alert('「得意な料理ジャンル」は1つ以上選択してください。');
+            return;
+        }
+
         if (!form.displayName) return alert('活動名は必須です。');
         if (!form.email) return alert('メールアドレスは必須です。');
 
@@ -320,7 +326,6 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             const now = new Date().toISOString();
             const applicationData = {
                 ...form,
-                birthDate: ageGroupOnly ? undefined : form.birthDate,
                 lastSurveyDate: now,
                 createdAt: now,
                 updatedAt: now,
@@ -400,7 +405,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                         <div className="confirm-row">
                             <span className="confirm-label">生年月日</span>
                             <span className="confirm-value">
-                                {ageGroupOnly ? `${form.ageGroup || '-'}（年代のみ公開）` : (form.birthDate ? `${form.birthDate} (${calculateAge(form.birthDate)}歳)` : '-')}
+                                {form.birthDate ? `${form.birthDate} (${calculateAge(form.birthDate)}歳)` : '-'}
                             </span>
                         </div>
                         <div className="confirm-row"><span className="confirm-label">性別</span><span className="confirm-value">{form.gender || '-'}</span></div>
@@ -621,81 +626,42 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
                         <div className="form-group">
                             <label className="form-label">生年月日</label>
-                            
-                            {!ageGroupOnly ? (
-                                <div className="birthdate-input-combined animate-fade-in">
-                                    <select 
-                                        className="birth-input birth-year" 
-                                        value={birthYear} 
-                                        onChange={e => handleBirthPartChange('y', e.target.value)} 
-                                        style={{ appearance: 'none', cursor: 'pointer' }}
-                                    >
-                                        <option value="">年</option>
-                                        {Array.from({ length: new Date().getFullYear() - 1929 }, (_, i) => new Date().getFullYear() - i).map(y => (
-                                            <option key={y} value={y}>{y}</option>
-                                        ))}
-                                    </select>
-                                    <span className="birth-divider">/</span>
-                                    <select 
-                                        className="birth-input birth-month" 
-                                        value={birthMonth} 
-                                        onChange={e => handleBirthPartChange('m', e.target.value)} 
-                                        style={{ appearance: 'none', cursor: 'pointer' }}
-                                    >
-                                        <option value="">月</option>
-                                        {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
-                                            <option key={m} value={m}>{m}</option>
-                                        ))}
-                                    </select>
-                                    <span className="birth-divider">/</span>
-                                    <select 
-                                        className="birth-input birth-day" 
-                                        value={birthDay} 
-                                        onChange={e => handleBirthPartChange('d', e.target.value)} 
-                                        style={{ appearance: 'none', cursor: 'pointer' }}
-                                    >
-                                        <option value="">日</option>
-                                        {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
-                                            <option key={d} value={d}>{d}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            ) : (
-                                <div className="radio-group-horizontal animate-fade-in">
-                                    {AGE_GROUPS.map(ag => (
-                                        <label key={ag} className={`radio-option ${form.ageGroup === ag ? 'selected' : ''}`}>
-                                            <input 
-                                                type="radio" 
-                                                name="ageGroup" 
-                                                value={ag} 
-                                                checked={form.ageGroup === ag} 
-                                                onChange={handleChange}
-                                            />
-                                            <span className="radio-text">{ag}</span>
-                                        </label>
+                            <div className="birthdate-input-combined animate-fade-in">
+                                <select 
+                                    className="birth-input birth-year" 
+                                    value={birthYear} 
+                                    onChange={e => handleBirthPartChange('y', e.target.value)} 
+                                    style={{ appearance: 'none', cursor: 'pointer' }}
+                                >
+                                    <option value="">年</option>
+                                    {Array.from({ length: new Date().getFullYear() - 1929 }, (_, i) => new Date().getFullYear() - i).map(y => (
+                                        <option key={y} value={y}>{y}</option>
                                     ))}
-                                </div>
-                            )}
-
-                            <div style={{ marginTop: '12px' }}>
-                                <label className="checkbox-option-inline" style={{ fontSize: '0.85rem', color: '#666', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                    <input 
-                                        type="checkbox" 
-                                        checked={ageGroupOnly} 
-                                        onChange={(e) => {
-                                            setAgeGroupOnly(e.target.checked);
-                                            if (e.target.checked) {
-                                                // 年代のみ回答に切り替えた際、もし既に生年月日があるならその年代を初期値にする
-                                                if (form.birthDate) {
-                                                    const ag = calculateAgeGroup(form.birthDate) as any;
-                                                    if (ag) setForm(prev => ({ ...prev, ageGroup: ag }));
-                                                }
-                                            }
-                                        }} 
-                                        style={{ marginRight: '6px' }}
-                                    />
-                                    <span>生年月日は入力せず、年代のみで回答する</span>
-                                </label>
+                                </select>
+                                <span className="birth-divider">/</span>
+                                <select 
+                                    className="birth-input birth-month" 
+                                    value={birthMonth} 
+                                    onChange={e => handleBirthPartChange('m', e.target.value)} 
+                                    style={{ appearance: 'none', cursor: 'pointer' }}
+                                >
+                                    <option value="">月</option>
+                                    {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+                                        <option key={m} value={m}>{m}</option>
+                                    ))}
+                                </select>
+                                <span className="birth-divider">/</span>
+                                <select 
+                                    className="birth-input birth-day" 
+                                    value={birthDay} 
+                                    onChange={e => handleBirthPartChange('d', e.target.value)} 
+                                    style={{ appearance: 'none', cursor: 'pointer' }}
+                                >
+                                    <option value="">日</option>
+                                    {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
+                                        <option key={d} value={d}>{d}</option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
 
@@ -720,26 +686,28 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
 
                         <div className="form-row">
                             <div className="form-group">
-                                <label className="form-label">居住地（都道府県）</label>
+                                <label className="form-label required">居住地（都道府県）</label>
                                 <select 
                                     name="area" 
                                     className="form-select" 
                                     value={form.area || ''} 
                                     onChange={handleChange}
                                     autoComplete="off"
+                                    required
                                 >
                                     <option value="">選択してください</option>
                                     {AREA_LIST.map(a => <option key={a} value={a}>{a}</option>)}
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">出身地（都道府県）</label>
+                                <label className="form-label required">出身地（都道府県）</label>
                                 <select 
                                     name="birthplace" 
                                     className="form-select" 
                                     value={form.birthplace || ''} 
                                     onChange={handleChange}
                                     autoComplete="off"
+                                    required
                                 >
                                     <option value="">選択してください</option>
                                     {AREA_LIST.map(a => <option key={a} value={a}>{a}</option>)}
@@ -945,7 +913,10 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                                 .sort((a, b) => Number(a.sortOrder ?? 999) - Number(b.sortOrder ?? 999));
                             return (
                                 <div key={cat} className="category-group">
-                                    <h3 className="category-title-static">{cat}</h3>
+                                    <h3 className="category-title-static">
+                                        {cat}
+                                        {cat === '得意な料理ジャンル' && <span style={{ marginLeft: 8, fontSize: '0.75rem', background: '#ef4444', color: 'white', padding: '2px 6px', borderRadius: 4, verticalAlign: 'middle' }}>必須</span>}
+                                    </h3>
                                     <div className="tag-grid">
                                         {tags.map(t => (
                                             <label key={t.id} className={`tag-pill ${form.tagIds.includes(t.id) ? 'active' : ''}`}>

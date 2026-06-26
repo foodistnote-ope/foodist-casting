@@ -156,10 +156,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                                     })()}
                                 </span>
                             </div>
-                            <div className="demo-item">
-                                <span className="demo-label">年代</span>
-                                <span className="demo-value">{val(getEffectiveAgeGroup(foodist))}</span>
-                            </div>
+
                             <div className="demo-item"><span className="demo-label">性別</span><span className="demo-value">{val(foodist.gender)}</span></div>
                             <div className="demo-item"><span className="demo-label">居住地</span><span className="demo-value">{val(foodist.area)}</span></div>
                             <div className="demo-item"><span className="demo-label">出身地</span><span className="demo-value">{val(foodist.birthplace)}</span></div>
