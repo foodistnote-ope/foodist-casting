@@ -213,6 +213,21 @@ export const DatabaseView = ({
                             </button>
                         )}
                     </div>
+                    {searchQuery && (
+                        <div style={{ 
+                            fontSize: '0.85rem', 
+                            fontWeight: '600',
+                            color: 'var(--color-brand-primary)', 
+                            backgroundColor: 'var(--color-bg-hover)',
+                            border: '1px solid #ffcc80',
+                            padding: '4px 10px',
+                            borderRadius: '12px',
+                            whiteSpace: 'nowrap',
+                            boxShadow: '0 1px 2px rgba(230, 81, 0, 0.1)'
+                        }}>
+                            {filteredFoodists.length}件ヒット
+                        </div>
+                    )}
                     
                     {/* Column Toggler & Export Group */}
                     <div className="csv-export-group">

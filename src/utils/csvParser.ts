@@ -218,13 +218,13 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                             patch.cookingClassStatus = cookingStatus as any;
                         }
 
-                        const notePerm = getVal('掲載可否') || getVal('フーディストノート掲載可否');
+                        const notePerm = getVal('フーディスト掲載可否') || getVal('掲載可否') || getVal('フーディストノート掲載可否');
                         if (notePerm) {
                             const val = parseNoteFeaturedPermission(notePerm);
                             if (val) patch.noteFeaturedPermission = val;
                         }
 
-                        const noteMemo = getVal('掲載メモ') || getVal('掲載不可の理由');
+                        const noteMemo = getVal('掲載可否の特記事項') || getVal('掲載メモ') || getVal('掲載不可の理由');
                         if (noteMemo !== undefined && noteMemo !== '') patch.noteFeaturedMemo = noteMemo;
 
                         // --- タグ ---
