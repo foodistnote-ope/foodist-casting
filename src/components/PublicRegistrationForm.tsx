@@ -109,6 +109,7 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
     const [isConfirming, setIsConfirming] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Set<TagCategory>>(new Set(TAG_CATEGORIES));
+    const [honeypot, setHoneypot] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // 生年月日の分割入力用（復元データがあれば初期値にセット）
@@ -320,6 +321,16 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
             }
         }
         // ------------------------------------------
+
+        // --- ハニーポット（スパム対策）チェック ---
+        // Botがこの隠しフィールドに入力した場合、正常に送信されたフリをして処理を終了する
+        if (honeypot !== '') {
+            console.log('Spam blocked (honeypot triggered).');
+            setIsSubmitted(true);
+            setIsSubmitting(false);
+            window.scrollTo(0, 0);
+            return;
+        }
 
         setIsSubmitting(true);
         try {
@@ -550,6 +561,20 @@ export const PublicRegistrationForm = ({ allTags }: PublicRegistrationFormProps)
                             フーディスト会員への無料登録がまだの方は、ぜひこの機会に<a href="https://foodist-service.jp/register" target="_blank" rel="noreferrer" style={{ color: '#888888', fontWeight: 600, textDecoration: 'underline' }}>ご登録ください</a>。
                         </p>
                     </section>
+
+                    {/* ハニーポット（スパム対策用の隠しフィールド） */}
+                    <div style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', zIndex: -1 }} aria-hidden="true">
+                        <label htmlFor="website-url-hp">ウェブサイト</label>
+                        <input
+                            type="text"
+                            id="website-url-hp"
+                            name="website-url-hp"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                            tabIndex={-1}
+                            autoComplete="off"
+                        />
+                    </div>
 
                     {/* ===== 基本情報 ===== */}
                     <section className="form-section">
