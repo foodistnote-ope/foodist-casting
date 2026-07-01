@@ -8,7 +8,17 @@ export type ColumnDef = {
     label: string;
     defaultVisible: boolean;
     excludeFromExport?: boolean;
-    render: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined, allTags: Tag[]) => React.ReactNode;
+    /**
+     * テーブルのセルに表示するReactNodeを返す関数。
+     * onTagClick はタグをクリックしたときの絞り込み処理（タグIDを渡す）。
+     * タグ列以外では使わないため省略可能。
+     */
+    render: (
+        f: Foodist,
+        getFollowers: (f: Foodist, type: string) => number | undefined,
+        allTags: Tag[],
+        onTagClick?: (tagId: string) => void
+    ) => React.ReactNode;
     sortValue?: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined, allTags: Tag[]) => string | number | undefined | null;
     csvValue?: (f: Foodist, getFollowers: (f: Foodist, type: string) => number | undefined, allTags: Tag[]) => string;
 };
@@ -260,20 +270,32 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
     {
         id: 'tags',
         label: 'タグ',
-        defaultVisible: false,
-        render: (f, _getFollowers, allTags) => {
+        defaultVisible: true,
+        render: (f, _getFollowers, allTags, onTagClick) => {
             if (!f.tagIds || f.tagIds.length === 0) return '-';
-            const names = f.tagIds
+            // リレーション・飲酒以外のタグを取得（IDも一緒に保持）
+            const tags = f.tagIds
                 .map(id => allTags.find(t => t.id === id))
-                .filter((t): t is Tag => !!t && t.category !== 'リレーション' && t.category !== '飲酒について')
-                .map(t => t.name);
-            if (names.length === 0) return '-';
+                .filter((t): t is Tag => !!t && t.category !== 'リレーション' && t.category !== '飲酒について');
+            if (tags.length === 0) return '-';
             return (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px', maxWidth: '200px' }}>
-                    {names.map((name, i) => (
-                        <span key={i} style={{ fontSize: '0.65rem', background: '#f0f0f0', borderRadius: '3px', padding: '1px 4px' }}>
-                            {name}
-                        </span>
+                    {tags.map((tag) => (
+                        // onTagClick がある場合はクリッカブルなボタンとして表示する
+                        onTagClick ? (
+                            <button
+                                key={tag.id}
+                                className="td-tag-clickable"
+                                onClick={() => onTagClick(tag.id)}
+                                title={`「${tag.name}」で絞り込む`}
+                            >
+                                {tag.name}
+                            </button>
+                        ) : (
+                            <span key={tag.id} style={{ fontSize: '0.65rem', background: '#f0f0f0', borderRadius: '3px', padding: '1px 4px' }}>
+                                {tag.name}
+                            </span>
+                        )
                     ))}
                 </div>
             );
