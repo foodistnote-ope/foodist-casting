@@ -337,7 +337,7 @@ export const useFoodists = () => {
      * - メモ: 既存メモを保持しつつ追記
      * - SNSフォロワー数: 対象プラットフォームの metricValue / url を上書き
      */
-    const patchFoodists = useCallback(async (patches: FoodistPatch[], matchKey: '活動名' | 'ニックネーム' | 'メールアドレス' = '活動名'): Promise<{ updated: number; notFound: string[]; conflicts: string[]; noUpdateFields: string[] }> => {
+    const patchFoodists = useCallback(async (patches: FoodistPatch[], matchKey: '活動名' | 'ニックネーム' | 'メールアドレス' = '活動名'): Promise<{ updated: number; notFound: string[]; conflicts: string[]; noUpdateFields: string[]; successes: string[] }> => {
         setLoading(true);
         setError(null);
         try {
@@ -346,6 +346,7 @@ export const useFoodists = () => {
             const notFound: string[] = [];
             const conflicts: string[] = [];
             const noUpdateFields: string[] = [];
+            const successes: string[] = [];
 
             const newList = foodists.map(f => ({ ...f }));
             const toSave: Foodist[] = [];
@@ -472,13 +473,15 @@ export const useFoodists = () => {
 
             newList[targetIndex] = updated;
             updatedCount++;
+            successes.push(patch._matchName || patch._matchId || '（不明）');
+            toSave.push(updated);
         }
 
             if (updatedCount > 0) {
-                _applyAndSave(newList, () => putManyFoodists(newList));
+                _applyAndSave(newList, () => putManyFoodists(toSave));
             }
 
-            return { updated: updatedCount, notFound, conflicts, noUpdateFields };
+            return { updated: updatedCount, notFound, conflicts, noUpdateFields, successes };
         } catch (e) {
             setError(e instanceof Error ? e.message : String(e));
             throw e;
