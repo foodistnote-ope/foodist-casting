@@ -273,3 +273,113 @@
         white-space: nowrap;
     }
 }
+
+/* ========================================
+   タグ絞り込みバッジエリア
+   （テーブルの上に表示される絞り込み中バッジ）
+   ======================================== */
+
+/* バッジエリア全体のコンテナ */
+.db-tag-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    background: #fff8f0;
+    border: 1px solid #ffcc80;
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+/* 「タグ絞り込み中：」ラベル */
+.db-tag-filter-label {
+    color: #e65100;
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+
+/* 選択中の各タグバッジ */
+.db-tag-filter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff3e0;
+    border: 1px solid #ff8c00;
+    color: #bf360c;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 8px 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+/* バッジ内の ✕ ボタン */
+.db-tag-filter-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ff6d00;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 1px 2px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+}
+
+.db-tag-filter-remove:hover {
+    color: #b71c1c;
+    background: #ffccbc;
+}
+
+/* すべてクリアボタン */
+.db-tag-filter-clear-all {
+    background: none;
+    border: 1px solid #bdbdbd;
+    cursor: pointer;
+    color: #757575;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    transition: background 0.15s, color 0.15s;
+    margin-left: 4px;
+}
+
+.db-tag-filter-clear-all:hover {
+    background: #f5f5f5;
+    color: #424242;
+}
+
+/* ========================================
+   テーブル上のクリッカブルなタグボタン
+   （タグ列でクリックすると絞り込みが発動）
+   ======================================== */
+.td-tag-clickable {
+    display: inline-block;
+    font-size: 0.65rem;
+    background: #e8f4fd;
+    border: 1px solid #90caf9;
+    color: #1565c0;
+    border-radius: 3px;
+    padding: 1px 6px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    white-space: nowrap;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.td-tag-clickable:hover {
+    background: #bbdefb;
+    border-color: #1976d2;
+    transform: scale(1.05);
+}
+
+.td-tag-clickable:active {
+    transform: scale(0.97);
+}
