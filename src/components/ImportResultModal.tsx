@@ -9,7 +9,7 @@ interface ImportResultModalProps {
         updated?: number;
     };
     failures?: {
-        type: 'notFound' | 'conflict' | 'duplicate' | 'noUpdate';
+        type: 'notFound' | 'conflict' | 'duplicate' | 'noUpdate' | 'success';
         label: string;
         items: string[];
     }[];
@@ -73,7 +73,7 @@ export const ImportResultModal = ({ title, summary, failures = [], onClose }: Im
                     {failures.map((f, idx) => f.items.length > 0 && (
                         <div key={idx} className={`result-failure-section ${f.type}`}>
                             <h3 className="failure-title">
-                                <span className="failure-icon">⚠️</span>
+                                <span className="failure-icon">{f.type === 'success' ? '✅' : '⚠️'}</span>
                                 {f.label}: {f.items.length}件
                             </h3>
                             <div className="failure-list-container">
