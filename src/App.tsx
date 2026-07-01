@@ -175,13 +175,10 @@ function App() {
   // CSV インポート処理
   const [isImportingCsv, setIsImportingCsv] = useState(false);
   const [isPatchingCsv, setIsPatchingCsv] = useState(false);
-  const handleCsvImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleCsvImport = async (file: File, matchKey: '活動名' | 'ニックネーム' | 'メールアドレス') => {
     setIsImportingCsv(true);
     try {
-      let parsed = await parseFoodistCsv(file, tags);
+      let parsed = await parseFoodistCsv(file, tags, matchKey);
       if (parsed.length === 0) {
         alert('CSVに有効なデータが見つかりませんでした。');
         return;
@@ -209,18 +206,16 @@ function App() {
           if (parsed.length === 0) {
             alert('新しいデータがなかったため、インポートを終了しました。');
             setIsImportingCsv(false);
-            e.target.value = '';
             return;
           }
         } else {
           // キャンセル時はすべて中止
           setIsImportingCsv(false);
-          e.target.value = '';
           return;
         }
       }
 
-      const { added } = await mergeFoodists(parsed);
+      const { added } = await mergeFoodists(parsed, matchKey);
       setImportResult({
         title: '新規追加インポート結果',
         summary: { success: added, added },
@@ -231,27 +226,23 @@ function App() {
       alert(`CSVインポートに失敗しました。\n${err}`);
     } finally {
       setIsImportingCsv(false);
-      e.target.value = '';
     }
   };
 
   // CSV 部分更新インポート処理
-  const handlePatchCsvImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handlePatchCsvImport = async (file: File, matchKey: '活動名' | 'ニックネーム' | 'メールアドレス') => {
     setIsPatchingCsv(true);
     try {
-      const patches = await parsePatchCsv(file, tags);
+      const patches = await parsePatchCsv(file, tags, matchKey);
       if (patches.length === 0) {
         alert('CSVにデータが見つかりませんでした。');
         return;
       }
 
-      const confirmMsg = `部分更新CSVを読み込みました。\n対象レコード数: ${patches.length}件\n\n「id」または「活動名」でマッチした既存データに差分を上書きします。\n新規登録はされません。\n\n実行しますか？`;
+      const confirmMsg = `部分更新CSVを読み込みました。\n対象レコード数: ${patches.length}件\n\n「${matchKey}」でマッチした既存データに差分を上書きします。\n新規登録はされません。\n\n実行しますか？`;
       if (!window.confirm(confirmMsg)) return;
 
-      const { updated, notFound, conflicts, noUpdateFields } = await patchFoodists(patches);
+      const { updated, notFound, conflicts, noUpdateFields } = await patchFoodists(patches, matchKey);
       setImportResult({
         title: '部分更新結果',
         summary: { success: updated },
@@ -263,10 +254,9 @@ function App() {
       });
     } catch (err) {
       console.error(err);
-      alert(`部分更新CSVのインポートに失敗しました。\n${err}`);
+      alert(`CSV更新に失敗しました。\n${err}`);
     } finally {
       setIsPatchingCsv(false);
-      e.target.value = '';
     }
   };
 
@@ -898,7 +888,7 @@ function App() {
                                 {cardMedia.length > 0 && (
                                   <div className="card-sns">
                                     {cardMedia.map(acc => (
-                                      <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.mediaType} onClick={e => e.stopPropagation()}>
+                                      <a key={acc.id} href={acc.url} target="_blank" rel="noreferrer" className="sns-link" title={acc.url || acc.mediaType} onClick={e => e.stopPropagation()}>
                                         <img
                                           src={MEDIA_ICONS[acc.mediaType] || MEDIA_ICONS['ブログ']}
                                           alt={acc.mediaType}

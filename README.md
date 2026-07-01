@@ -1,73 +1,18 @@
-# React + TypeScript + Vite
+# Foodist Casting (社内管理用 候補者選定ツール)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## プロジェクト概要
+本システムは、アイランド株式会社における「フーディスト（料理インフルエンサー）」の仕事起用（キャスティング）に向けた候補者選定プロセスを効率化・管理するための**社内専用ツール**です。
 
-Currently, two official plugins are available:
+## 主な目的
+* 案件に最適なフーディストを迅速かつ的確に選定・リストアップする。
+* フーディストの基本情報や得意分野を一元管理し、属人化しがちなキャスティング業務を共有・効率化する。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## データ収集の仕組み
+候補者となるフーディストのデータベースは、主に以下の2つの方法で構築されます。
+1. **フォーム回答による登録**
+   アイランド株式会社から候補となるフーディストへ専用フォームのURLを送信し、回答されたデータを自動でシステムに取り込む。
+2. **担当者による手動登録**
+   アイランド株式会社の担当者が、SNSなどから魅力的なフーディストを独自に発掘し、任意で手動登録する。
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ドキュメント構成
+* [機能説明書 (docs/functional_spec.md)](./docs/functional_spec.md) - 本システムに必要な画面機能やデータ項目の詳細説明

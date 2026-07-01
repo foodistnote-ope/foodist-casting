@@ -73,7 +73,7 @@ const readFileWithEncoding = (file: File): Promise<string> => {
 
             // 3. 変換後の文字列に「活動名」が含まれているかチェック。
             //    もし含まれていなければ、もう一方の主要な文字コード（UTF-8/SJIS）で再試行する
-            if (!unicodeString.includes('活動名')) {
+            if (!unicodeString.includes('活動名') && !unicodeString.includes('ニックネーム') && !unicodeString.includes('メールアドレス') && !unicodeString.includes('id')) {
                 const fallbackEncoding = encoding === 'SJIS' ? 'UTF8' : 'SJIS';
                 unicodeString = Encoding.convert(codes, {
                     to: 'UNICODE',
@@ -89,69 +89,91 @@ const readFileWithEncoding = (file: File): Promise<string> => {
     });
 };
 
+const parseNumber = (value?: string): number | undefined => {
+    if (!value) return undefined;
+    const num = parseInt(value.replace(/[,]/g, ''), 10);
+    return isNaN(num) ? undefined : num;
+};
+
+/** Excelの日付シリアル値（整数）を YYYY-MM-DD 形式に変換し、他の日付形式もハイフン区切りに正規化する */
+const parseExcelDate = (value?: string): string | undefined => {
+    if (!value) return undefined;
+    const num = parseInt(value, 10);
+    // 10000〜90000の数値のみの文字列であればシリアル値とみなす
+    if (!isNaN(num) && num > 10000 && num < 90000 && /^\d+$/.test(value)) {
+        const d = new Date(1899, 11, 30);
+        d.setDate(d.getDate() + num);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+    // スラッシュやドット、年月日などをハイフンに変換（例: 2025/08/01 -> 2025-08-01）
+    let normalized = value.replace(/[/.年]/g, '-').replace(/[日月]/g, '');
+    if (normalized.endsWith('-')) {
+        normalized = normalized.slice(0, -1);
+    }
+    return normalized;
+};
+
+/** URLの形式をバリデーションする */
+const validateUrl = (url: string | undefined, rowName: string, fieldName: string) => {
+    if (!url) return;
+    const trimmed = url.trim();
+    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+        throw new Error(`【${rowName}】の「${fieldName}」には正しいURL（http:// または https:// から始まる文字列）を入力してください。\n入力値: ${url}`);
+    }
+    try {
+        new URL(trimmed);
+    } catch {
+        throw new Error(`【${rowName}】の「${fieldName}」のURL形式が不正です。\n入力値: ${url}`);
+    }
+};
+
+/** カンマ区切りのタグ名をID配列に変換する */
+const mapTagNamesToIds = (tagNamesStr: string | undefined, allTags: Tag[]): string[] => {
+    if (!tagNamesStr) return [];
+    const names = tagNamesStr.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
+    const result: string[] = [];
+    names.forEach(name => {
+        const tag = allTags.find(t => t.name === name);
+        if (tag) result.push(tag.id);
+    });
+    return Array.from(new Set(result));
+};
+
 /**
- * 部分更新CSVのパース。
- * - ヘッダーに "id" または "活動名" が必要（どちらか一方でも可）。
+ * CSV インポート
  */
-export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<FoodistPatch[]> => {
+export const parsePatchCsv = async (file: File, allTags: Tag[], matchKey: '活動名' | 'ニックネーム' | 'メールアドレス' = '活動名'): Promise<FoodistPatch[]> => {
     const csvString = await readFileWithEncoding(file);
     return new Promise((resolve, reject) => {
-        // ヘッダー判定を確実にするため、一旦 header: false で読み込む
-        Papa.parse<string[]>(csvString, {
-            header: false,
+        Papa.parse<Record<string, string>>(csvString, {
+            header: true,
             skipEmptyLines: 'greedy',
+            transformHeader: (header) => header.replace(/[\ufeff\u200b\u200c\u200d\u200e\u200f]/g, '').trim(),
+            delimiter: '',
             complete: (results) => {
                 try {
-                    const data = results.data;
-                    if (data.length < 1) {
-                        resolve([]);
-                        return;
-                    }
-
-                    // 1行目をヘッダーとして取得（前後の不要な文字やBOMを除去）
-                    const rawHeaders = data[0].map(h => (h || '').replace(/[\ufeff\u200b\u200c\u200d\u200e\u200f]/g, '').trim());
-                    const headerMap = getHeaderMap(rawHeaders);
+                    const headers = results.meta.fields ?? [];
+                    const headerMap = getHeaderMap(headers);
+                    const getRealHeader = (target: string) => headerMap.get(normalizeHeader(target));
                     
-                    const getIdx = (name: string) => {
-                        const originalHeader = headerMap.get(normalizeHeader(name));
-                        if (!originalHeader) return -1;
-                        return rawHeaders.indexOf(originalHeader);
-                    };
-
-                    const idIdx = getIdx('id');
-                    const nameIdx = getIdx('活動名');
-
-                    if (idIdx === -1 && nameIdx === -1) {
-                        const detected = rawHeaders.filter(h => h).join(', ');
-                        throw new Error(`「活動名」または「id」の列が見つかりません。(検出された項目名: ${detected || 'なし'})`);
+                    const matchHeader = getRealHeader(matchKey);
+                    if (!matchHeader) {
+                        throw new Error(`マッチング用の列「${matchKey}」が見つかりません。`);
                     }
 
-                    const patches: FoodistPatch[] = data.slice(1) // 2行目以降がデータ
-                        .filter(row => row && row.some(v => v !== ''))
+                    const patches: FoodistPatch[] = results.data
+                        .filter(row => row && Object.values(row).some(v => v !== ''))
                         .map((row, index) => {
                         const patch: FoodistPatch = {
-                            _matchId: idIdx !== -1 ? row[idIdx] : undefined,
-                            _matchName: nameIdx !== -1 ? row[nameIdx] : undefined,
+                            _matchName: row[matchHeader]
                         };
-
-                        const getVal = (target: string) => {
-                            const idx = getIdx(target);
-                            return idx !== -1 ? row[idx] : undefined;
+                        const getVal = (key: string) => {
+                            const h = getRealHeader(key);
+                            return h ? row[h] : undefined;
                         };
-
-                        // --- フィールド設定 ---
-                        const realName = getVal('本名');
-                        if (realName !== undefined && realName !== '') patch.realName = realName;
-                        
-                        const title = getVal('肩書き');
-                        if (title !== undefined && title !== '') patch.title = title;
-
-                        const membership = getVal('会員登録状況');
-                        if (membership && ['あり', 'なし', '要確認'].includes(membership)) patch.membershipStatus = membership as any;
-
-                        const marital = getVal('婚姻状況');
-                        if (marital && ['未婚', '既婚', '回答しない', '未確認'].includes(marital)) patch.maritalStatus = marital as any;
-                        else if (marital === '非公開') patch.maritalStatus = '回答しない';
 
                         const area = getVal('居住地');
                         if (area !== undefined && area !== '') patch.area = area;
@@ -160,7 +182,7 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
                         if (birthplace !== undefined && birthplace !== '') patch.birthplace = birthplace;
 
                         const birthDate = getVal('生年月日');
-                        if (birthDate !== undefined && birthDate !== '') patch.birthDate = birthDate;
+                        if (birthDate !== undefined && birthDate !== '') patch.birthDate = parseExcelDate(birthDate);
 
                         const age = getVal('年齢');
                         if (age !== undefined && age !== '') {
@@ -301,38 +323,6 @@ export const parsePatchCsv = async (file: File, allTags: Tag[]): Promise<Foodist
     });
 };
 
-const parseNumber = (value?: string): number | undefined => {
-    if (!value) return undefined;
-    const num = parseInt(value.replace(/[,]/g, ''), 10);
-    return isNaN(num) ? undefined : num;
-};
-
-/** URLの形式をバリデーションする */
-const validateUrl = (url: string | undefined, rowName: string, fieldName: string) => {
-    if (!url) return;
-    const trimmed = url.trim();
-    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
-        throw new Error(`【${rowName}】の「${fieldName}」には正しいURL（http:// または https:// から始まる文字列）を入力してください。\n入力値: ${url}`);
-    }
-    try {
-        new URL(trimmed);
-    } catch {
-        throw new Error(`【${rowName}】の「${fieldName}」のURL形式が不正です。\n入力値: ${url}`);
-    }
-};
-
-/** カンマ区切りのタグ名をID配列に変換する */
-const mapTagNamesToIds = (tagNamesStr: string | undefined, allTags: Tag[]): string[] => {
-    if (!tagNamesStr) return [];
-    const names = tagNamesStr.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
-    const result: string[] = [];
-    names.forEach(name => {
-        const tag = allTags.find(t => t.name === name);
-        if (tag) result.push(tag.id);
-    });
-    return Array.from(new Set(result));
-};
-
 /**
  * CSV インポート
  */
@@ -346,15 +336,21 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
             delimiter: '',
             complete: (results) => {
                 try {
+                    const headers = results.meta.fields ?? [];
+                    const headerMap = getHeaderMap(headers);
+                    const getRealHeader = (target: string) => headerMap.get(normalizeHeader(target));
+                    
+                    const nameHeader = getRealHeader('活動名') || getRealHeader('ニックネーム') || getRealHeader('displayName') || getRealHeader('name');
+                    if (!nameHeader) {
+                        throw new Error('「活動名」または「ニックネーム」の列が見つからないため反映できません。');
+                    }
+
                     const now = new Date().toISOString();
                     const parsed: Foodist[] = results.data
                         .filter(row => row && Object.values(row).some(v => v !== ''))
                         .map((row, index: number) => {
-                        const headers = results.meta.fields ?? [];
-                        const headerMap = getHeaderMap(headers);
-                        const getRealHeader = (target: string) => headerMap.get(normalizeHeader(target));
 
-                        const displayName = row[getRealHeader('活動名')!] || row[getRealHeader('displayName')!] || row[getRealHeader('name')!] || '名称未設定';
+                        const displayName = row[nameHeader] || '名称未設定';
                         const mediaAccounts: MediaAccount[] = [];
                         let sort = 1;
 
@@ -445,7 +441,7 @@ export const parseFoodistCsv = async (file: File, allTags: Tag[]): Promise<Foodi
                             })(),
                             area: areaKey ? row[areaKey] : undefined,
                             birthplace: birthplaceKey ? row[birthplaceKey] : undefined,
-                            birthDate: birthDateKey ? row[birthDateKey] : undefined,
+                            birthDate: birthDateKey ? parseExcelDate(row[birthDateKey]) : undefined,
                             age: ageKey ? parseNumber(row[ageKey]) : undefined,
                             ageGroup: (ageGroupKey ? row[ageGroupKey] : undefined) as Foodist['ageGroup'] || undefined,
                             gender: (() => {
