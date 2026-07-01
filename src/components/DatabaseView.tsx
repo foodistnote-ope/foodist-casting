@@ -11,14 +11,15 @@ interface DatabaseViewProps {
     onView?: (foodist: Foodist) => void;
     onEdit: (foodist: Foodist) => void;
     onAdd: () => void;
-    onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onImport: (file: File, matchKey: '活動名' | 'ニックネーム' | 'メールアドレス') => void;
     onDelete?: (id: string) => void;
     isImporting: boolean;
-    onPatchImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onPatchImport: (file: File, matchKey: '活動名' | 'ニックネーム' | 'メールアドレス') => void;
     isPatchImporting: boolean;
 }
 
 import { AVAILABLE_COLUMNS, getMediaFollowers } from '../utils/exportColumns';
+import { CsvImportSettingsModal } from './CsvImportSettingsModal';
 
 export const DatabaseView = ({ 
     foodists, 
@@ -33,6 +34,7 @@ export const DatabaseView = ({
     isPatchImporting
 }: DatabaseViewProps) => {
     const [searchQuery, setSearchQuery] = useState('');
+    const [importSettingsModal, setImportSettingsModal] = useState<{ isOpen: boolean, type: 'full' | 'patch' }>({ isOpen: false, type: 'full' });
     
     // Column visibility state
     const [visibleColumnIds, setVisibleColumnIds] = useState<string[]>(() => {
@@ -282,7 +284,7 @@ export const DatabaseView = ({
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         新規登録
                     </button>
-                    <label className={`btn-secondary db-btn-csv-new ${isImporting ? 'loading' : ''}`} style={{ cursor: 'pointer' }} title="新規フーディストを一括追加するCSV">
+                    <button className={`btn-secondary db-btn-csv-new ${isImporting ? 'loading' : ''}`} onClick={() => setImportSettingsModal({ isOpen: true, type: 'full' })} disabled={isImporting} title="新規フーディストを一括追加するCSV">
                         {isImporting ? (
                             '読込中...'
                         ) : (
@@ -291,11 +293,12 @@ export const DatabaseView = ({
                                 新規追加CSV
                             </>
                         )}
-                        <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onImport} disabled={isImporting} />
-                    </label>
-                    <label
+                    </button>
+                    <button
                         className={`btn-secondary db-btn-csv-patch ${isPatchImporting ? 'loading' : ''}`}
-                        style={{ cursor: 'pointer', borderColor: '#d4844a', color: '#d4844a' }}
+                        style={{ borderColor: '#d4844a', color: '#d4844a' }}
+                        onClick={() => setImportSettingsModal({ isOpen: true, type: 'patch' })}
+                        disabled={isPatchImporting}
                         title="既存フーディストの特定項目を一括更新するCSV（新規追加はされません）"
                     >
                         {isPatchImporting ? (
@@ -306,8 +309,7 @@ export const DatabaseView = ({
                                 部分更新CSV
                             </>
                         )}
-                        <input type="file" accept=".csv" style={{ display: 'none' }} onChange={onPatchImport} disabled={isPatchImporting} />
-                    </label>
+                    </button>
 
                     <a
                         href="/foodist_patch_template.csv"
@@ -388,6 +390,21 @@ export const DatabaseView = ({
                     </tbody>
                 </table>
             </div>
+            
+            {importSettingsModal.isOpen && (
+                <CsvImportSettingsModal
+                    title={importSettingsModal.type === 'full' ? '新規追加CSVのインポート' : '部分更新CSVのインポート'}
+                    onClose={() => setImportSettingsModal({ isOpen: false, type: 'full' })}
+                    onConfirm={(file, matchKey) => {
+                        setImportSettingsModal({ isOpen: false, type: 'full' });
+                        if (importSettingsModal.type === 'full') {
+                            onImport(file, matchKey);
+                        } else {
+                            onPatchImport(file, matchKey);
+                        }
+                    }}
+                />
+            )}
         </div>
     );
 };

@@ -62,7 +62,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'birthDate',
         label: '生年月日',
         defaultVisible: false,
-        render: (f) => f.birthDate || '-',
+        render: (f) => f.birthDate ? new Date(f.birthDate).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.birthDate || '',
     },
     {
@@ -350,6 +350,7 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
                             <img 
                                 src={MEDIA_ICONS[mediaType]} 
                                 alt={mediaType} 
+                                title={f.mediaAccounts.find(a => a.mediaType === mediaType)?.url || mediaType}
                                 style={{ 
                                     width: '16px', 
                                     height: '16px', 
@@ -385,9 +386,15 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
             id: `${baseId}_updatedAt`,
             label: `${mediaType}_更新日時`,
             defaultVisible: false,
-            render: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt?.slice(0, 10) || '-',
+            render: (f) => {
+                const d = f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt;
+                return d ? new Date(d).toLocaleDateString('ja-JP') : '-';
+            },
             sortValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt || '',
-            csvValue: (f) => f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt?.slice(0, 10) || '',
+            csvValue: (f) => {
+                const d = f.mediaAccounts.find(a => a.mediaType === mediaType)?.updatedAt;
+                return d ? new Date(d).toLocaleDateString('ja-JP') : '';
+            },
         });
 
         return cols;

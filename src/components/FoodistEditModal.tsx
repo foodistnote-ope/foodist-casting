@@ -140,8 +140,9 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
     const [birthDay, setBirthDay] = useState('');
 
     useEffect(() => {
-        if (form.birthDate && form.birthDate.includes('-')) {
-            const [y, m, d] = form.birthDate.split('-');
+        if (foodist && foodist.birthDate && (foodist.birthDate.includes('-') || foodist.birthDate.includes('/'))) {
+            const sep = foodist.birthDate.includes('-') ? '-' : '/';
+            const [y, m, d] = foodist.birthDate.split(sep);
             setBirthYear(y || '');
             setBirthMonth(m ? parseInt(m, 10).toString() : '');
             setBirthDay(d ? parseInt(d, 10).toString() : '');
@@ -231,7 +232,7 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
             ...prev,
             mediaAccounts: prev.mediaAccounts.map(a => {
                 if (a.id !== id) return a;
-                const next = { ...a, ...patch };
+                const next = { ...a, ...patch, updatedAt: new Date().toISOString() };
 
                 // 媒体種別の変更に合わせて数値種別のデフォルトを切り替える
                 if (patch.mediaType) {

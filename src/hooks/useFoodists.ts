@@ -229,65 +229,77 @@ export const useFoodists = () => {
      * - ID または 活動名 が一致する場合：既存レコードを新しい内容で上書き（更新）
      * - 一致しない場合：新規追加
      */
-    const mergeFoodists = useCallback(async (incoming: Foodist[]): Promise<{ added: number; updated: number }> => {
-        const validExisting = foodists.filter(f => !!f);
-        const newList = [...validExisting];
-        const idIndex = new Map(validExisting.map((f, i) => [f.id, i]));
+    const mergeFoodists = useCallback(async (incoming: Foodist[], matchKey: '活動名' | 'ニックネーム' | 'メールアドレス' = '活動名'): Promise<{ added: number }> => {
+        setLoading(true);
+        setError(null);
+        try {
+            const existingList = foodists;
+            const validExisting = existingList.filter(f => !!f);
+            
+            let added = 0;
+            const newList = [...validExisting];
+            const toSave: Foodist[] = [];
 
-        let added = 0;
-        let updated = 0;
-        const toSave: Foodist[] = [];
-
-        for (const item of incoming) {
-            if (!item) continue;
-            // マッチングロジック: ID優先、次に活動名（正規化）
-            let idx = item.id ? idIndex.get(item.id) : undefined;
-
-            if (idx === undefined || idx === -1) {
-                // 正規化して比較
-                const targetNorm = normalizeString(item.displayName);
-                const foundIdx = validExisting.findIndex(f => 
-                    normalizeString(f.displayName) === targetNorm || 
-                    (f.aliases ?? []).some(a => normalizeString(a) === targetNorm)
-                );
-                idx = foundIdx !== -1 ? foundIdx : undefined;
-            }
-
-            if (idx !== undefined && idx !== -1) {
-                // 既存あり → 更新
-                const existing = newList[idx];
-                if (!existing) continue;
+            for (const item of incoming) {
+                if (!item) continue;
                 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const patch: any = {};
-                (Object.keys(item) as (keyof Foodist)[]).forEach(key => {
-                    const val = item[key];
-                    if (val !== '' && val !== null && val !== undefined && !(Array.isArray(val) && val.length === 0)) {
-                        patch[key] = val;
-                    }
-                });
-
-                const updatedItem = { ...existing, ...patch, id: existing.id };
-                newList[idx] = updatedItem;
-                updated++;
-                toSave.push(updatedItem);
-            } else {
-                // 新規追加
-                if (!item.id) {
-                    item.id = `foodist-${Date.now()}-${added}-${Math.floor(Math.random() * 1000000)}`;
+                let idx: number | undefined = undefined;
+                if (item.id) {
+                    const foundIdx = newList.findIndex(f => f.id === item.id);
+                    if (foundIdx !== -1) idx = foundIdx;
                 }
-                newList.push(item);
-                added++;
-                toSave.push(item);
+                
+                if (idx === undefined || idx === -1) {
+                    let searchNorm = '';
+                    if (matchKey === '活動名' || matchKey === 'ニックネーム') {
+                        searchNorm = normalizeString(item.displayName);
+                    } else if (matchKey === 'メールアドレス') {
+                        searchNorm = normalizeString(item.email || '');
+                    }
+
+                    if (searchNorm) {
+                        const potentialMatches = newList.filter(f => {
+                            if (matchKey === '活動名') return normalizeString(f.displayName) === searchNorm;
+                            if (matchKey === 'ニックネーム') return (f.aliases ?? []).some(a => normalizeString(a) === searchNorm) || normalizeString(f.displayName) === searchNorm;
+                            if (matchKey === 'メールアドレス') return f.email && normalizeString(f.email) === searchNorm;
+                            return false;
+                        });
+
+                        if (potentialMatches.length > 1) {
+                            console.warn(`[mergeFoodists] Ambiguous match for "${searchNorm}": found ${potentialMatches.length} candidates. Skipping.`);
+                            continue;
+                        } else if (potentialMatches.length === 1) {
+                            idx = newList.indexOf(potentialMatches[0]);
+                        }
+                    }
+                }
+
+                if (idx !== undefined && idx !== -1) {
+                    const existing = newList[idx];
+                    const updatedItem = { ...existing, ...item, id: existing.id };
+                    newList[idx] = updatedItem;
+                    toSave.push(updatedItem);
+                } else {
+                    if (!item.id) {
+                        item.id = `foodist-${Date.now()}-${added}-${Math.floor(Math.random() * 1000000)}`;
+                    }
+                    newList.push(item);
+                    added++;
+                    toSave.push(item);
+                }
             }
-        }
 
-        if (toSave.length > 0) {
-            setFoodistsState(newList);
-            await putManyFoodists(toSave);
+            if (toSave.length > 0) {
+                setFoodistsState(newList);
+                await putManyFoodists(toSave);
+            }
+            return { added };
+        } catch (e) {
+            setError(e instanceof Error ? e.message : String(e));
+            throw e;
+        } finally {
+            setLoading(false);
         }
-
-        return { added, updated };
     }, [foodists]);
 
     // ---- JSON インポート ----
@@ -307,9 +319,8 @@ export const useFoodists = () => {
                         return;
                     }
 
-                    // 改良版マージを実行
                     const result = await mergeFoodists(incoming);
-                    resolve({ ...result, skipped: 0 });
+                    resolve({ added: result.added, updated: 0, skipped: 0 });
                 } catch (err) {
                     reject(err);
                 }
@@ -326,16 +337,20 @@ export const useFoodists = () => {
      * - メモ: 既存メモを保持しつつ追記
      * - SNSフォロワー数: 対象プラットフォームの metricValue / url を上書き
      */
-    const patchFoodists = useCallback(async (patches: FoodistPatch[]): Promise<{ updated: number; notFound: string[]; conflicts: string[]; noUpdateFields: string[] }> => {
-        const now = new Date().toISOString();
-        let updatedCount = 0;
-        const notFound: string[] = [];
-        const conflicts: string[] = [];
-        const noUpdateFields: string[] = [];
+    const patchFoodists = useCallback(async (patches: FoodistPatch[], matchKey: '活動名' | 'ニックネーム' | 'メールアドレス' = '活動名'): Promise<{ updated: number; notFound: string[]; conflicts: string[]; noUpdateFields: string[] }> => {
+        setLoading(true);
+        setError(null);
+        try {
+            const now = new Date().toISOString();
+            let updatedCount = 0;
+            const notFound: string[] = [];
+            const conflicts: string[] = [];
+            const noUpdateFields: string[] = [];
 
-        const newList = foodists.map(f => ({ ...f }));
+            const newList = foodists.map(f => ({ ...f }));
+            const toSave: Foodist[] = [];
 
-        for (const patch of patches) {
+            for (const patch of patches) {
             // 0. 更新項目がない場合はスキップ
             if (patch._noUpdateFields) {
                 noUpdateFields.push(patch._matchName || patch._matchId || '（不明）');
@@ -355,11 +370,17 @@ export const useFoodists = () => {
                 const searchNorm = normalizeString(patch._matchName);
                 console.info(`[patchFoodists] Matching for: "${patch._matchName}" (norm: "${searchNorm}")`);
                 
-                // 候補を探す（活動名またはエイリアスが一致するもの）
-                const potentialMatches = newList.filter(f => 
-                    normalizeString(f.displayName) === searchNorm ||
-                    (f.aliases ?? []).some(a => normalizeString(a) === searchNorm)
-                );
+                // 候補を探す
+                const potentialMatches = newList.filter(f => {
+                    if (matchKey === '活動名') {
+                        return normalizeString(f.displayName) === searchNorm;
+                    } else if (matchKey === 'ニックネーム') {
+                        return (f.aliases ?? []).some(a => normalizeString(a) === searchNorm) || normalizeString(f.displayName) === searchNorm;
+                    } else if (matchKey === 'メールアドレス') {
+                        return f.email && normalizeString(f.email) === searchNorm;
+                    }
+                    return false;
+                });
 
                 if (potentialMatches.length > 1) {
                     console.warn(`[patchFoodists] Ambiguous match for "${patch._matchName}": found ${potentialMatches.length} candidates.`);
@@ -453,11 +474,17 @@ export const useFoodists = () => {
             updatedCount++;
         }
 
-        if (updatedCount > 0) {
-            _applyAndSave(newList, () => putManyFoodists(newList));
-        }
+            if (updatedCount > 0) {
+                _applyAndSave(newList, () => putManyFoodists(newList));
+            }
 
-        return { updated: updatedCount, notFound, conflicts, noUpdateFields };
+            return { updated: updatedCount, notFound, conflicts, noUpdateFields };
+        } catch (e) {
+            setError(e instanceof Error ? e.message : String(e));
+            throw e;
+        } finally {
+            setLoading(false);
+        }
     }, [foodists, _applyAndSave]);
 
     return {

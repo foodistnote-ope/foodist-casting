@@ -114,7 +114,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                         {visibleMedia.length > 0 && (
                             <div className="modal-sns-links">
                                 {visibleMedia.map(acc => (
-                                    <a key={acc.id} href={acc.url || '#'} target="_blank" rel="noreferrer" className="modal-sns-link">
+                                    <a key={acc.id} href={acc.url || '#'} target="_blank" rel="noreferrer" className="modal-sns-link" title={acc.url || acc.mediaType}>
                                         <img
                                             src={MEDIA_ICONS[acc.mediaType] || MEDIA_ICONS['その他']}
                                             alt={acc.mediaType}
@@ -146,7 +146,7 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">本名</span><span className="demo-value">{val(foodist.realName)}</span></div>
                             <div className="demo-item"><span className="demo-label">肩書き</span><span className="demo-value">{val(foodist.title)}</span></div>
                             <div className="demo-item"><span className="demo-label">会員登録状況</span><span className="demo-value">{val(foodist.membershipStatus)}</span></div>
-                            <div className="demo-item"><span className="demo-label">生年月日</span><span className="demo-value">{val(foodist.birthDate)}</span></div>
+                            <div className="demo-item"><span className="demo-label">生年月日</span><span className="demo-value">{foodist.birthDate ? new Date(foodist.birthDate).toLocaleDateString('ja-JP') : '未設定'}</span></div>
                             <div className="demo-item">
                                 <span className="demo-label">年齢</span>
                                 <span className="demo-value">
