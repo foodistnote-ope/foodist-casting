@@ -34,6 +34,8 @@ export const DatabaseView = ({
     isPatchImporting
 }: DatabaseViewProps) => {
     const [searchQuery, setSearchQuery] = useState('');
+    // 絞り込み中のタグIDの一覧（複数選択AND絞り込み）
+    const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
     const [importSettingsModal, setImportSettingsModal] = useState<{ isOpen: boolean, type: 'full' | 'patch' }>({ isOpen: false, type: 'full' });
     
     // Column visibility state
@@ -242,6 +244,24 @@ export const DatabaseView = ({
         });
     };
 
+    // タグをクリックしたとき：選択㢧のトグル（既に選択済みなら解除、未選択なら追加）
+    const handleTagClick = (tagId: string) => {
+        setSelectedTagIds(prev =>
+            prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
+        );
+    };
+
+    // 選択中タグを解除する（バッジの ✕ ボタン用）
+    const removeTagFilter = (tagId: string) => {
+        setSelectedTagIds(prev => prev.filter(id => id !== tagId));
+    };
+
+    // キーワードとタグ絞り込みをまとめてリセットする
+    const clearAllFilters = () => {
+        setSearchQuery('');
+        setSelectedTagIds([]);
+    };
+
     const filteredFoodists = useMemo(() => {
         let result = foodists.filter(f => {
             // Apply column filters
@@ -271,31 +291,43 @@ export const DatabaseView = ({
             }
 
             const q = searchQuery.toLowerCase();
-            if (!q) return true;
 
-            const nq = normalizeString(searchQuery);
-            const tagNames = f.tagIds.map(id => allTags.find(t => t.id === id)?.name || '').join(' ').toLowerCase();
-            const nTagNames = normalizeString(tagNames);
+            // キーワードフィルタ（空欄なら通過）
+            if (q) {
+                const nq = normalizeString(searchQuery);
+                const tagNames = f.tagIds.map(id => allTags.find(t => t.id === id)?.name || '').join(' ').toLowerCase();
+                const nTagNames = normalizeString(tagNames);
 
-            return f.displayName.toLowerCase().includes(q) ||
-            normalizeString(f.displayName).includes(nq) ||
-            (f.realName || '').toLowerCase().includes(q) ||
-            normalizeString(f.realName).includes(nq) ||
-            (f.title || '').toLowerCase().includes(q) ||
-            normalizeString(f.title).includes(nq) ||
-            (f.listIntro || '').toLowerCase().includes(q) ||
-            normalizeString(f.listIntro || '').includes(nq) ||
-            (f.profileText || '').toLowerCase().includes(q) ||
-            normalizeString(f.profileText || '').includes(nq) ||
-            (f.aliases ?? []).some(a => a.toLowerCase().includes(q) || normalizeString(a).includes(nq)) ||
-            tagNames.includes(q) || nTagNames.includes(nq) ||
-            f.mediaAccounts.some(acc => 
-              (acc.accountName || '').toLowerCase().includes(q) || 
-              (acc.url || '').toLowerCase().includes(q)
-            ) ||
-            (f.faceVisibilityMemo || '').toLowerCase().includes(q) ||
-            normalizeString(f.faceVisibilityMemo || '').includes(nq) ||
-            f.notes.some(n => n.content.toLowerCase().includes(q) || normalizeString(n.content).includes(nq));
+                const keywordMatch =
+                    f.displayName.toLowerCase().includes(q) ||
+                    normalizeString(f.displayName).includes(nq) ||
+                    (f.realName || '').toLowerCase().includes(q) ||
+                    normalizeString(f.realName).includes(nq) ||
+                    (f.title || '').toLowerCase().includes(q) ||
+                    normalizeString(f.title).includes(nq) ||
+                    (f.listIntro || '').toLowerCase().includes(q) ||
+                    normalizeString(f.listIntro || '').includes(nq) ||
+                    (f.profileText || '').toLowerCase().includes(q) ||
+                    normalizeString(f.profileText || '').includes(nq) ||
+                    (f.aliases ?? []).some(a => a.toLowerCase().includes(q) || normalizeString(a).includes(nq)) ||
+                    tagNames.includes(q) || nTagNames.includes(nq) ||
+                    f.mediaAccounts.some(acc =>
+                      (acc.accountName || '').toLowerCase().includes(q) ||
+                      (acc.url || '').toLowerCase().includes(q)
+                    ) ||
+                    (f.faceVisibilityMemo || '').toLowerCase().includes(q) ||
+                    normalizeString(f.faceVisibilityMemo || '').includes(nq) ||
+                    f.notes.some(n => n.content.toLowerCase().includes(q) || normalizeString(n.content).includes(nq));
+
+                if (!keywordMatch) return false;
+            }
+
+            // タグANDフィルタ：選択中のタグをすべて持つ人だけ通過
+            if (selectedTagIds.length > 0) {
+                if (!selectedTagIds.every(tid => f.tagIds.includes(tid))) return false;
+            }
+
+            return true;
         });
 
         if (sortConfig) {
@@ -317,7 +349,7 @@ export const DatabaseView = ({
         }
 
         return result;
-    }, [foodists, searchQuery, allTags, sortConfig, columnFilters]);
+    }, [foodists, searchQuery, allTags, sortConfig, columnFilters, selectedTagIds]);
 
     const visibleColumns = AVAILABLE_COLUMNS.filter(c => visibleColumnIds.includes(c.id));
 
@@ -353,7 +385,7 @@ export const DatabaseView = ({
         downloadCsvAsShiftJis(csv, `foodist_export_${timestamp}.csv`);
     };
 
-    const isFiltered = searchQuery.length > 0 || Object.values(columnFilters).some(arr => arr.length > 0);
+    const isFiltered = searchQuery.length > 0 || Object.values(columnFilters).some(arr => arr.length > 0) || selectedTagIds.length > 0;
 
     return (
         <div className="database-view">
@@ -378,6 +410,7 @@ export const DatabaseView = ({
                             </button>
                         )}
                     </div>
+                    {/* 検索件数バッジ */}
                     {isFiltered && (
                         <div style={{ 
                             fontSize: '0.85rem', 
@@ -485,6 +518,37 @@ export const DatabaseView = ({
                     </a>
                 </div>
             </header>
+
+            {/* タグ絞り込みバッジエリア：選択中のタグを表示し ✕ で解除できる */}
+            {selectedTagIds.length > 0 && (
+                <div className="db-tag-filter-bar">
+                    <span className="db-tag-filter-label">タグ絞り込み中：</span>
+                    {selectedTagIds.map(tagId => {
+                        const tag = allTags.find(t => t.id === tagId);
+                        if (!tag) return null;
+                        return (
+                            <span key={tagId} className="db-tag-filter-badge">
+                                {tag.name}
+                                <button
+                                    className="db-tag-filter-remove"
+                                    onClick={() => removeTagFilter(tagId)}
+                                    aria-label={`「${tag.name}」の絞り込みを解除`}
+                                    type="button"
+                                >
+                                    ✕
+                                </button>
+                            </span>
+                        );
+                    })}
+                    <button
+                        className="db-tag-filter-clear-all"
+                        onClick={clearAllFilters}
+                        type="button"
+                    >
+                        すべてクリア
+                    </button>
+                </div>
+            )}
 
             <div className="table-container">
                 <table className="db-table">
@@ -612,7 +676,8 @@ export const DatabaseView = ({
                                 <tr key={foodist.id}>
                                     {visibleColumns.map(col => (
                                         <td key={col.id}>
-                                            {col.render(foodist, getMediaFollowers, allTags)}
+                                            {/* タグ列のみ onTagClick を渡して、クリックで絞り込めるようにする */}
+                                            {col.render(foodist, getMediaFollowers, allTags, col.id === 'tags' ? handleTagClick : undefined)}
                                         </td>
                                     ))}
                                     <td>
