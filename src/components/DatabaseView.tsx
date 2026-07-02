@@ -106,7 +106,7 @@ export const DatabaseView = ({
             '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
             '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県',
             '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県',
-            '海外', 'その他', '非公開', 'なし', '未確認'
+            '海外', 'その他', '未確認'
         ];
 
         const customOrders: Record<string, string[]> = {
@@ -114,21 +114,58 @@ export const DatabaseView = ({
             membership: ['あり', 'なし', '要確認'],
             maritalStatus: ['未婚', '既婚', '回答しない', '未確認'],
             hasChildren: ['あり', 'なし', '回答しない', '未確認'],
-            childrenCount: ['1', '2', '3', '4人以上'],
+            childrenCount: ['0人', '1人', '2人', '3人', '4人以上', '回答しない', '未確認'],
             childStage: ['乳幼児', '未就学児', '小学生', '中高生', '成人'],
             faceVisibility: ['可', '条件付き可', '不可', '未設定'],
+            alcohol: ['お酒を飲む', 'お酒を飲まない', 'お酒は飲まないがPR可'],
+            cookingClassStatus: ['現在運営している', '過去運営していたことがある', '運営したことがない', '未確認'],
+            notePermission: ['掲載可（事前確認は不要、掲載後に案内があればOK）', '掲載可（事前確認が必要）', '掲載不可', '未設定'],
+            instagram_reels: ['ほぼ毎日', '週3~5回ほど', '週1~2回ほど', '月1~2回ほど', '月1回以下', '投稿したことがない'],
             area: AREA_LIST,
             birthplace: AREA_LIST
         };
 
         if (customOrders[colId]) {
             const order = customOrders[colId];
+            // データに存在しない標準の選択肢もフィルターに表示させるため追加
+            order.forEach(o => {
+                if (!arr.includes(o)) {
+                    arr.push(o);
+                }
+            });
+
             arr.sort((a, b) => {
                 const ia = order.indexOf(a);
                 const ib = order.indexOf(b);
                 if (ia !== -1 && ib !== -1) return ia - ib;
                 if (ia !== -1) return -1;
                 if (ib !== -1) return 1;
+                return a.localeCompare(b, 'ja');
+            });
+        } else if (colId.includes('tag')) {
+            const CATEGORY_ORDER = [
+                '得意な料理ジャンル',
+                '資格・専門',
+                '実績',
+                '対応可能業務',
+                'ステータス',
+                'アンバサダー・パートナー'
+            ];
+
+            arr.sort((a, b) => {
+                const tagA = allTags.find(t => t.name === a);
+                const tagB = allTags.find(t => t.name === b);
+                if (tagA && tagB) {
+                    if (tagA.category !== tagB.category) {
+                        const idxA = CATEGORY_ORDER.indexOf(tagA.category);
+                        const idxB = CATEGORY_ORDER.indexOf(tagB.category);
+                        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                        if (idxA !== -1) return -1;
+                        if (idxB !== -1) return 1;
+                        return tagA.category.localeCompare(tagB.category, 'ja');
+                    }
+                    return tagA.sortOrder - tagB.sortOrder;
+                }
                 return a.localeCompare(b, 'ja');
             });
         }
@@ -476,41 +513,40 @@ export const DatabaseView = ({
                                                 'name', 'realName', 'title', 'avatarUrl', 'birthDate', 'age', 
                                                 'profileText', 'faceVisibilityMemo', 'noteFeaturedMemo', 
                                                 'email', 'phoneNumber', 'proposalMemo', 'otherMemo', 
-                                                'totalFollowers', 'aliases', 'createdAt', 'sysUpdatedAt'
+                                                'totalFollowers', 'aliases', 'createdAt', 'sysUpdatedAt', 'lastSurveyDate'
                                             ];
                                             const isFilterable = !NO_FILTER_COLUMNS.includes(col.id) && 
                                                 !col.id.endsWith('_url') && 
                                                 !col.id.endsWith('_updatedAt') && 
-                                                !col.id.endsWith('_reels') && 
                                                 !['instagram', 'x', 'tiktok', 'youtube', 'lemon8', 'note', 'blog'].includes(col.id);
                                             
                                             if (!isFilterable) return null;
 
                                             return (
                                                 <button 
-                                            className="btn-text" 
-                                            style={{ 
-                                                padding: '4px 6px',
-                                                marginLeft: '4px',
-                                                color: columnFilters[col.id]?.length ? '#fff' : '#64748b',
-                                                backgroundColor: columnFilters[col.id]?.length ? 'var(--color-brand-primary)' : (activeFilterColumn === col.id ? '#e2e8f0' : 'transparent'),
-                                                borderRadius: '6px',
-                                                minWidth: 'auto',
-                                                height: 'auto',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                border: '1px solid transparent',
-                                                boxShadow: columnFilters[col.id]?.length ? '0 2px 4px rgba(230,81,0,0.2)' : 'none'
-                                            }}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setActiveFilterColumn(prev => prev === col.id ? null : col.id);
-                                            }}
-                                            title={`${col.label}で絞り込む`}
-                                        >
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill={columnFilters[col.id]?.length ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                                         </button>
+                                                    className="btn-text" 
+                                                    style={{ 
+                                                        padding: '4px',
+                                                        marginLeft: '2px',
+                                                        color: columnFilters[col.id]?.length ? 'var(--primary-color)' : (activeFilterColumn === col.id ? '#475569' : '#94a3b8'),
+                                                        backgroundColor: 'transparent',
+                                                        borderRadius: '4px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        border: 'none',
+                                                        transition: 'color 0.2s',
+                                                    }}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setActiveFilterColumn(prev => prev === col.id ? null : col.id);
+                                                    }}
+                                                    title={`${col.label}で絞り込む`}
+                                                >
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                                    </svg>
+                                                </button>
                                             );
                                         })()}
                                     </div>
