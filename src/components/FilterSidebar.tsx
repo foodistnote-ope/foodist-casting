@@ -94,7 +94,7 @@ const MEMBERSHIP_OPTIONS = ['あり', 'なし', '要確認'];
 const MARITAL_STATUS_OPTIONS = ['未婚', '既婚', '回答しない', '未確認'];
 const FACE_OPTIONS = ['可', '条件付き可', '不可', '未設定'];
 const HAS_CHILDREN_OPTIONS = ['あり', 'なし', '回答しない', '未確認'];
-const CHILDREN_COUNT_OPTIONS = ['1', '2', '3', '4人以上'];
+const CHILDREN_COUNT_OPTIONS = ['0人', '1人', '2人', '3人', '4人以上', '回答しない', '未確認'];
 const CHILD_STAGE_OPTIONS = ['乳幼児', '未就学児', '小学生', '中高生', '成人'];
 const FOLLOWER_OPTIONS = [
     '1万未満', '1万〜3万未満', '3万〜5万未満', '5万〜10万未満',

@@ -74,6 +74,12 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f) => f.birthDate ? new Date(f.birthDate).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.birthDate || '',
+        csvValue: (f) => {
+            if (!f.birthDate) return '';
+            const d = new Date(f.birthDate);
+            if (isNaN(d.getTime())) return f.birthDate;
+            return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+        }
     },
     {
         id: 'age',
@@ -96,15 +102,41 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'area',
         label: '居住地',
         defaultVisible: true,
-        render: (f) => f.area || '-',
-        sortValue: (f) => f.area || '',
+        render: (f) => {
+            const val = f.area;
+            if (val === '非公開' || val === 'なし') return 'その他';
+            return val || '-';
+        },
+        sortValue: (f) => {
+            const val = f.area;
+            if (val === '非公開' || val === 'なし') return 'その他';
+            return val || '';
+        },
+        csvValue: (f) => {
+            const val = f.area;
+            if (val === '非公開' || val === 'なし') return 'その他';
+            return val || '';
+        },
     },
     {
         id: 'birthplace',
         label: '出身地',
         defaultVisible: false,
-        render: (f) => f.birthplace || '-',
-        sortValue: (f) => f.birthplace || '',
+        render: (f) => {
+            const val = f.birthplace;
+            if (val === '非公開' || val === 'なし') return 'その他';
+            return val || '-';
+        },
+        sortValue: (f) => {
+            const val = f.birthplace;
+            if (val === '非公開' || val === 'なし') return 'その他';
+            return val || '';
+        },
+        csvValue: (f) => {
+            const val = f.birthplace;
+            if (val === '非公開' || val === 'なし') return 'その他';
+            return val || '';
+        },
     },
     {
         id: 'maritalStatus',
@@ -124,8 +156,24 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         id: 'childrenCount',
         label: '子どもの数',
         defaultVisible: false,
-        render: (f) => f.childrenCount || '-',
-        sortValue: (f) => f.childrenCount || '',
+        render: (f) => {
+            const val = f.childrenCount;
+            if (!val) return '-';
+            if (['0', '1', '2', '3'].includes(val)) return `${val}人`;
+            return val;
+        },
+        sortValue: (f) => {
+            const val = f.childrenCount;
+            if (!val) return '';
+            if (['0', '1', '2', '3'].includes(val)) return `${val}人`;
+            return val;
+        },
+        csvValue: (f) => {
+            const val = f.childrenCount;
+            if (!val) return '';
+            if (['0', '1', '2', '3'].includes(val)) return `${val}人`;
+            return val;
+        },
     },
     {
         id: 'childStage',

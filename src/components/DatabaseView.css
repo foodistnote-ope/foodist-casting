@@ -240,20 +240,25 @@
 }
 
 .sort-icon {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--primary-color);
     font-weight: bold;
+    margin-left: 2px;
 }
 
 .sort-icon-idle {
-    color: #94a3b8;
-    opacity: 0.5;
-    transition: all 0.2s;
+    color: #94a3b8; /* 薄すぎないグレーにして視認性を確保 */
+    opacity: 1;
+    transition: color 0.2s;
 }
 
 .sortable-header:hover .sort-icon-idle {
-    opacity: 1;
-    color: var(--primary-color);
+    color: #475569; /* ホバー時はさらに濃いグレーにしてクリック可能であることを明示 */
+}
+
+/* Filter Popup Item Hover */
+.hover-bg-gray:hover {
+    background-color: #f1f5f9;
 }
 
 /* ========================================
