@@ -256,6 +256,11 @@
     color: var(--primary-color);
 }
 
+/* Filter Popup Item Hover */
+.hover-bg-gray:hover {
+    background-color: #f1f5f9;
+}
+
 /* ========================================
    モバイル用スタイル（≤768px）
    ======================================== */

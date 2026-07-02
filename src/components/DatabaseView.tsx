@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Papa from 'papaparse';
 import type { Foodist, Tag } from '../data/types';
 import { normalizeString } from '../hooks/useFoodists';
@@ -57,6 +57,104 @@ export const DatabaseView = ({
     const [isColumnDropdownOpen, setIsColumnDropdownOpen] = useState(false);
     const columnDropdownRef = useRef<HTMLDivElement>(null);
 
+    // Column Filters state
+    const [columnFilters, setColumnFilters] = useState<Record<string, string[]>>({});
+    const [activeFilterColumn, setActiveFilterColumn] = useState<string | null>(null);
+    const filterPopupRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (filterPopupRef.current && !filterPopupRef.current.contains(event.target as Node)) {
+                setActiveFilterColumn(null);
+            }
+        };
+        if (activeFilterColumn) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [activeFilterColumn]);
+
+    const getUniqueValuesForColumn = useCallback((colId: string) => {
+        const col = AVAILABLE_COLUMNS.find(c => c.id === colId);
+        if (!col) return [];
+        const values = new Set<string>();
+        foodists.forEach(f => {
+            let val = '';
+            if (col.csvValue) {
+                val = String(col.csvValue(f, getMediaFollowers, allTags) ?? '');
+            } else if (col.sortValue) {
+                const sv = col.sortValue(f, getMediaFollowers, allTags);
+                val = sv == null ? '' : String(sv);
+            }
+            if (val) {
+                if (val.includes(',') && (colId.includes('tag') || colId === 'platforms' || colId === 'childStage')) {
+                    val.split(',').forEach(v => {
+                        const trimmed = v.trim();
+                        if (trimmed) values.add(trimmed);
+                    });
+                } else {
+                    values.add(val.trim());
+                }
+            }
+        });
+        let arr = Array.from(values).sort();
+
+        const AREA_LIST = [
+            '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
+            '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
+            '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県',
+            '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+            '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県',
+            '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県',
+            '海外', 'その他', '非公開', 'なし', '未確認'
+        ];
+
+        const customOrders: Record<string, string[]> = {
+            gender: ['女性', '男性', 'その他', '回答しない'],
+            membership: ['あり', 'なし', '要確認'],
+            maritalStatus: ['未婚', '既婚', '回答しない', '未確認'],
+            hasChildren: ['あり', 'なし', '回答しない', '未確認'],
+            childrenCount: ['1', '2', '3', '4人以上'],
+            childStage: ['乳幼児', '未就学児', '小学生', '中高生', '成人'],
+            faceVisibility: ['可', '条件付き可', '不可', '未設定'],
+            area: AREA_LIST,
+            birthplace: AREA_LIST
+        };
+
+        if (customOrders[colId]) {
+            const order = customOrders[colId];
+            arr.sort((a, b) => {
+                const ia = order.indexOf(a);
+                const ib = order.indexOf(b);
+                if (ia !== -1 && ib !== -1) return ia - ib;
+                if (ia !== -1) return -1;
+                if (ib !== -1) return 1;
+                return a.localeCompare(b, 'ja');
+            });
+        }
+
+        return arr;
+    }, [foodists, allTags]);
+
+    const toggleFilterValue = (colId: string, value: string) => {
+        setColumnFilters(prev => {
+            const current = prev[colId] || [];
+            const next = current.includes(value) 
+                ? current.filter(v => v !== value) 
+                : [...current, value];
+            return { ...prev, [colId]: next };
+        });
+    };
+
+    const clearFilter = (colId: string) => {
+        setColumnFilters(prev => {
+            const copy = { ...prev };
+            delete copy[colId];
+            return copy;
+        });
+        setActiveFilterColumn(null);
+    };
+
     // Sorting state
     const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(() => {
         const saved = localStorage.getItem('db_sort_config');
@@ -109,6 +207,32 @@ export const DatabaseView = ({
 
     const filteredFoodists = useMemo(() => {
         let result = foodists.filter(f => {
+            // Apply column filters
+            for (const [colId, selectedValues] of Object.entries(columnFilters)) {
+                if (!selectedValues || selectedValues.length === 0) continue;
+                const col = AVAILABLE_COLUMNS.find(c => c.id === colId);
+                if (!col) continue;
+                
+                let val = '';
+                if (col.csvValue) {
+                    val = String(col.csvValue(f, getMediaFollowers, allTags) ?? '');
+                } else if (col.sortValue) {
+                    const sv = col.sortValue(f, getMediaFollowers, allTags);
+                    val = sv == null ? '' : String(sv);
+                }
+                
+                if (val.includes(',') && (colId.includes('tag') || colId === 'platforms' || colId === 'childStage')) {
+                    const valArray = val.split(',').map(v => v.trim());
+                    if (!selectedValues.some(sv => valArray.includes(sv))) {
+                        return false;
+                    }
+                } else {
+                    if (!selectedValues.includes(val.trim())) {
+                        return false;
+                    }
+                }
+            }
+
             const q = searchQuery.toLowerCase();
             if (!q) return true;
 
@@ -156,7 +280,7 @@ export const DatabaseView = ({
         }
 
         return result;
-    }, [foodists, searchQuery, allTags, sortConfig]);
+    }, [foodists, searchQuery, allTags, sortConfig, columnFilters]);
 
     const visibleColumns = AVAILABLE_COLUMNS.filter(c => visibleColumnIds.includes(c.id));
 
@@ -192,6 +316,8 @@ export const DatabaseView = ({
         downloadCsvAsShiftJis(csv, `foodist_export_${timestamp}.csv`);
     };
 
+    const isFiltered = searchQuery.length > 0 || Object.values(columnFilters).some(arr => arr.length > 0);
+
     return (
         <div className="database-view">
             <header className="db-header">
@@ -215,7 +341,7 @@ export const DatabaseView = ({
                             </button>
                         )}
                     </div>
-                    {searchQuery && (
+                    {isFiltered && (
                         <div style={{ 
                             fontSize: '0.85rem', 
                             fontWeight: '600',
@@ -330,20 +456,114 @@ export const DatabaseView = ({
                             {visibleColumns.map(col => (
                                 <th 
                                     key={col.id} 
-                                    onClick={() => handleSort(col.id)}
                                     className={col.sortValue ? 'sortable-header' : ''}
+                                    style={{ position: 'relative' }}
                                 >
-                                    <div className="th-content">
-                                        {col.label}
-                                        {sortConfig?.key === col.id && (
-                                            <span className="sort-icon">
-                                                {sortConfig.direction === 'asc' ? '▲' : '▼'}
-                                            </span>
-                                        )}
-                                        {sortConfig?.key !== col.id && col.sortValue && (
-                                            <span className="sort-icon sort-icon-idle">▼</span>
-                                        )}
+                                    <div className="th-content" style={{ display: 'flex', alignItems: 'center', gap: '4px', justifyContent: 'space-between', width: '100%' }}>
+                                        <div onClick={() => handleSort(col.id)} style={{ cursor: col.sortValue ? 'pointer' : 'default', display: 'flex', alignItems: 'center', gap: '4px', flex: 1 }}>
+                                            {col.label}
+                                            {sortConfig?.key === col.id && (
+                                                <span className="sort-icon">
+                                                    {sortConfig.direction === 'asc' ? '▲' : '▼'}
+                                                </span>
+                                            )}
+                                            {sortConfig?.key !== col.id && col.sortValue && (
+                                                <span className="sort-icon sort-icon-idle">▼</span>
+                                            )}
+                                        </div>
+                                        {(() => {
+                                            const NO_FILTER_COLUMNS = [
+                                                'name', 'realName', 'title', 'avatarUrl', 'birthDate', 'age', 
+                                                'profileText', 'faceVisibilityMemo', 'noteFeaturedMemo', 
+                                                'email', 'phoneNumber', 'proposalMemo', 'otherMemo', 
+                                                'totalFollowers', 'aliases', 'createdAt', 'sysUpdatedAt'
+                                            ];
+                                            const isFilterable = !NO_FILTER_COLUMNS.includes(col.id) && 
+                                                !col.id.endsWith('_url') && 
+                                                !col.id.endsWith('_updatedAt') && 
+                                                !col.id.endsWith('_reels') && 
+                                                !['instagram', 'x', 'tiktok', 'youtube', 'lemon8', 'note', 'blog'].includes(col.id);
+                                            
+                                            if (!isFilterable) return null;
+
+                                            return (
+                                                <button 
+                                            className="btn-text" 
+                                            style={{ 
+                                                padding: '4px 6px',
+                                                marginLeft: '4px',
+                                                color: columnFilters[col.id]?.length ? '#fff' : '#64748b',
+                                                backgroundColor: columnFilters[col.id]?.length ? 'var(--color-brand-primary)' : (activeFilterColumn === col.id ? '#e2e8f0' : 'transparent'),
+                                                borderRadius: '6px',
+                                                minWidth: 'auto',
+                                                height: 'auto',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                border: '1px solid transparent',
+                                                boxShadow: columnFilters[col.id]?.length ? '0 2px 4px rgba(230,81,0,0.2)' : 'none'
+                                            }}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setActiveFilterColumn(prev => prev === col.id ? null : col.id);
+                                            }}
+                                            title={`${col.label}で絞り込む`}
+                                        >
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill={columnFilters[col.id]?.length ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                                         </button>
+                                            );
+                                        })()}
                                     </div>
+
+                                    {activeFilterColumn === col.id && (
+                                        <div 
+                                            ref={filterPopupRef}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '100%',
+                                                left: 0,
+                                                minWidth: '220px',
+                                                maxHeight: '300px',
+                                                overflowY: 'auto',
+                                                background: '#fff',
+                                                border: '1px solid #ddd',
+                                                borderRadius: '8px',
+                                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                                                zIndex: 100,
+                                                padding: '8px',
+                                                fontWeight: 'normal',
+                                                fontSize: '0.85rem',
+                                                color: '#333',
+                                                textAlign: 'left',
+                                                whiteSpace: 'normal',
+                                                cursor: 'default'
+                                            }}
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <div style={{ paddingBottom: '8px', borderBottom: '1px solid #eee', marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <strong style={{ fontSize: '0.8rem' }}>{col.label} の絞り込み</strong>
+                                                {(columnFilters[col.id]?.length ?? 0) > 0 && (
+                                                    <button className="btn-text" style={{ fontSize: '0.75rem', color: '#d9534f', padding: '2px 4px' }} onClick={() => clearFilter(col.id)}>クリア</button>
+                                                )}
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                {getUniqueValuesForColumn(col.id).map(val => (
+                                                    <label key={val} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', cursor: 'pointer', padding: '4px 6px', borderRadius: '4px' }} className="hover-bg-gray">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            checked={(columnFilters[col.id] || []).includes(val)}
+                                                            onChange={() => toggleFilterValue(col.id, val)}
+                                                            style={{ marginTop: '2px', cursor: 'pointer' }}
+                                                        />
+                                                        <span style={{ wordBreak: 'break-word', lineHeight: '1.2' }}>{val || '(空白)'}</span>
+                                                    </label>
+                                                ))}
+                                                {getUniqueValuesForColumn(col.id).length === 0 && (
+                                                    <div style={{ color: '#888', fontStyle: 'italic', padding: '4px' }}>値がありません</div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
                                 </th>
                             ))}
                             <th>操作</th>

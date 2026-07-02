@@ -64,6 +64,12 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         defaultVisible: false,
         render: (f) => f.birthDate ? new Date(f.birthDate).toLocaleDateString('ja-JP') : '-',
         sortValue: (f) => f.birthDate || '',
+        csvValue: (f) => {
+            if (!f.birthDate) return '';
+            const d = new Date(f.birthDate);
+            if (isNaN(d.getTime())) return f.birthDate;
+            return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+        }
     },
     {
         id: 'age',
