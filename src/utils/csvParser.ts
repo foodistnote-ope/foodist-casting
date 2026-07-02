@@ -136,7 +136,13 @@ const mapTagNamesToIds = (tagNamesStr: string | undefined, allTags: Tag[]): stri
     const names = tagNamesStr.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
     const result: string[] = [];
     names.forEach(name => {
-        const tag = allTags.find(t => t.name === name);
+        let mappedName = name;
+        if (name === '日常') mappedName = '日常ごはん';
+        else if (name === '成長期のお子さま') mappedName = '子ども向けごはん';
+        else if (name === 'おもてなし' || name === 'パーティー') mappedName = 'おもてなし・パーティー';
+        else if (name === '出張講師・レッスン') mappedName = '講師・レッスン';
+
+        const tag = allTags.find(t => t.name === mappedName);
         if (tag) result.push(tag.id);
     });
     return Array.from(new Set(result));
@@ -266,9 +272,7 @@ export const parsePatchCsv = async (file: File, allTags: Tag[], matchKey: '活�
                             tagNames.push(alcoholVal.trim());
                         }
                         if (tagNames.length > 0) {
-                            patch.tagIds = tagNames
-                                .map(name => allTags.find(t => t.name === name)?.id)
-                                .filter((id): id is string => !!id);
+                            patch.tagIds = mapTagNamesToIds(tagNames.join(','), allTags);
                         }
                         
                         // 会員登録状況が「あり」の場合、自動的に「フーディスト会員」タグを追加

@@ -284,6 +284,7 @@ export const FilterSidebar = ({
 
     const filterContents = (
         <>
+
             {/* 居住地 */}
             <FilterSection title="居住地" badge={selectedAreas.length}>
                 <div className="filter-options scrollable-options">
@@ -388,6 +389,16 @@ export const FilterSidebar = ({
                 <CheckList items={FOLLOWER_OPTIONS.map(v => ({ value: v, label: v }))} selected={selectedNoteFollowers} onToggle={v => toggle(v, selectedNoteFollowers, setSelectedNoteFollowers)} />
             </FilterSection>
 
+            {/* 得意な料理ジャンル */}
+            <FilterSection title="得意な料理ジャンル" badge={selectedFeatureTagIds.length}>
+                <CheckList
+                    items={featureTags.map(t => ({ value: t.id, label: t.name }))}
+                    selected={selectedFeatureTagIds}
+                    onToggle={v => toggle(v, selectedFeatureTagIds, setSelectedFeatureTagIds)}
+                    showMoreThreshold={SHOW_MORE_THRESHOLD}
+                />
+            </FilterSection>
+
             {/* 保有資格・専門 */}
             <FilterSection title="保有資格・専門" badge={selectedQualificationTagIds.length}>
                 <CheckList
@@ -418,15 +429,6 @@ export const FilterSidebar = ({
                 />
             </FilterSection>
 
-            {/* 得意な料理ジャンル */}
-            <FilterSection title="得意な料理ジャンル" badge={selectedFeatureTagIds.length}>
-                <CheckList
-                    items={featureTags.map(t => ({ value: t.id, label: t.name }))}
-                    selected={selectedFeatureTagIds}
-                    onToggle={v => toggle(v, selectedFeatureTagIds, setSelectedFeatureTagIds)}
-                    showMoreThreshold={SHOW_MORE_THRESHOLD}
-                />
-            </FilterSection>
 
             {/* 顔出し可否 */}
             <FilterSection title="顔出し可否" badge={selectedFaceVisibility.length}>
