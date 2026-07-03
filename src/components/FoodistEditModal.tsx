@@ -545,7 +545,15 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                     {acc.mediaType === 'Instagram' && (
                                         <div className="form-group" style={{ flex: 0.5 }}>
                                             <label className="form-label">リール投稿頻度</label>
-                                            <input className="form-input" value={acc.reelsFrequency || ''} onChange={e => updateMedia(acc.id, { reelsFrequency: e.target.value })} placeholder="例: 週3回" />
+                                            <select className="form-select" value={acc.reelsFrequency || ''} onChange={e => updateMedia(acc.id, { reelsFrequency: e.target.value })}>
+                                                <option value="">選択してください</option>
+                                                <option value="ほぼ毎日">ほぼ毎日</option>
+                                                <option value="週3~5回ほど">週3~5回ほど</option>
+                                                <option value="週1~2回ほど">週1~2回ほど</option>
+                                                <option value="月1~2回ほど">月1~2回ほど</option>
+                                                <option value="月1回以下">月1回以下</option>
+                                                <option value="投稿したことがない">投稿したことがない</option>
+                                            </select>
                                         </div>
                                     )}
                                 </div>

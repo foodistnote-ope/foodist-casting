@@ -359,6 +359,50 @@ export const AVAILABLE_COLUMNS: ColumnDef[] = [
         },
     },
     {
+        id: 'relation',
+        label: 'リレーション',
+        defaultVisible: false,
+        render: (f, _getFollowers, allTags, onTagClick) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '-';
+            const tags = f.tagIds
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category === 'リレーション');
+            if (tags.length === 0) return '-';
+            return (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px', maxWidth: '200px' }}>
+                    {tags.map((tag) => (
+                        onTagClick ? (
+                            <button
+                                key={tag.id}
+                                className="td-tag-clickable"
+                                onClick={() => onTagClick(tag.id)}
+                                title={`「${tag.name}」で絞り込む`}
+                            >
+                                {tag.name}
+                            </button>
+                        ) : (
+                            <span key={tag.id} style={{ fontSize: '0.65rem', background: '#f0f0f0', borderRadius: '3px', padding: '1px 4px' }}>
+                                {tag.name}
+                            </span>
+                        )
+                    ))}
+                </div>
+            );
+        },
+        sortValue: (f, _getFollowers, allTags) => {
+            const names = f.tagIds?.map(id => allTags.find(t => t.id === id)).filter((t): t is Tag => !!t && t.category === 'リレーション').map(t => t.name);
+            return names?.join(', ') || '';
+        },
+        csvValue: (f, _getFollowers, allTags) => {
+            if (!f.tagIds || f.tagIds.length === 0) return '';
+            const names = f.tagIds
+                .map(id => allTags.find(t => t.id === id))
+                .filter((t): t is Tag => !!t && t.category === 'リレーション')
+                .map(t => t.name);
+            return names.join(', ');
+        },
+    },
+    {
         id: 'proposalMemo',
         label: '提案時メモ',
         defaultVisible: false,

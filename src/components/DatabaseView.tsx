@@ -89,7 +89,7 @@ export const DatabaseView = ({
                 val = sv == null ? '' : String(sv);
             }
             if (val) {
-                if (val.includes(',') && (colId.includes('tag') || colId === 'platforms' || colId === 'childStage')) {
+                if (val.includes(',') && (colId.includes('tag') || colId === 'platforms' || colId === 'childStage' || colId === 'relation' || colId === 'alcohol')) {
                     val.split(',').forEach(v => {
                         const trimmed = v.trim();
                         if (trimmed) values.add(trimmed);
@@ -278,7 +278,7 @@ export const DatabaseView = ({
                     val = sv == null ? '' : String(sv);
                 }
                 
-                if (val.includes(',') && (colId.includes('tag') || colId === 'platforms' || colId === 'childStage')) {
+                if (val.includes(',') && (colId.includes('tag') || colId === 'platforms' || colId === 'childStage' || colId === 'relation' || colId === 'alcohol')) {
                     const valArray = val.split(',').map(v => v.trim());
                     if (!selectedValues.some(sv => valArray.includes(sv))) {
                         return false;
@@ -676,8 +676,8 @@ export const DatabaseView = ({
                                 <tr key={foodist.id}>
                                     {visibleColumns.map(col => (
                                         <td key={col.id}>
-                                            {/* タグ列のみ onTagClick を渡して、クリックで絞り込めるようにする */}
-                                            {col.render(foodist, getMediaFollowers, allTags, col.id === 'tags' ? handleTagClick : undefined)}
+                                            {/* タグ・リレーション列は onTagClick を渡して、クリックで絞り込めるようにする */}
+                                            {col.render(foodist, getMediaFollowers, allTags, (col.id === 'tags' || col.id === 'relation') ? handleTagClick : undefined)}
                                         </td>
                                     ))}
                                     <td>
