@@ -13,6 +13,7 @@ import { AuthGate } from './components/AuthGate';
 import { ImportResultModal } from './components/ImportResultModal';
 import { PublicRegistrationForm } from './components/PublicRegistrationForm';
 import { ApplicationReviewView } from './components/ApplicationReviewView';
+import { GuideView } from './components/GuideView';
 import { updateApplicationStatus } from './lib/supabaseDb';
 import { calculateAge, calculateAgeGroup, getEffectiveAgeGroup } from './utils/dateUtils';
 import Papa from 'papaparse';
@@ -36,7 +37,7 @@ const FOLLOWER_RANGES: Record<string, FollowerRange> = {
 
 function App() {
   // ---- ビュー ----
-  const [currentView, setCurrentView] = useState<'dashboard' | 'database' | 'review'>(() => {
+  const [currentView, setCurrentView] = useState<'dashboard' | 'database' | 'review' | 'guide'>(() => {
     return (localStorage.getItem('app_current_view') as any) || 'dashboard';
   });
 
@@ -960,7 +961,7 @@ function App() {
               onPatchImport={handlePatchCsvImport}
               isPatchImporting={isPatchingCsv}
             />
-          ) : (
+          ) : currentView === 'review' ? (
             <ApplicationReviewView 
               allTags={tags} 
               onEdit={app => {
@@ -990,6 +991,8 @@ function App() {
                 setIsEditModalOpen(true);
               }}
             />
+          ) : (
+            <GuideView />
           )}
         </main>
 
