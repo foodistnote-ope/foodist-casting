@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Foodist, Tag, MediaType } from '../data/types';
+import { Tooltip } from './Tooltip';
 import { calculateAge, getEffectiveAgeGroup } from '../utils/dateUtils';
 import { MEDIA_ICONS, MEDIA_ICON_FILTER } from '../utils/mediaIcons';
 import './ProfileModal.css';
@@ -145,10 +146,23 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">活動名</span><span className="demo-value">{val(foodist.displayName)}</span></div>
                             <div className="demo-item"><span className="demo-label">本名</span><span className="demo-value">{val(foodist.realName)}</span></div>
                             <div className="demo-item"><span className="demo-label">肩書き</span><span className="demo-value">{val(foodist.title)}</span></div>
-                            <div className="demo-item"><span className="demo-label">会員登録状況</span><span className="demo-value">{val(foodist.membershipStatus)}</span></div>
+                            <div className="demo-item">
+                                <span className="demo-label">
+                                    会員登録状況
+                                    <Tooltip content="本ツールはフーディスト会員システム（FS Console）と自動連動していません。正確な会員登録状況は、フーディスト会員システム（FS Console）でご確認ください。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </span>
+                                <span className="demo-value">{val(foodist.membershipStatus)}</span>
+                            </div>
                             <div className="demo-item"><span className="demo-label">生年月日</span><span className="demo-value">{foodist.birthDate ? new Date(foodist.birthDate).toLocaleDateString('ja-JP') : '未設定'}</span></div>
                             <div className="demo-item">
-                                <span className="demo-label">年齢</span>
+                                <span className="demo-label">
+                                    年齢
+                                    <Tooltip content="生年月日の登録がない場合、年齢情報が古い場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </span>
                                 <span className="demo-value">
                                     {(() => {
                                         const effectiveAge = foodist.birthDate ? calculateAge(foodist.birthDate) : foodist.age;
@@ -161,10 +175,31 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">居住地</span><span className="demo-value">{val(foodist.area)}</span></div>
                             <div className="demo-item"><span className="demo-label">出身地</span><span className="demo-value">{val(foodist.birthplace)}</span></div>
                             <div className="demo-item"><span className="demo-label">婚姻状況</span><span className="demo-value">{val(foodist.maritalStatus)}</span></div>
-                            <div className="demo-item"><span className="demo-label">子どもの有無</span><span className="demo-value">{val(foodist.hasChildren)}</span></div>
-                            <div className="demo-item"><span className="demo-label">子どもの数</span><span className="demo-value">{foodist.childrenCount ? `${foodist.childrenCount}人` : '未設定'}</span></div>
+                            <div className="demo-item">
+                                <span className="demo-label">
+                                    子どもの有無
+                                    <Tooltip content="アンケートやSNS等からの情報に基づくため、最新の情報ではない場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </span>
+                                <span className="demo-value">{val(foodist.hasChildren)}</span>
+                            </div>
+                            <div className="demo-item">
+                                <span className="demo-label">
+                                    子どもの数
+                                    <Tooltip content="アンケートやSNS等からの情報に基づくため、最新の情報ではない場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </span>
+                                <span className="demo-value">{foodist.childrenCount ? `${foodist.childrenCount}人` : '未設定'}</span>
+                            </div>
                             <div className="demo-item demo-item-full">
-                                <span className="demo-label">お子さんの成長時期</span>
+                                <span className="demo-label">
+                                    お子さんの成長時期
+                                    <Tooltip content="アンケートやSNS等からの情報に基づくため、最新の情報ではない場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </span>
                                 <span className="demo-value">
                                     {foodist.childStage.length > 0 ? foodist.childStage.join('・') : '未設定'}
                                 </span>
@@ -175,7 +210,12 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                     {/* アカウント情報（数値） */}
                     {metricRows.length > 0 && (
                         <div className="modal-section">
-                            <h3 className="section-title">アカウント情報</h3>
+                            <h3 className="section-title">
+                                アカウント情報
+                                <Tooltip content="SNSのフォロワー数などは「最終更新日時」時点の情報です。リアルタイムな数値ではないため、提案時などは実際のSNSアカウントをご確認ください。">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 6, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                </Tooltip>
+                            </h3>
                             <div className="demo-grid">
                                 {metricRows.map(acc => (
                                     <div key={acc.id} className="demo-item">
@@ -305,7 +345,16 @@ export const ProfileModal = ({ foodist, allTags, onClose, onTagClick, onEditClic
                             <div className="demo-item"><span className="demo-label">電話番号</span><span className="demo-value">{val(foodist.phoneNumber)}</span></div>
                             {tagsByCategory['リレーション']?.some(t => t.name === 'アンケート回答あり') && (
                                 <div className="demo-item demo-item-full">
-                                    <span className="demo-label">最新アンケート回答日</span>
+                                    <span className="demo-label">
+                                        最新アンケート回答日
+                                        <Tooltip content={
+                                            <>
+                                                対象となるアンケートは「料理の活動に関するアンケート」です。
+                                            </>
+                                        }>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                        </Tooltip>
+                                    </span>
                                     <span className="demo-value">
                                         {foodist.lastSurveyDate ? new Date(foodist.lastSurveyDate).toLocaleDateString('ja-JP') : '不明'}
                                         <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '4px' }}>

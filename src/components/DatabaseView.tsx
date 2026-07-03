@@ -389,6 +389,14 @@ export const DatabaseView = ({
 
     return (
         <div className="database-view">
+            <div style={{ backgroundColor: '#fff8e1', padding: '12px 16px', borderBottom: '1px solid #ffe0b2', fontSize: '0.85rem', color: '#555', marginBottom: '16px' }}>
+                <div style={{ marginBottom: '6px' }}>
+                    <strong>ダウンロード形式（CSV出力）:</strong> 「表示項目」から表示させたい項目を選択してください。選択（チェック）した項目がそのままダウンロード対象になります。すべての項目を出力したい場合は「すべて表示」をクリックしてください。
+                </div>
+                <div>
+                    <strong>データの並び替え・絞り込み:</strong> 各項目の見出しをクリックすると昇順・降順で並び替えることができます。また、見出し内のフィルタやタグのアイコンから条件を指定して絞り込むことも可能です。
+                </div>
+            </div>
             <header className="db-header">
                 <div className="db-actions">
                     <div className="db-search-wrapper">

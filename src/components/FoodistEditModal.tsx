@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import type { Foodist, Tag, MediaAccount, FoodieNote, TagCategory, MediaType, MetricType } from '../data/types';
 import { TAG_CATEGORIES, MEDIA_TYPES, METRIC_TYPES, NOTE_TYPES, AGE_GROUPS, CHILD_STAGES, FOLLOWER_CONTRIBUTING_MEDIA, calcTotalFollowers } from '../data/types';
 import { calculateAge, calculateAgeGroup } from '../utils/dateUtils';
+import { getMediaFollowers } from '../utils/exportColumns';
+import { Tooltip } from './Tooltip';
 import './FoodistEditModal.css';
 
 interface FoodistEditModalProps {
@@ -376,7 +378,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 <input className="form-input" name="title" value={form.title || ''} onChange={handleChange} placeholder="例: 料理研究家・栄養士" />
                             </div>
                             <div className="form-group">
-                                <label className="form-label">フーディスト会員登録状況</label>
+                                <label className="form-label">
+                                    フーディスト会員登録状況
+                                    <Tooltip content="本ツールはフーディスト会員システム（FS Console）と自動連動していません。正確な会員登録状況は、フーディスト会員システム（FS Console）でご確認ください。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </label>
                                 <select className="form-select" name="membershipStatus" value={form.membershipStatus} onChange={handleChange}>
                                     <option value="あり">あり</option>
                                     <option value="なし">なし</option>
@@ -432,7 +439,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 </div>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">年齢</label>
+                                <label className="form-label">
+                                    年齢
+                                    <Tooltip content="生年月日の登録がない場合、年齢情報が古い場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </label>
                                 <input type="number" className="form-input" name="age" value={form.age ?? ''} min={0} max={120}
                                     onChange={e => set('age', e.target.value ? parseInt(e.target.value) : undefined)} />
                             </div>
@@ -479,7 +491,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">子どもの有無</label>
+                                <label className="form-label">
+                                    子どもの有無
+                                    <Tooltip content="アンケートやSNS等からの情報に基づくため、最新の情報ではない場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </label>
                                 <select className="form-select" name="hasChildren" value={form.hasChildren} onChange={handleChange}>
                                     <option value="あり">あり</option>
                                     <option value="なし">なし</option>
@@ -488,7 +505,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">子どもの数</label>
+                                <label className="form-label">
+                                    子どもの数
+                                    <Tooltip content="アンケートやSNS等からの情報に基づくため、最新の情報ではない場合があります。">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                    </Tooltip>
+                                </label>
                                 <select className="form-select" name="childrenCount" value={form.childrenCount || ''} onChange={handleChange}>
                                     <option value="">-- 未設定 --</option>
                                     <option value="0">0人</option>
@@ -503,7 +525,12 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">お子さんの成長時期（複数選択可）</label>
+                            <label className="form-label">
+                                お子さんの成長時期（複数選択可）
+                                <Tooltip content="アンケートやSNS等からの情報に基づくため、最新の情報ではない場合があります。">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                </Tooltip>
+                            </label>
                             <div className="tags-checkbox-group">
                                 {CHILD_STAGES.map(stage => (
                                     <label key={stage} className={`tag-checkbox-label ${form.childStage.includes(stage) ? 'selected' : ''}`}>
@@ -515,7 +542,11 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         {/* ===== SNS・媒体情報 ===== */}
-                        <h3 className="form-section-title">SNS・媒体情報
+                        <h3 className="form-section-title">
+                            SNS・媒体情報
+                            <Tooltip content="SNSのフォロワー数などは「最終更新日時」時点の情報です。リアルタイムな数値ではないため、提案時などは実際のSNSアカウントをご確認ください。">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 6, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            </Tooltip>
                             <span className="form-hint" style={{ marginLeft: 8 }}>総フォロワー数（自動）: {previewTotal != null ? previewTotal.toLocaleString() : '未設定'}</span>
                         </h3>
 
@@ -722,7 +753,16 @@ export const FoodistEditModal = ({ foodist, allTags, onSave, onClose }: FoodistE
                         </div>
 
                         <div className="form-group" style={{ marginTop: '16px' }}>
-                            <label className="form-label">最新アンケート回答日</label>
+                            <label className="form-label">
+                                最新アンケート回答日
+                                <Tooltip content={
+                                    <>
+                                        対象となるアンケートは「料理の活動に関するアンケート」です。
+                                    </>
+                                }>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft: 4, verticalAlign: 'text-bottom', color: '#94a3b8'}}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                </Tooltip>
+                            </label>
                             <input 
                                 type="date" 
                                 className="form-input" 

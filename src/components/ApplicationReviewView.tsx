@@ -81,17 +81,22 @@ export const ApplicationReviewView = ({ allTags, onEdit }: ApplicationReviewView
                         target="_blank" 
                         rel="noreferrer" 
                         className="btn-text" 
-                        style={{ display: 'flex', alignItems: 'center', fontSize: '0.85rem', color: '#64748b', textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', transition: 'background 0.2s' }}
+                        style={{ display: 'flex', alignItems: 'center', fontSize: '0.85rem', color: '#64748b', textDecoration: 'none', padding: '6px 12px', borderRadius: '6px', transition: 'background 0.2s', whiteSpace: 'nowrap' }}
                     >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: 6}}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                         申請フォームを開く
                     </a>
-                    <button className="btn-secondary" onClick={loadApplications}>
+                    <button className="btn-secondary" onClick={loadApplications} style={{ whiteSpace: 'nowrap' }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: 6}}><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
                         更新
                     </button>
                 </div>
             </header>
+
+            <div style={{ backgroundColor: '#fff8e1', padding: '12px 16px', border: '1px solid #ffe0b2', borderRadius: '8px', fontSize: '0.85rem', color: '#555', marginBottom: '20px' }}>
+                回答があると、Slackの「#フーディストさん情報」に自動で通知が来ます。依頼をした担当者が確認をして登録をお願いします。既存登録があるか確認し、あればマージをお願いします。<br/>
+                <span style={{ color: '#888', fontSize: '0.8rem', marginTop: '4px', display: 'inline-block' }}>※フォームのURLは右上の「申請フォームを開く」から確認可能です。</span>
+            </div>
 
             {applications.length === 0 ? (
                 <div className="empty-review">
