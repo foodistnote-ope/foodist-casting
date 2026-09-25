@@ -11,6 +11,7 @@ export const getAllFoodists = async (): Promise<Foodist[]> => {
     const { data, error } = await supabase
         .from('foodists')
         .select('data')
+        .is('deleted_at', null)
         .order('created_at', { ascending: false });
     if (error) throw error;
     return (data ?? []).map(row => row.data as Foodist).filter(f => f != null);
@@ -20,7 +21,8 @@ export const getAllFoodists = async (): Promise<Foodist[]> => {
 export const countFoodists = async (): Promise<number> => {
     const { count, error } = await supabase
         .from('foodists')
-        .select('id', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true })
+        .is('deleted_at', null);
     if (error) throw error;
     return count ?? 0;
 };
@@ -69,16 +71,16 @@ export const replaceAllFoodists = async (list: Foodist[]): Promise<void> => {
     if (error) throw error;
 };
 
-/** 1件削除 */
+/** 1件削除 (論理削除) */
 export const deleteFoodistById = async (id: string): Promise<void> => {
     const { error } = await supabase
         .from('foodists')
-        .delete()
+        .update({ deleted_at: new Date().toISOString() })
         .eq('id', id);
     if (error) throw error;
 };
 
-/** 複数件を一括削除 */
+/** 複数件を一括削除 (論理削除) */
 export const deleteManyFoodistsByIds = async (ids: string[]): Promise<void> => {
     if (ids.length === 0) return;
     
@@ -88,7 +90,7 @@ export const deleteManyFoodistsByIds = async (ids: string[]): Promise<void> => {
         const batch = ids.slice(i, i + batchSize);
         const { error } = await supabase
             .from('foodists')
-            .delete()
+            .update({ deleted_at: new Date().toISOString() })
             .in('id', batch);
         if (error) throw error;
     }
